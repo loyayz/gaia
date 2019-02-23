@@ -22,6 +22,7 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
 
         <guava.version>24.0-jre</guava.version>
+        <jjwt.version>0.9.1</jjwt.version>
     </properties>
 
 
@@ -35,6 +36,11 @@
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
                 <version>${guava.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt</artifactId>
+                <version>${jjwt.version}</version>
             </dependency>
 
         </dependencies>
