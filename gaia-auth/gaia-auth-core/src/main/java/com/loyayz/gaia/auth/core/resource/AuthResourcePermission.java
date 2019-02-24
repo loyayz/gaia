@@ -14,7 +14,7 @@ import java.util.*;
  */
 @Data
 @NoArgsConstructor
-public class SecurityResourcePermission implements Serializable {
+public class AuthResourcePermission implements Serializable {
     private static final long serialVersionUID = -1L;
 
     /**
@@ -26,7 +26,7 @@ public class SecurityResourcePermission implements Serializable {
 
     private List<String> allowedRoles;
 
-    public SecurityResourcePermission(SecurityResourcePermission other) {
+    public AuthResourcePermission(AuthResourcePermission other) {
         this.allowedRoles = other.getAllowedRoles();
     }
 
@@ -41,11 +41,11 @@ public class SecurityResourcePermission implements Serializable {
      * 合并权限
      * allowedRoles 包含 {@link #ALL} 则合并后还是为 {@link #ALL}
      */
-    public SecurityResourcePermission combine(SecurityResourcePermission other) {
+    public AuthResourcePermission combine(AuthResourcePermission other) {
         if (other == null) {
             return this;
         }
-        SecurityResourcePermission result = new SecurityResourcePermission(this);
+        AuthResourcePermission result = new AuthResourcePermission(this);
         result.setAllowedRoles(this.combine(this.getAllowedRoles(), other.getAllowedRoles()));
         return result;
     }

@@ -4,7 +4,7 @@ package com.loyayz.gaia.auth.core.credentials;
  * @author loyayz (loyayz@foxmail.com)
  */
 @FunctionalInterface
-public interface SecurityAuthCredentialsExtractor<T> {
+public interface AuthCredentialsExtractor<T> {
 
     /**
      * 提取用于鉴权的凭证
@@ -12,6 +12,6 @@ public interface SecurityAuthCredentialsExtractor<T> {
      * @param request 要提取凭证的请求
      * @return credentials never null
      */
-    AuthenticationCredentials extract(T request);
+    AuthCredentials extract(T request);
 
 }

@@ -1,12 +1,12 @@
 package com.loyayz.gaia.auth.core.user;
 
-import com.loyayz.gaia.auth.core.credentials.AuthenticationCredentials;
+import com.loyayz.gaia.auth.core.credentials.AuthCredentials;
 
 /**
  * @author loyayz (loyayz@foxmail.com)
  */
 @FunctionalInterface
-public interface SecurityUserExtractor {
+public interface AuthUserExtractor {
 
     /**
      * 从凭证中取回用户信息
@@ -14,6 +14,6 @@ public interface SecurityUserExtractor {
      * @param credentials The credentials to retrieve user
      * @return 用户信息
      */
-    SecurityUser extract(AuthenticationCredentials credentials);
+    AuthUser extract(AuthCredentials credentials);
 
 }

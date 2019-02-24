@@ -1,7 +1,7 @@
 package com.loyayz.gaia.auth.core;
 
-import com.loyayz.gaia.auth.core.resource.SecurityResource;
-import com.loyayz.gaia.auth.core.resource.SecurityResourcePermission;
+import com.loyayz.gaia.auth.core.resource.AuthResource;
+import com.loyayz.gaia.auth.core.resource.AuthResourcePermission;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -11,7 +11,7 @@ import java.util.*;
  * @author loyayz (loyayz@foxmail.com)
  */
 @Data
-public class SecurityResourcePermissionConfiguration implements Serializable {
+public class AuthResourcePermissionConfiguration implements Serializable {
     private static final long serialVersionUID = -1L;
 
     private static final List<String> PERMIT_DEFAULT_PUBLIC = Arrays.asList("/public/**", "/error/**");
@@ -39,15 +39,15 @@ public class SecurityResourcePermissionConfiguration implements Serializable {
     /**
      * 不需要鉴权的资源组（resourceGroup）
      */
-    private List<SecurityResource> permit;
+    private List<AuthResource> permit;
     /**
      * 受保护的资源 （需要鉴权）
      * < resourceGroup,permission >
      */
-    private Map<String, SecurityResourcePermission> protect;
+    private Map<String, AuthResourcePermission> protect;
 
-    public List<SecurityResource> listPermitResources() {
-        List<SecurityResource> resources = new ArrayList<>();
+    public List<AuthResource> listPermitResources() {
+        List<AuthResource> resources = new ArrayList<>();
         resources.addAll(this.getPermit());
         resources.addAll(this.getDefaultPermitResources());
         return resources;
@@ -56,34 +56,34 @@ public class SecurityResourcePermissionConfiguration implements Serializable {
     /**
      * 获取不需要鉴权的资源
      */
-    private List<SecurityResource> getDefaultPermitResources() {
-        List<SecurityResource> result = new ArrayList<>();
+    private List<AuthResource> getDefaultPermitResources() {
+        List<AuthResource> result = new ArrayList<>();
         if (this.permitPublic) {
             for (String path : PERMIT_DEFAULT_PUBLIC) {
-                result.add(new SecurityResource(path));
+                result.add(new AuthResource(path));
             }
         }
         if (this.permitStatic) {
             for (String path : PERMIT_DEFAULT_STATIC) {
-                result.add(new SecurityResource(path));
+                result.add(new AuthResource(path));
             }
         }
         if (this.permitOptions) {
-            SecurityResource options = new SecurityResource("/**");
+            AuthResource options = new AuthResource("/**");
             options.setMethods("OPTIONS");
             result.add(options);
         }
         return result;
     }
 
-    public List<SecurityResource> getPermit() {
+    public List<AuthResource> getPermit() {
         if (this.permit == null) {
             return Collections.emptyList();
         }
         return this.permit;
     }
 
-    public Map<String, SecurityResourcePermission> getProtect() {
+    public Map<String, AuthResourcePermission> getProtect() {
         if (this.protect == null) {
             return Collections.emptyMap();
         }

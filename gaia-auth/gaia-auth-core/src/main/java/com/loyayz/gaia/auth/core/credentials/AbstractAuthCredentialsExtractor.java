@@ -1,6 +1,8 @@
 package com.loyayz.gaia.auth.core.credentials;
 
-import com.loyayz.gaia.auth.core.SecurityCredentialsConfiguration;
+import com.loyayz.gaia.auth.core.AuthCredentialsConfiguration;
+import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Optional;
@@ -9,8 +11,9 @@ import java.util.Optional;
  * @author loyayz (loyayz@foxmail.com)
  */
 @RequiredArgsConstructor
-public abstract class AbstractSecurityAuthCredentialsExtractor<T> implements SecurityAuthCredentialsExtractor<T> {
-    private final SecurityCredentialsConfiguration securityCredentialsConfiguration;
+public abstract class AbstractAuthCredentialsExtractor<T> implements AuthCredentialsExtractor<T> {
+    @Getter(AccessLevel.PROTECTED)
+    private final AuthCredentialsConfiguration authCredentialsConfiguration;
 
     /**
      * 从 header 提取
@@ -31,15 +34,15 @@ public abstract class AbstractSecurityAuthCredentialsExtractor<T> implements Sec
     protected abstract String getParamToken(T request, String paramName);
 
     @Override
-    public AuthenticationCredentials extract(T request) {
+    public AuthCredentials extract(T request) {
         String token = this.getHeaderToken(request).orElse(
                 this.getParamToken(request).orElse("")
         );
-        return new AuthenticationCredentials(token);
+        return new AuthCredentials(token);
     }
 
     private Optional<String> getHeaderToken(T request) {
-        String headerName = this.securityCredentialsConfiguration.getTokenHeaderName();
+        String headerName = this.authCredentialsConfiguration.getTokenHeaderName();
         if (headerName == null || headerName.isEmpty()) {
             return Optional.empty();
         }
@@ -47,7 +50,7 @@ public abstract class AbstractSecurityAuthCredentialsExtractor<T> implements Sec
     }
 
     private Optional<String> getParamToken(T request) {
-        String paramName = this.securityCredentialsConfiguration.getTokenParamName();
+        String paramName = this.authCredentialsConfiguration.getTokenParamName();
         if (paramName == null || paramName.isEmpty()) {
             return Optional.empty();
         }

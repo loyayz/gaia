@@ -1,11 +1,11 @@
 package com.loyayz.gaia.auth.core.user;
 
-import com.loyayz.gaia.auth.core.credentials.AuthenticationCredentials;
+import com.loyayz.gaia.auth.core.credentials.AuthCredentials;
 
 /**
  * @author loyayz (loyayz@foxmail.com)
  */
-public interface SecurityUserCache {
+public interface AuthUserCache {
 
     /**
      * 获取缓存的用户详情
@@ -13,7 +13,7 @@ public interface SecurityUserCache {
      * @param credentials {@link #putUserInCache result}
      * @return 查无缓存或缓存过期，则返回 null
      */
-    SecurityUser getUserFromCache(AuthenticationCredentials credentials);
+    AuthUser getUserFromCache(AuthCredentials credentials);
 
     /**
      * 缓存用户详情
@@ -21,21 +21,21 @@ public interface SecurityUserCache {
      * @param user 要缓存的用户详情
      * @return token
      */
-    AuthenticationCredentials putUserInCache(SecurityUser user);
+    AuthCredentials putUserInCache(AuthUser user);
 
     /**
      * 删除缓存
      *
      * @param credentials {@link #putUserInCache result}
      */
-    default void removeUserFromCache(AuthenticationCredentials credentials) {
+    default void removeUserFromCache(AuthCredentials credentials) {
         this.removeUserFromCache(credentials.getToken());
     }
 
     /**
      * 删除缓存
      *
-     * @param token {@link #removeUserFromCache(AuthenticationCredentials)}
+     * @param token {@link #removeUserFromCache(AuthCredentials)}
      */
     void removeUserFromCache(String token);
 

@@ -1,9 +1,9 @@
 package com.loyayz.gaia.auth.core.user.strategy;
 
-import com.loyayz.gaia.auth.core.SecurityCredentialsConfiguration;
-import com.loyayz.gaia.auth.core.credentials.AuthenticationCredentials;
-import com.loyayz.gaia.auth.core.user.SecurityUser;
-import com.loyayz.gaia.auth.core.user.SecurityUserCache;
+import com.loyayz.gaia.auth.core.AuthCredentialsConfiguration;
+import com.loyayz.gaia.auth.core.credentials.AuthCredentials;
+import com.loyayz.gaia.auth.core.user.AuthUser;
+import com.loyayz.gaia.auth.core.user.AuthUserCache;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
@@ -17,19 +17,19 @@ import java.util.Map;
  * @author loyayz (loyayz@foxmail.com)
  */
 @RequiredArgsConstructor
-public class JwtSecurityUserCache implements SecurityUserCache {
-    private final SecurityCredentialsConfiguration securityCredentialsConfiguration;
+public class JwtAuthUserCache implements AuthUserCache {
+    private final AuthCredentialsConfiguration authCredentialsConfiguration;
 
     @Override
     @SuppressWarnings("unchecked")
-    public SecurityUser getUserFromCache(AuthenticationCredentials credentials) {
+    public AuthUser getUserFromCache(AuthCredentials credentials) {
         Claims claims;
         try {
             claims = this.parseToken(credentials.getToken());
         } catch (Exception e) {
             return null;
         }
-        return SecurityUser.builder()
+        return AuthUser.builder()
                 .id(claims.getId())
                 .name(claims.get("name", String.class))
                 .roles(claims.get("roles", List.class))
@@ -37,13 +37,13 @@ public class JwtSecurityUserCache implements SecurityUserCache {
     }
 
     @Override
-    public AuthenticationCredentials putUserInCache(SecurityUser user) {
+    public AuthCredentials putUserInCache(AuthUser user) {
         Map<String, Object> claims = new HashMap<>(8);
         claims.put("name", user.getName());
         claims.put("roles", user.getRoles());
         String userId = user.getId();
         String token = this.generateToken(userId, claims);
-        return new AuthenticationCredentials(token);
+        return new AuthCredentials(token);
     }
 
     @Override
@@ -53,8 +53,8 @@ public class JwtSecurityUserCache implements SecurityUserCache {
 
     private String generateToken(String id, Map<String, Object> claims) {
         Date now = new Date();
-        Date expirationDate = this.securityCredentialsConfiguration.getExpirationDate(now);
-        SecurityCredentialsConfiguration.Jwt jwt = this.securityCredentialsConfiguration.getJwt();
+        Date expirationDate = this.authCredentialsConfiguration.getExpirationDate(now);
+        AuthCredentialsConfiguration.Jwt jwt = this.authCredentialsConfiguration.getJwt();
         return Jwts.builder()
                 .setClaims(claims)
                 .setId(id)
@@ -66,7 +66,7 @@ public class JwtSecurityUserCache implements SecurityUserCache {
     }
 
     private Claims parseToken(String token) {
-        SecurityCredentialsConfiguration.Jwt jwt = this.securityCredentialsConfiguration.getJwt();
+        AuthCredentialsConfiguration.Jwt jwt = this.authCredentialsConfiguration.getJwt();
         return Jwts.parser()
                 .setSigningKey(jwt.getSignSecret())
                 .parseClaimsJws(token)

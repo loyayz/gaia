@@ -16,7 +16,7 @@ import java.util.Set;
  */
 @Data
 @NoArgsConstructor
-public class SecurityResource implements Serializable {
+public class AuthResource implements Serializable {
     private static final long serialVersionUID = -1L;
     public static final String ALL_METHOD = "*";
 
@@ -27,8 +27,8 @@ public class SecurityResource implements Serializable {
      * 合并资源
      * methods 包含 {@link #ALL_METHOD} 则合并后还是为 {@link #ALL_METHOD}
      */
-    public SecurityResource combine(SecurityResource other) {
-        SecurityResource result = new SecurityResource(this);
+    public AuthResource combine(AuthResource other) {
+        AuthResource result = new AuthResource(this);
         if (other == null) {
             return result;
         }
@@ -36,11 +36,11 @@ public class SecurityResource implements Serializable {
         return result;
     }
 
-    public SecurityResource(String path) {
+    public AuthResource(String path) {
         this.path = path;
     }
 
-    public SecurityResource(SecurityResource other) {
+    public AuthResource(AuthResource other) {
         this.path = other.getPath();
         this.methods = other.getMethods();
     }

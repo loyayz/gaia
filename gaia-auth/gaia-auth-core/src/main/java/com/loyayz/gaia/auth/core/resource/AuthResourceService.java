@@ -6,21 +6,21 @@ import java.util.Map;
 /**
  * @author loyayz (loyayz@foxmail.com)
  */
-public interface SecurityResourceService {
+public interface AuthResourceService {
 
     /**
      * 根据分组名查询资源列表
      */
-    List<SecurityResource> listResourcesByGroup(String resourceGroup);
+    List<AuthResource> listResourcesByGroup(String resourceGroup);
 
     /**
      * 获取公开的资源列表
      */
-    List<SecurityResource> listPermitResources();
+    List<AuthResource> listPermitResources();
 
     /**
      * 获取受保护资源的权限设置
      */
-    Map<SecurityResource, SecurityResourcePermission> listProtectResourcePermission();
+    Map<AuthResource, AuthResourcePermission> listProtectResourcePermission();
 
 }
