@@ -13,7 +13,7 @@ public abstract class AbstractWebSecurityAdapter extends WebSecurityConfigurerAd
 
     protected abstract AuthenticationFilter authFilter();
 
-    protected abstract AuthenticationExceptionResolver exceptionResolver();
+    protected abstract AuthExceptionResolver exceptionResolver();
 
     /**
      * 其他配置

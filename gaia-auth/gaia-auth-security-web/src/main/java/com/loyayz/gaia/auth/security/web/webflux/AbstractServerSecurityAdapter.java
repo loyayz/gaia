@@ -15,7 +15,7 @@ public abstract class AbstractServerSecurityAdapter {
 
     protected abstract AuthenticationWebFilter authFilter();
 
-    protected abstract ServerAuthenticationExceptionResolver exceptionResolver();
+    protected abstract ServerAuthExceptionResolver exceptionResolver();
 
     /**
      * 其他配置

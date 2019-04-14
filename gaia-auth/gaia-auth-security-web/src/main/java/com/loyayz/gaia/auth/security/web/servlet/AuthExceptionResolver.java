@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * @author loyayz (loyayz@foxmail.com)
  */
-public interface AuthenticationExceptionResolver {
+public interface AuthExceptionResolver {
 
     void resolve(HttpServletRequest request, HttpServletResponse response, Throwable exception);
 

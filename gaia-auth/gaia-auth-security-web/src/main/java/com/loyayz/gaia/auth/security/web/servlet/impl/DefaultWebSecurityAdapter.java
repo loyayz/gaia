@@ -1,7 +1,7 @@
 package com.loyayz.gaia.auth.security.web.servlet.impl;
 
 import com.loyayz.gaia.auth.security.web.servlet.AbstractWebSecurityAdapter;
-import com.loyayz.gaia.auth.security.web.servlet.AuthenticationExceptionResolver;
+import com.loyayz.gaia.auth.security.web.servlet.AuthExceptionResolver;
 import com.loyayz.gaia.auth.security.web.servlet.AuthenticationFilter;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 @RequiredArgsConstructor
 public class DefaultWebSecurityAdapter extends AbstractWebSecurityAdapter {
     private final AuthenticationFilter authenticationFilter;
-    private final AuthenticationExceptionResolver authenticationExceptionResolver;
+    private final AuthExceptionResolver exceptionResolver;
     @Setter
     private CorsConfigurationSource corsConfigurationSource;
 
@@ -26,8 +26,8 @@ public class DefaultWebSecurityAdapter extends AbstractWebSecurityAdapter {
     }
 
     @Override
-    protected AuthenticationExceptionResolver exceptionResolver() {
-        return this.authenticationExceptionResolver;
+    protected AuthExceptionResolver exceptionResolver() {
+        return this.exceptionResolver;
     }
 
     @Override

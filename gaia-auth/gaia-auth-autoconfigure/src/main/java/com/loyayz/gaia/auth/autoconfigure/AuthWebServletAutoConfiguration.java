@@ -7,7 +7,6 @@ import com.loyayz.gaia.auth.core.user.AuthUserExtractor;
 import com.loyayz.gaia.auth.security.DefaultAuthenticationProvider;
 import com.loyayz.gaia.auth.security.web.servlet.*;
 import com.loyayz.gaia.auth.security.web.servlet.impl.DefaultAuthenticationConverter;
-import com.loyayz.gaia.auth.security.web.servlet.impl.DefaultAuthenticationExceptionResolver;
 import com.loyayz.gaia.auth.security.web.servlet.impl.DefaultAuthenticationPermissionHandler;
 import com.loyayz.gaia.auth.security.web.servlet.impl.DefaultWebSecurityAdapter;
 import lombok.RequiredArgsConstructor;
@@ -45,20 +44,11 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class AuthWebServletAutoConfiguration {
-    private final AuthCredentialsConfiguration securityCredentialsConfiguration;
-    private final AuthUserExtractor securityUserExtractor;
-    private final AuthResourceService securityResourceService;
-
-    @Bean
-    @ConditionalOnMissingBean(AuthenticationExceptionResolver.class)
-    public AuthenticationExceptionResolver authenticationExceptionResolver() {
-        return new DefaultAuthenticationExceptionResolver();
-    }
 
     @Bean
     @ConditionalOnMissingBean(AuthenticationManager.class)
-    public AuthenticationManager authenticationManager() {
-        AuthenticationProvider provider = new DefaultAuthenticationProvider(this.securityUserExtractor);
+    public AuthenticationManager authenticationManager(AuthUserExtractor userExtractor) {
+        AuthenticationProvider provider = new DefaultAuthenticationProvider(userExtractor);
         List<AuthenticationProvider> providers = new ArrayList<>();
         providers.add(provider);
         return new ProviderManager(providers);
@@ -66,8 +56,8 @@ public class AuthWebServletAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(AuthCredentialsExtractor.class)
-    public AuthCredentialsExtractor<HttpServletRequest> authCredentialsExtractor() {
-        return new ServletAuthCredentialsExtractor(this.securityCredentialsConfiguration);
+    public AuthCredentialsExtractor<HttpServletRequest> authCredentialsExtractor(AuthCredentialsConfiguration credentialsConfiguration) {
+        return new ServletAuthCredentialsExtractor(credentialsConfiguration);
     }
 
     @Bean
@@ -88,7 +78,7 @@ public class AuthWebServletAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(AuthenticationFailureHandler.class)
-    public AuthenticationFailureHandler authenticationFailureHandler(AuthenticationExceptionResolver exceptionResolver) {
+    public AuthenticationFailureHandler authenticationFailureHandler(AuthExceptionResolver exceptionResolver) {
         return exceptionResolver::resolve;
     }
 
@@ -108,14 +98,14 @@ public class AuthWebServletAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(AuthenticationPermissionHandler.class)
-    public AuthenticationPermissionHandler authenticationPermissionHandler() {
-        return new DefaultAuthenticationPermissionHandler(this.securityResourceService);
+    public AuthenticationPermissionHandler authenticationPermissionHandler(AuthResourceService resourceService) {
+        return new DefaultAuthenticationPermissionHandler(resourceService);
     }
 
     @Bean
     @ConditionalOnMissingBean({WebSecurityConfigurerAdapter.class, AbstractWebSecurityAdapter.class})
     public WebSecurityConfigurerAdapter webSecurityConfigurerAdapter(AuthenticationFilter authenticationFilter,
-                                                                     AuthenticationExceptionResolver exceptionResolver) {
+                                                                     AuthExceptionResolver exceptionResolver) {
         return new DefaultWebSecurityAdapter(authenticationFilter, exceptionResolver);
     }
 

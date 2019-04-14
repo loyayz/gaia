@@ -7,7 +7,6 @@ import com.loyayz.gaia.auth.core.user.AuthUserExtractor;
 import com.loyayz.gaia.auth.security.DefaultAuthenticationProvider;
 import com.loyayz.gaia.auth.security.web.webflux.*;
 import com.loyayz.gaia.auth.security.web.webflux.impl.DefaultServerAuthenticationConverter;
-import com.loyayz.gaia.auth.security.web.webflux.impl.DefaultServerAuthenticationExceptionResolver;
 import com.loyayz.gaia.auth.security.web.webflux.impl.DefaultServerAuthenticationPermissionHandler;
 import com.loyayz.gaia.auth.security.web.webflux.impl.DefaultServerSecurityAdapter;
 import lombok.RequiredArgsConstructor;
@@ -45,20 +44,11 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class AuthWebFluxAutoConfiguration {
-    private final AuthCredentialsConfiguration authCredentialsConfiguration;
-    private final AuthUserExtractor authUserExtractor;
-    private final AuthResourceService authResourceService;
-
-    @Bean
-    @ConditionalOnMissingBean(ServerAuthenticationExceptionResolver.class)
-    public ServerAuthenticationExceptionResolver serverAuthenticationExceptionResolver() {
-        return new DefaultServerAuthenticationExceptionResolver();
-    }
 
     @Bean
     @ConditionalOnMissingBean(ReactiveAuthenticationManager.class)
-    public ReactiveAuthenticationManager reactiveAuthenticationManager() {
-        AuthenticationProvider provider = new DefaultAuthenticationProvider(this.authUserExtractor);
+    public ReactiveAuthenticationManager reactiveAuthenticationManager(AuthUserExtractor userExtractor) {
+        AuthenticationProvider provider = new DefaultAuthenticationProvider(userExtractor);
         List<AuthenticationProvider> providers = new ArrayList<>();
         providers.add(provider);
         AuthenticationManager authenticationManager = new ProviderManager(providers);
@@ -67,8 +57,8 @@ public class AuthWebFluxAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(AuthCredentialsExtractor.class)
-    public AuthCredentialsExtractor<ServerWebExchange> authCredentialsExtractor() {
-        return new ServerAuthCredentialsExtractor(this.authCredentialsConfiguration);
+    public AuthCredentialsExtractor<ServerWebExchange> authCredentialsExtractor(AuthCredentialsConfiguration credentialsConfiguration) {
+        return new ServerAuthCredentialsExtractor(credentialsConfiguration);
     }
 
     @Bean
@@ -93,7 +83,7 @@ public class AuthWebFluxAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(ServerAuthenticationFailureHandler.class)
-    public ServerAuthenticationFailureHandler serverAuthenticationFailureHandler(ServerAuthenticationExceptionResolver exceptionResolver) {
+    public ServerAuthenticationFailureHandler serverAuthenticationFailureHandler(ServerAuthExceptionResolver exceptionResolver) {
         return (exchange, exception) -> exceptionResolver.resolve(exchange.getExchange(), exception);
     }
 
@@ -113,14 +103,14 @@ public class AuthWebFluxAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(ServerAuthenticationPermissionHandler.class)
-    public ServerAuthenticationPermissionHandler serverAuthenticationPermissionHandler() {
-        return new DefaultServerAuthenticationPermissionHandler(this.authResourceService);
+    public ServerAuthenticationPermissionHandler serverAuthenticationPermissionHandler(AuthResourceService resourceService) {
+        return new DefaultServerAuthenticationPermissionHandler(resourceService);
     }
 
     @Bean
     @ConditionalOnMissingBean(AbstractServerSecurityAdapter.class)
     public AbstractServerSecurityAdapter serverSecurityAdapter(ServerAuthenticationFilter authenticationFilter,
-                                                               ServerAuthenticationExceptionResolver exceptionResolver) {
+                                                               ServerAuthExceptionResolver exceptionResolver) {
         return new DefaultServerSecurityAdapter(authenticationFilter, exceptionResolver);
     }
 

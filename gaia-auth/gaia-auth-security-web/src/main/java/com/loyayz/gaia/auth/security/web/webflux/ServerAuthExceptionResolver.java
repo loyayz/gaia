@@ -6,7 +6,7 @@ import reactor.core.publisher.Mono;
 /**
  * @author loyayz (loyayz@foxmail.com)
  */
-public interface ServerAuthenticationExceptionResolver {
+public interface ServerAuthExceptionResolver {
 
     Mono<Void> resolve(ServerWebExchange exchange, Throwable exception);
 
