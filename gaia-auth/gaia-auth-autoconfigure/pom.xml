@@ -19,9 +19,8 @@
         </dependency>
         <dependency>
             <groupId>com.loyayz.gaia</groupId>
-            <artifactId>gaia-auth-security-web</artifactId>
+            <artifactId>gaia-auth-security</artifactId>
             <version>${project.version}</version>
-            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>com.loyayz.gaia</groupId>

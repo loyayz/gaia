@@ -1,4 +1,4 @@
-package com.loyayz.gaia.auth.security;
+package com.loyayz.gaia.auth.core.security;
 
 import com.loyayz.gaia.auth.core.credentials.AuthCredentials;
 import com.loyayz.gaia.auth.core.user.AuthUser;
@@ -13,7 +13,7 @@ import java.util.Optional;
 /**
  * @author loyayz (loyayz@foxmail.com)
  */
-public class AuthContextHelper {
+public class SecurityContextHelper {
 
     public static SecurityContext getSecurityContext() {
         return SecurityContextHolder.getContext();
@@ -81,7 +81,7 @@ public class AuthContextHelper {
         return user == null ? Collections.emptyList() : user.getRoles();
     }
 
-    private AuthContextHelper() {
+    private SecurityContextHelper() {
 
     }
 }

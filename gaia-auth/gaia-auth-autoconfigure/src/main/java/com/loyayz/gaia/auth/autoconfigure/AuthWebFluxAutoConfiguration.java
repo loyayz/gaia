@@ -4,7 +4,7 @@ import com.loyayz.gaia.auth.core.AuthCredentialsConfiguration;
 import com.loyayz.gaia.auth.core.credentials.AuthCredentialsExtractor;
 import com.loyayz.gaia.auth.core.resource.AuthResourceService;
 import com.loyayz.gaia.auth.core.user.AuthUserExtractor;
-import com.loyayz.gaia.auth.security.DefaultAuthenticationProvider;
+import com.loyayz.gaia.auth.core.security.DefaultAuthenticationProvider;
 import com.loyayz.gaia.auth.security.web.webflux.*;
 import com.loyayz.gaia.auth.security.web.webflux.impl.DefaultServerAuthenticationConverter;
 import com.loyayz.gaia.auth.security.web.webflux.impl.DefaultServerAuthenticationPermissionHandler;
@@ -36,7 +36,6 @@ import java.util.List;
  * @author loyayz (loyayz@foxmail.com)
  */
 @Configuration
-@ConditionalOnClass(AbstractServerSecurityAdapter.class)
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.REACTIVE)
 @AutoConfigureBefore({ReactiveSecurityAutoConfiguration.class})
 @EnableWebFluxSecurity

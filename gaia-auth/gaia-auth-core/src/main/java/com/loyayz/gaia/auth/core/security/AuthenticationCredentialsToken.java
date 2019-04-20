@@ -1,4 +1,4 @@
-package com.loyayz.gaia.auth.security;
+package com.loyayz.gaia.auth.core.security;
 
 import com.loyayz.gaia.auth.core.credentials.AuthCredentials;
 import com.loyayz.gaia.auth.core.user.AuthUser;

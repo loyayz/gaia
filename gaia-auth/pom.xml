@@ -16,7 +16,6 @@
     <modules>
         <module>gaia-auth-core</module>
         <module>gaia-auth-security</module>
-        <module>gaia-auth-security-web</module>
         <module>gaia-auth-autoconfigure</module>
     </modules>
 

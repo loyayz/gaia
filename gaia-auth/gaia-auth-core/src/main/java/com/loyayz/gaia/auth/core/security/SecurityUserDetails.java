@@ -1,4 +1,4 @@
-package com.loyayz.gaia.auth.security;
+package com.loyayz.gaia.auth.core.security;
 
 import com.loyayz.gaia.auth.core.user.AuthUser;
 import lombok.Data;
@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
  */
 @Data
 @RequiredArgsConstructor
-public class AuthUserDetails implements UserDetails, CredentialsContainer {
+public class SecurityUserDetails implements UserDetails, CredentialsContainer {
     private static final long serialVersionUID = -1L;
     private final String DEFAULT_ROLE_PREFIX = "ROLE_";
 

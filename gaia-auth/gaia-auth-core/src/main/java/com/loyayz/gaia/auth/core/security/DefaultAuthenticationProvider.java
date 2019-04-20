@@ -1,4 +1,4 @@
-package com.loyayz.gaia.auth.security;
+package com.loyayz.gaia.auth.core.security;
 
 import com.loyayz.gaia.auth.core.credentials.AuthCredentials;
 import com.loyayz.gaia.auth.core.user.AuthUser;
@@ -39,11 +39,11 @@ public class DefaultAuthenticationProvider implements AuthenticationProvider {
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         AuthCredentials credentials = ((AuthenticationCredentialsToken) authentication).getCredentials();
         this.validBeforeAuth(credentials);
-        AuthUserDetails user = this.retrieveUser(credentials);
+        SecurityUserDetails user = this.retrieveUser(credentials);
         return this.createSuccessAuthentication(credentials, user);
     }
 
-    protected AuthUserDetails retrieveUser(AuthCredentials credentials) {
+    protected SecurityUserDetails retrieveUser(AuthCredentials credentials) {
         AuthUser user;
         try {
             user = this.authUserExtractor.extract(credentials);
@@ -57,7 +57,7 @@ public class DefaultAuthenticationProvider implements AuthenticationProvider {
             throw new UsernameNotFoundException("Could not find resource user from credentials [" + credentials + "]");
         }
 
-        AuthUserDetails userDetails = new AuthUserDetails(user);
+        SecurityUserDetails userDetails = new SecurityUserDetails(user);
         this.authenticationChecks.check(userDetails);
         return userDetails;
     }
@@ -68,7 +68,7 @@ public class DefaultAuthenticationProvider implements AuthenticationProvider {
         }
     }
 
-    protected Authentication createSuccessAuthentication(AuthCredentials credentials, AuthUserDetails userDetails) {
+    protected Authentication createSuccessAuthentication(AuthCredentials credentials, SecurityUserDetails userDetails) {
         return new AuthenticationCredentialsToken(userDetails.getUser(), credentials,
                 this.authoritiesMapper.mapAuthorities(userDetails.getAuthorities()));
     }

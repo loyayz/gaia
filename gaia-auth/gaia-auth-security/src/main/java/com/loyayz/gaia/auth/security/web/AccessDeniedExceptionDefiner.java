@@ -1,10 +1,10 @@
 package com.loyayz.gaia.auth.security.web;
 
-import com.google.common.collect.Lists;
 import com.loyayz.gaia.exception.core.ExceptionDefiner;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -15,7 +15,7 @@ public class AccessDeniedExceptionDefiner implements ExceptionDefiner {
 
     @Override
     public List<Class<? extends Throwable>> exceptions() {
-        return Lists.newArrayList(AccessDeniedException.class);
+        return Collections.singletonList(AccessDeniedException.class);
     }
 
     @Override

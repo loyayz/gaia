@@ -1,10 +1,10 @@
 package com.loyayz.gaia.auth.security.web;
 
-import com.google.common.collect.Lists;
 import com.loyayz.gaia.exception.core.ExceptionDefiner;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -15,7 +15,7 @@ public class AuthenticationExceptionDefiner implements ExceptionDefiner {
 
     @Override
     public List<Class<? extends Throwable>> exceptions() {
-        return Lists.newArrayList(AuthenticationException.class);
+        return Collections.singletonList(AuthenticationException.class);
     }
 
     @Override
