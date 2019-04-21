@@ -61,7 +61,7 @@ public abstract class AbstractWebSecurityAdapter extends WebSecurityConfigurerAd
     }
 
     protected void authPath(HttpSecurity security) throws Exception {
-        security.authorizeRequests().anyRequest().permitAll();
+        security.authorizeRequests().anyRequest().authenticated();
     }
 
     protected void authUserFilter(HttpSecurity security) {

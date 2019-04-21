@@ -63,7 +63,7 @@ public abstract class AbstractServerSecurityAdapter {
     }
 
     protected void authPath(ServerHttpSecurity security) {
-        security.authorizeExchange().anyExchange().permitAll();
+        security.authorizeExchange().anyExchange().authenticated();
     }
 
     protected void authUserFilter(ServerHttpSecurity security) {

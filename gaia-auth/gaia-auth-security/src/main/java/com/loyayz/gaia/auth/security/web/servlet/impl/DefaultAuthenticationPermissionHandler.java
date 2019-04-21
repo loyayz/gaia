@@ -44,17 +44,17 @@ public class DefaultAuthenticationPermissionHandler implements AuthenticationPer
     }
 
     @Override
-    public boolean hasPermission(Authentication authentication, HttpServletRequest request) {
+    public Boolean hasPermission(Authentication authentication, HttpServletRequest request) {
         if (!this.requiresAuthentication(request)) {
-            return true;
+            return Boolean.TRUE;
         }
         if (AnonymousAuthenticationToken.class.isAssignableFrom(authentication.getClass())) {
-            return false;
+            return Boolean.FALSE;
         }
         return this.validAuthentication(authentication, request);
     }
 
-    private boolean validAuthentication(Authentication authentication, HttpServletRequest request) {
+    private Boolean validAuthentication(Authentication authentication, HttpServletRequest request) {
         SecurityExpressionOperations authenticationOperations = new DefaultSecurityExpressionRoot(authentication);
         boolean reject = Maps.newHashMap(this.protectMatcherPermission)
                 .entrySet()

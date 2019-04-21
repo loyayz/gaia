@@ -3,8 +3,8 @@ package com.loyayz.gaia.auth.autoconfigure;
 import com.loyayz.gaia.auth.core.AuthCredentialsConfiguration;
 import com.loyayz.gaia.auth.core.credentials.AuthCredentialsExtractor;
 import com.loyayz.gaia.auth.core.resource.AuthResourceService;
-import com.loyayz.gaia.auth.core.user.AuthUserExtractor;
 import com.loyayz.gaia.auth.core.security.DefaultAuthenticationProvider;
+import com.loyayz.gaia.auth.core.user.AuthUserExtractor;
 import com.loyayz.gaia.auth.security.web.webflux.*;
 import com.loyayz.gaia.auth.security.web.webflux.impl.DefaultServerAuthenticationConverter;
 import com.loyayz.gaia.auth.security.web.webflux.impl.DefaultServerAuthenticationPermissionHandler;
@@ -12,7 +12,6 @@ import com.loyayz.gaia.auth.security.web.webflux.impl.DefaultServerSecurityAdapt
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.autoconfigure.security.reactive.ReactiveSecurityAutoConfiguration;
@@ -87,13 +86,14 @@ public class AuthWebFluxAutoConfiguration {
     }
 
     @Bean
-    @ConditionalOnMissingBean({AuthenticationWebFilter.class, ServerAuthenticationFilter.class})
-    public ServerAuthenticationFilter serverAuthenticationFilter(ReactiveAuthenticationManager manager,
-                                                                 ServerAuthenticationPermissionHandler permissionHandler,
-                                                                 ServerAuthenticationConverter converter,
-                                                                 ServerAuthenticationSuccessHandler successHandler,
-                                                                 ServerAuthenticationFailureHandler failureHandler) {
-        ServerAuthenticationFilter filter = new ServerAuthenticationFilter(manager, permissionHandler);
+    @ConditionalOnMissingBean({AuthenticationWebFilter.class})
+    public AuthenticationWebFilter authenticationWebFilter(ReactiveAuthenticationManager manager,
+                                                           ServerAuthenticationPermissionHandler permissionHandler,
+                                                           ServerAuthenticationConverter converter,
+                                                           ServerAuthenticationSuccessHandler successHandler,
+                                                           ServerAuthenticationFailureHandler failureHandler) {
+        AuthenticationWebFilter filter = new AuthenticationWebFilter(manager);
+        filter.setRequiresAuthenticationMatcher(permissionHandler.requiresAuthenticationMatcher());
         filter.setServerAuthenticationConverter(converter);
         filter.setAuthenticationSuccessHandler(successHandler);
         filter.setAuthenticationFailureHandler(failureHandler);
@@ -108,9 +108,14 @@ public class AuthWebFluxAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(AbstractServerSecurityAdapter.class)
-    public AbstractServerSecurityAdapter serverSecurityAdapter(ServerAuthenticationFilter authenticationFilter,
-                                                               ServerAuthExceptionResolver exceptionResolver) {
-        return new DefaultServerSecurityAdapter(authenticationFilter, exceptionResolver);
+    public AbstractServerSecurityAdapter serverSecurityAdapter(AuthenticationWebFilter authenticationFilter,
+                                                               ServerAuthExceptionResolver exceptionResolver,
+                                                               ServerAuthenticationPermissionHandler permissionHandler) {
+        ServerAuthenticationPermissionAccess accessDecisionManager = new ServerAuthenticationPermissionAccess(permissionHandler);
+
+        DefaultServerSecurityAdapter result = new DefaultServerSecurityAdapter(authenticationFilter, exceptionResolver);
+        result.setAccessDecisionManager(accessDecisionManager);
+        return result;
     }
 
     @Bean

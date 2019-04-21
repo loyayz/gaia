@@ -34,12 +34,8 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     private AuthenticationSuccessHandler authenticationSuccessHandler = new SavedRequestAwareAuthenticationSuccessHandler();
     private AuthenticationFailureHandler authenticationFailureHandler = new SimpleUrlAuthenticationFailureHandler();
 
-    private AuthenticationPermissionHandler authenticationPermissionHandler;
-
-    public AuthenticationFilter(AuthenticationManager authenticationManager, AuthenticationPermissionHandler authenticationPermissionHandler) {
-        this.requestMatcher = authenticationPermissionHandler.requiresAuthenticationMatcher();
+    public AuthenticationFilter(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
-        this.authenticationPermissionHandler = authenticationPermissionHandler;
     }
 
     @Override
@@ -71,11 +67,6 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
                                             Authentication authentication) throws IOException, ServletException {
-
-        boolean hasPermission = this.authenticationPermissionHandler.hasPermission(authentication, request);
-        if (!hasPermission) {
-            throw this.permissionException(authentication, request);
-        }
 
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(authentication);

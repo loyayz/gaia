@@ -19,7 +19,6 @@ import org.springframework.security.web.server.util.matcher.ServerWebExchangeMat
 import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatchers;
 import org.springframework.util.StringUtils;
 import org.springframework.web.server.ServerWebExchange;
-import reactor.core.publisher.Mono;
 
 import java.util.Collections;
 import java.util.List;
@@ -47,17 +46,14 @@ public class DefaultServerAuthenticationPermissionHandler implements ServerAuthe
     }
 
     @Override
-    public Mono<Boolean> hasPermission(Authentication authentication, ServerWebExchange exchange) {
-        return this.requiresAuthentication(exchange)
-                .map(matchResult -> {
-                    if (!matchResult.isMatch()) {
-                        return Boolean.TRUE;
-                    }
-                    if (AnonymousAuthenticationToken.class.isAssignableFrom(authentication.getClass())) {
-                        return Boolean.FALSE;
-                    }
-                    return this.validAuthentication(authentication, exchange);
-                });
+    public Boolean hasPermission(Authentication authentication, ServerWebExchange exchange) {
+        if (!this.requiresAuthentication(exchange)) {
+            return Boolean.TRUE;
+        }
+        if (AnonymousAuthenticationToken.class.isAssignableFrom(authentication.getClass())) {
+            return Boolean.FALSE;
+        }
+        return this.validAuthentication(authentication, exchange);
     }
 
     private boolean validAuthentication(Authentication authentication, ServerWebExchange exchange) {
@@ -66,8 +62,7 @@ public class DefaultServerAuthenticationPermissionHandler implements ServerAuthe
                 .entrySet()
                 .parallelStream()
                 // 无权限访问受保护资源
-                .anyMatch(protectMatcher -> protectMatcher.getKey()
-                        .matches(exchange)
+                .anyMatch(protectMatcher -> protectMatcher.getKey().matches(exchange)
                         .map(match -> {
                             if (match.isMatch()) {
                                 AuthResourcePermission permission = protectMatcher.getValue();

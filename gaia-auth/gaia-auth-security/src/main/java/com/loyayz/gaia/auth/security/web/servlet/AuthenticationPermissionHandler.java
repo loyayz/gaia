@@ -18,13 +18,13 @@ public interface AuthenticationPermissionHandler {
     /**
      * 是否需要鉴权
      */
-    default boolean requiresAuthentication(HttpServletRequest request) {
+    default Boolean requiresAuthentication(HttpServletRequest request) {
         return this.requiresAuthenticationMatcher().matches(request);
     }
 
     /**
      * 鉴权
      */
-    boolean hasPermission(Authentication authentication, HttpServletRequest request);
+    Boolean hasPermission(Authentication authentication, HttpServletRequest request);
 
 }

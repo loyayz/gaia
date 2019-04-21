@@ -3,8 +3,8 @@ package com.loyayz.gaia.auth.autoconfigure;
 import com.loyayz.gaia.auth.core.AuthCredentialsConfiguration;
 import com.loyayz.gaia.auth.core.credentials.AuthCredentialsExtractor;
 import com.loyayz.gaia.auth.core.resource.AuthResourceService;
-import com.loyayz.gaia.auth.core.user.AuthUserExtractor;
 import com.loyayz.gaia.auth.core.security.DefaultAuthenticationProvider;
+import com.loyayz.gaia.auth.core.user.AuthUserExtractor;
 import com.loyayz.gaia.auth.security.web.servlet.*;
 import com.loyayz.gaia.auth.security.web.servlet.impl.DefaultAuthenticationConverter;
 import com.loyayz.gaia.auth.security.web.servlet.impl.DefaultAuthenticationPermissionHandler;
@@ -12,13 +12,13 @@ import com.loyayz.gaia.auth.security.web.servlet.impl.DefaultWebSecurityAdapter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
@@ -88,7 +88,8 @@ public class AuthWebServletAutoConfiguration {
                                                      AuthenticationConverter converter,
                                                      AuthenticationSuccessHandler successHandler,
                                                      AuthenticationFailureHandler failureHandler) {
-        AuthenticationFilter filter = new AuthenticationFilter(manager, permissionHandler);
+        AuthenticationFilter filter = new AuthenticationFilter(manager);
+        filter.setRequestMatcher(permissionHandler.requiresAuthenticationMatcher());
         filter.setAuthenticationConverter(converter);
         filter.setAuthenticationSuccessHandler(successHandler);
         filter.setAuthenticationFailureHandler(failureHandler);
@@ -104,8 +105,13 @@ public class AuthWebServletAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean({WebSecurityConfigurerAdapter.class, AbstractWebSecurityAdapter.class})
     public WebSecurityConfigurerAdapter webSecurityConfigurerAdapter(AuthenticationFilter authenticationFilter,
-                                                                     AuthExceptionResolver exceptionResolver) {
-        return new DefaultWebSecurityAdapter(authenticationFilter, exceptionResolver);
+                                                                     AuthExceptionResolver exceptionResolver,
+                                                                     AuthenticationPermissionHandler permissionHandler) {
+        AccessDecisionManager accessDecisionManager = new AuthenticationPermissionAccessVoter(permissionHandler).defaultManager();
+
+        DefaultWebSecurityAdapter result = new DefaultWebSecurityAdapter(authenticationFilter, exceptionResolver);
+        result.setAccessDecisionManager(accessDecisionManager);
+        return result;
     }
 
     @Bean
