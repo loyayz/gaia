@@ -6,10 +6,8 @@ import com.loyayz.gaia.auth.security.web.servlet.AuthExceptionResolver;
 import com.loyayz.gaia.auth.security.web.servlet.impl.DefaultAuthExceptionResolver;
 import com.loyayz.gaia.auth.security.web.webflux.ServerAuthExceptionResolver;
 import com.loyayz.gaia.auth.security.web.webflux.impl.DefaultServerAuthExceptionResolver;
-import com.loyayz.gaia.exception.core.WebExceptionResolver;
 import com.loyayz.gaia.exception.core.WebfluxExceptionResolver;
 import com.loyayz.gaia.exception.core.WebmvcExceptionResolver;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Bean;
@@ -19,7 +17,6 @@ import org.springframework.context.annotation.Configuration;
  * @author loyayz (loyayz@foxmail.com)
  */
 @Configuration
-@ConditionalOnClass({WebExceptionResolver.class, AccessDeniedExceptionDefiner.class, AuthenticationExceptionDefiner.class})
 public class AuthExceptionAutoConfiguration {
 
     @Bean

@@ -22,12 +22,6 @@
             <artifactId>gaia-auth-security</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.loyayz.gaia</groupId>
-            <artifactId>gaia-exception-core</artifactId>
-            <version>${project.version}</version>
-            <optional>true</optional>
-        </dependency>
 
         <dependency>
             <groupId>org.projectlombok</groupId>
