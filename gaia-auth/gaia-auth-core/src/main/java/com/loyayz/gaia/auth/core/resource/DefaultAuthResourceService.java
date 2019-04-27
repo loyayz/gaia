@@ -17,18 +17,13 @@ public class DefaultAuthResourceService implements AuthResourceService {
     private final AuthResourceConfiguration authResourceConfiguration;
 
     @Override
-    public List<AuthResource> listResourcesByGroup(String resourceGroup) {
-        return this.authResourceConfiguration.listResourcesByGroup(resourceGroup);
-    }
-
-    @Override
     public List<AuthResource> listPermitResources() {
         return this.authResourceConfiguration.listPermitResources();
     }
 
     @Override
     public Map<AuthResource, AuthResourcePermission> listProtectResourcePermission() {
-        return this.authResourceConfiguration.listProtectResourcePermission();
+        return this.authResourceConfiguration.listProtectResources();
     }
 
 }

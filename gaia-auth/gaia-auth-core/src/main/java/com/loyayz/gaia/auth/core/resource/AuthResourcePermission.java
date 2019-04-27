@@ -14,8 +14,7 @@ import java.util.*;
  */
 @Data
 @NoArgsConstructor
-public class AuthResourcePermission implements Serializable {
-    private static final long serialVersionUID = -1L;
+public class AuthResourcePermission extends AuthResource {
 
     /**
      * 特殊字符，表示全部
@@ -27,6 +26,7 @@ public class AuthResourcePermission implements Serializable {
     private List<String> allowedRoles;
 
     public AuthResourcePermission(AuthResourcePermission other) {
+        super(other);
         this.allowedRoles = other.getAllowedRoles();
     }
 
@@ -73,17 +73,6 @@ public class AuthResourcePermission implements Serializable {
         return this.allowedRoles;
     }
 
-    public void addAllowedRoles(String role) {
-        if (ALL.equals(role)) {
-            this.allowedRoles = Lists.newArrayList(ALL);
-            return;
-        }
-        if (this.allowedRoles == null) {
-            this.allowedRoles = Lists.newArrayList();
-        }
-        this.allowedRoles.add(role);
-    }
-
     private List<String> combine(List<String> source, List<String> other) {
         if (other == null) {
             return (source != null ? source : Collections.emptyList());
@@ -92,7 +81,7 @@ public class AuthResourcePermission implements Serializable {
             return other;
         }
         if (source.contains(ALL) || other.contains(ALL)) {
-            return new ArrayList<>(Collections.singletonList(ALL));
+            return Lists.newArrayList(ALL);
         }
         Set<String> combined = new LinkedHashSet<>(source);
         combined.addAll(other);

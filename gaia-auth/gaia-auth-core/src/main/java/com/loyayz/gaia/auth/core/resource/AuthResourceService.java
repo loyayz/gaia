@@ -9,11 +9,6 @@ import java.util.Map;
 public interface AuthResourceService {
 
     /**
-     * 根据分组名查询资源列表
-     */
-    List<AuthResource> listResourcesByGroup(String resourceGroup);
-
-    /**
      * 获取公开的资源列表
      */
     List<AuthResource> listPermitResources();

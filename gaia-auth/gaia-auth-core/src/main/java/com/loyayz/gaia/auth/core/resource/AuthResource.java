@@ -7,9 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author loyayz (loyayz@foxmail.com)
@@ -22,19 +20,6 @@ public class AuthResource implements Serializable {
 
     private String path;
     private List<String> methods;
-
-    /**
-     * 合并资源
-     * methods 包含 {@link #ALL_METHOD} 则合并后还是为 {@link #ALL_METHOD}
-     */
-    public AuthResource combine(AuthResource other) {
-        AuthResource result = new AuthResource(this);
-        if (other == null) {
-            return result;
-        }
-        result.setMethods(this.combine(this.getMethods(), other.getMethods()));
-        return result;
-    }
 
     public AuthResource(String path) {
         this.path = path;
@@ -68,27 +53,13 @@ public class AuthResource implements Serializable {
         return this.methods;
     }
 
-    public void addMethod(String method) {
-        if (ALL_METHOD.equals(method)) {
-            this.methods = Lists.newArrayList(ALL_METHOD);
-            return;
-        }
-        if (this.methods == null) {
-            this.methods = Lists.newArrayList();
-        }
-        this.methods.add(method);
+    public AuthResource getResource() {
+        return new AuthResource(this);
     }
 
-    private List<String> combine(List<String> source, List<String> other) {
-        if (other == null) {
-            return (source != null ? source : Collections.emptyList());
-        }
-        if (source == null) {
-            return other;
-        }
-        Set<String> combined = Sets.newLinkedHashSet(source);
-        combined.addAll(other);
-        return Lists.newArrayList(combined);
+    public boolean valid() {
+        return this.path != null
+                && !"".equals(this.path.trim());
     }
 
 }

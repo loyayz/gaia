@@ -12,73 +12,92 @@ import java.util.stream.Collectors;
  */
 @Data
 public class AuthResourceConfiguration {
+    private static final List<String> DEFAULT_PERMIT_PUBLIC = Arrays.asList("/public/**", "/error/**");
+    private static final List<String> DEFAULT_PERMIT_STATIC = Arrays.asList("/css/**", "/js/**", "/images/**", "/webjars/**", "/**/favicon.ico", "/static/**");
 
     /**
-     * 定义资源
-     * < resourceGroup,resources >
+     * 不鉴权所有公共资源
      */
-    private Map<String, List<AuthResource>> items;
+    private Boolean permitPublic = Boolean.TRUE;
+    /**
+     * 不鉴权所有静态资源
+     */
+    private Boolean permitStatic = Boolean.TRUE;
+    /**
+     * 不鉴权所有 options 请求
+     */
+    private Boolean permitOptions = Boolean.TRUE;
+    /**
+     * 不需要鉴权的资源组（resourceGroup）
+     */
+    private List<AuthResource> permit;
+
     /**
      * 权限配置
      */
-    private AuthResourcePermissionConfiguration permission;
+    private List<AuthResourcePermission> permission;
 
     /**
-     * @param resourceGroup group of resources
-     * @return resources
+     * 获取受保护资源的权限设置
      */
-    public List<AuthResource> listResourcesByGroup(String resourceGroup) {
-        Collection<AuthResource> resources = this.getItems()
-                .getOrDefault(resourceGroup, Collections.emptyList())
+    public Map<AuthResource, AuthResourcePermission> listProtectResources() {
+        return this.getPermission()
                 .stream()
-                // 过滤掉空 path
-                .filter(resource -> {
-                    String path = resource.getPath();
-                    return path != null && !"".equals(path.trim());
-                })
-                // 转为 map<path,resource>
+                // 过滤掉不合法的配置
+                .filter(p -> p != null && p.valid())
+                // 转为 map<resource,permission>
                 .collect(Collectors.toMap(
-                        AuthResource::getPath,
-                        AuthResource::new,
-                        AuthResource::combine
-                ))
-                .values();
-        return new ArrayList<>(resources);
+                        AuthResourcePermission::getResource,
+                        AuthResourcePermission::new,
+                        AuthResourcePermission::combine)
+                );
     }
 
     /**
      * 获取公开的资源列表
      */
     public List<AuthResource> listPermitResources() {
-        AuthResourcePermissionConfiguration permissionConfig = this.getPermission();
-        return permissionConfig.listPermitResources();
+        List<AuthResource> resources = new ArrayList<>();
+        resources.addAll(this.getPermit());
+        resources.addAll(this.getDefaultPermitResources());
+        return resources;
+    }
+
+    public List<AuthResource> getPermit() {
+        if (this.permit == null) {
+            return Collections.emptyList();
+        }
+        return permit;
+    }
+
+    public List<AuthResourcePermission> getPermission() {
+        if (this.permission == null) {
+            return Collections.emptyList();
+        }
+        return permission;
     }
 
     /**
-     * 获取受保护资源的权限设置
+     * 获取不需要鉴权的资源
      */
-    public Map<AuthResource, AuthResourcePermission> listProtectResourcePermission() {
-        Map<AuthResource, AuthResourcePermission> result = new HashMap<>(12);
-        this.getPermission().getProtect().forEach((resourceGroup, permission) -> {
-            this.listResourcesByGroup(resourceGroup).forEach(resource -> {
-                result.put(resource, permission);
-            });
-        });
+    private List<AuthResource> getDefaultPermitResources() {
+        List<AuthResource> result = new ArrayList<>();
+        if (this.permitPublic) {
+            for (String path : DEFAULT_PERMIT_PUBLIC) {
+                result.add(new AuthResource(path));
+            }
+        }
+        if (this.permitStatic) {
+            for (String path : DEFAULT_PERMIT_STATIC) {
+                result.add(new AuthResource(path));
+            }
+        }
+        if (this.permitOptions) {
+            AuthResource options = new AuthResource("/**");
+            options.setMethods("OPTIONS");
+            result.add(options);
+        }
         return result;
-    }
-
-    public void setItems(Map<String, List<AuthResource>> items) {
-        if (items == null) {
-            items = new HashMap<>(4);
-        }
-        this.items = items;
-    }
-
-    public void setPermission(AuthResourcePermissionConfiguration permission) {
-        if (permission == null) {
-            permission = new AuthResourcePermissionConfiguration();
-        }
-        this.permission = permission;
     }
 
 }

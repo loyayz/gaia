@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -28,5 +29,12 @@ public class AuthUser implements Serializable {
      * 角色
      */
     private List<String> roles = new ArrayList<>();
+
+    public List<String> getRoles() {
+        if (this.roles == null) {
+            return Collections.emptyList();
+        }
+        return roles;
+    }
 
 }
