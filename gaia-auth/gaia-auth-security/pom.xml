@@ -19,7 +19,7 @@
         </dependency>
         <dependency>
             <groupId>com.loyayz.gaia</groupId>
-            <artifactId>gaia-exception-core</artifactId>
+            <artifactId>gaia-commons</artifactId>
             <version>${project.version}</version>
         </dependency>
 

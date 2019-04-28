@@ -14,7 +14,6 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>gaia-exception-core</module>
         <module>gaia-exception-autoconfigure</module>
     </modules>
 

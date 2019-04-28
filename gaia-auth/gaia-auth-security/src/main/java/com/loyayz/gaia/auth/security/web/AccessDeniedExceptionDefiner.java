@@ -1,6 +1,6 @@
 package com.loyayz.gaia.auth.security.web;
 
-import com.loyayz.gaia.exception.core.ExceptionDefiner;
+import com.loyayz.gaia.commons.exception.ExceptionDefiner;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 

@@ -1,8 +1,8 @@
 package com.loyayz.gaia.auth.security.web.servlet.impl;
 
 import com.loyayz.gaia.auth.security.web.servlet.AuthExceptionResolver;
-import com.loyayz.gaia.exception.core.ExceptionResult;
-import com.loyayz.gaia.exception.core.WebmvcExceptionResolver;
+import com.loyayz.gaia.commons.exception.ExceptionResult;
+import com.loyayz.gaia.commons.exception.WebmvcExceptionResolver;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 

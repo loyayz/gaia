@@ -1,7 +1,7 @@
 package com.loyayz.gaia.exception.autoconfigure;
 
-import com.loyayz.gaia.exception.core.ExceptionResolver;
-import com.loyayz.gaia.exception.core.WebfluxExceptionResolver;
+import com.loyayz.gaia.commons.exception.ExceptionResolver;
+import com.loyayz.gaia.commons.exception.WebfluxExceptionResolver;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;

@@ -1,4 +1,4 @@
-package com.loyayz.gaia.exception.core;
+package com.loyayz.gaia.commons.exception;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Slf4j
 @RequiredArgsConstructor
-public class WebmvcExceptionResolver implements WebExceptionResolver {
+public class WebmvcExceptionResolver {
     private final ExceptionResolver resolver;
 
     public ExceptionResult handlerException(HttpServletRequest request, HttpServletResponse response, Throwable exception) {

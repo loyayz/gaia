@@ -1,9 +1,8 @@
 package com.loyayz.gaia.exception.autoconfigure;
 
-import com.loyayz.gaia.exception.core.ExceptionResolver;
-import com.loyayz.gaia.exception.core.ExceptionResult;
-import com.loyayz.gaia.exception.core.WebExceptionResolver;
-import com.loyayz.gaia.exception.core.WebmvcExceptionResolver;
+import com.loyayz.gaia.commons.exception.ExceptionResolver;
+import com.loyayz.gaia.commons.exception.ExceptionResult;
+import com.loyayz.gaia.commons.exception.WebmvcExceptionResolver;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Configuration;
@@ -21,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 public class ExceptionWebmvcAutoConfiguration {
 
-    @ConditionalOnMissingBean(value = {WebExceptionResolver.class})
+    @ConditionalOnMissingBean(value = {WebmvcExceptionResolver.class})
     @RestControllerAdvice
     @Order(0)
     public class DefaultWebmvcExceptionResolver extends WebmvcExceptionResolver {

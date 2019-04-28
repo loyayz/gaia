@@ -1,4 +1,4 @@
-package com.loyayz.gaia.exception.core;
+package com.loyayz.gaia.commons.exception;
 
 import java.util.List;
 

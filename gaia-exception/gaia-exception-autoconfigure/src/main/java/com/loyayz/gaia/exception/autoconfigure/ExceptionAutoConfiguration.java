@@ -1,7 +1,7 @@
 package com.loyayz.gaia.exception.autoconfigure;
 
-import com.loyayz.gaia.exception.core.ExceptionDefiner;
-import com.loyayz.gaia.exception.core.ExceptionResolver;
+import com.loyayz.gaia.commons.exception.ExceptionDefiner;
+import com.loyayz.gaia.commons.exception.ExceptionResolver;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,4 +1,4 @@
-package com.loyayz.gaia.exception.core;
+package com.loyayz.gaia.commons.exception;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +20,7 @@ import java.util.List;
  */
 @Slf4j
 @RequiredArgsConstructor
-public class WebfluxExceptionResolver implements WebExceptionResolver {
+public class WebfluxExceptionResolver {
     private final ExceptionResolver resolver;
 
     public Mono<Void> handlerException(ServerWebExchange exchange, Throwable exception) {

@@ -1,7 +1,7 @@
 package com.loyayz.gaia.auth.security.web.webflux.impl;
 
 import com.loyayz.gaia.auth.security.web.webflux.ServerAuthExceptionResolver;
-import com.loyayz.gaia.exception.core.WebfluxExceptionResolver;
+import com.loyayz.gaia.commons.exception.WebfluxExceptionResolver;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;

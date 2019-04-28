@@ -1,4 +1,4 @@
-package com.loyayz.gaia.exception.core;
+package com.loyayz.gaia.commons.exception;
 
 import org.springframework.lang.Nullable;
 import org.springframework.util.CollectionUtils;
