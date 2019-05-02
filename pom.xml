@@ -29,6 +29,7 @@
     <modules>
         <module>gaia-commons</module>
         <module>gaia-auth</module>
+        <module>starter</module>
     </modules>
 
     <dependencyManagement>
