@@ -1,10 +1,10 @@
 package com.loyayz.gaia.auth.security.web.servlet.impl;
 
 import com.loyayz.gaia.auth.security.web.servlet.AbstractWebSecurityAdapter;
-import com.loyayz.gaia.auth.security.web.servlet.AuthExceptionResolver;
 import com.loyayz.gaia.auth.security.web.servlet.AuthenticationFilter;
+import com.loyayz.gaia.auth.security.web.servlet.AuthenticationPermissionAccessVoter;
+import com.loyayz.gaia.auth.security.web.servlet.AuthenticationPermissionHandler;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,23 +14,24 @@ import org.springframework.web.cors.CorsConfigurationSource;
  * @author loyayz (loyayz@foxmail.com)
  */
 @Getter
-@RequiredArgsConstructor
 public class DefaultWebSecurityAdapter extends AbstractWebSecurityAdapter {
     private final AuthenticationFilter authenticationFilter;
-    private final AuthExceptionResolver exceptionResolver;
+    private final AuthenticationPermissionHandler permissionHandler;
     @Setter
     private AccessDecisionManager accessDecisionManager;
     @Setter
     private CorsConfigurationSource corsConfigurationSource;
 
-    @Override
-    protected AuthenticationFilter authFilter() {
-        return this.authenticationFilter;
+    public DefaultWebSecurityAdapter(AuthenticationFilter authenticationFilter,
+                                     AuthenticationPermissionHandler permissionHandler) {
+        this.authenticationFilter = authenticationFilter;
+        this.permissionHandler = permissionHandler;
+        this.accessDecisionManager = new AuthenticationPermissionAccessVoter(permissionHandler).defaultManager();
     }
 
     @Override
-    protected AuthExceptionResolver exceptionResolver() {
-        return this.exceptionResolver;
+    protected AuthenticationFilter authFilter() {
+        return this.authenticationFilter;
     }
 
     @Override
@@ -46,7 +47,11 @@ public class DefaultWebSecurityAdapter extends AbstractWebSecurityAdapter {
         super.authPath(security);
         AccessDecisionManager manager = this.getAccessDecisionManager();
         if (manager != null) {
-            security.authorizeRequests().accessDecisionManager(manager);
+            security.authorizeRequests()
+                    .anyRequest().authenticated()
+                    .accessDecisionManager(manager);
+        } else {
+            super.authPath(security);
         }
     }
 

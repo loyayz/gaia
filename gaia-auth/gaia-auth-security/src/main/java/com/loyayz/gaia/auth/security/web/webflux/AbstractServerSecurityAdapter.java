@@ -1,5 +1,6 @@
 package com.loyayz.gaia.auth.security.web.webflux;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
@@ -14,8 +15,6 @@ import org.springframework.web.server.WebFilter;
 public abstract class AbstractServerSecurityAdapter {
 
     protected abstract AuthenticationWebFilter authFilter();
-
-    protected abstract ServerAuthExceptionResolver exceptionResolver();
 
     /**
      * 其他配置
@@ -73,8 +72,8 @@ public abstract class AbstractServerSecurityAdapter {
 
     protected void exceptionHandling(ServerHttpSecurity security) {
         security.exceptionHandling()
-                .authenticationEntryPoint(this.exceptionResolver()::resolve)
-                .accessDeniedHandler(this.exceptionResolver()::resolve);
+                .authenticationEntryPoint(new HttpStatusServerAuthFailureHandler(HttpStatus.UNAUTHORIZED))
+                .accessDeniedHandler(new HttpStatusServerAuthFailureHandler(HttpStatus.FORBIDDEN));
     }
 
 }

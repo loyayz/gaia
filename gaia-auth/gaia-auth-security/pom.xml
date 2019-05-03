@@ -17,11 +17,6 @@
             <artifactId>gaia-auth-core</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.loyayz.gaia</groupId>
-            <artifactId>gaia-commons</artifactId>
-            <version>${project.version}</version>
-        </dependency>
 
         <dependency>
             <groupId>org.springframework.security</groupId>

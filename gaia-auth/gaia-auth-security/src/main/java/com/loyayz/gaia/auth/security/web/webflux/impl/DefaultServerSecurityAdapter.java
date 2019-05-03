@@ -1,9 +1,9 @@
 package com.loyayz.gaia.auth.security.web.webflux.impl;
 
 import com.loyayz.gaia.auth.security.web.webflux.AbstractServerSecurityAdapter;
-import com.loyayz.gaia.auth.security.web.webflux.ServerAuthExceptionResolver;
+import com.loyayz.gaia.auth.security.web.webflux.ServerAuthenticationPermissionAccess;
+import com.loyayz.gaia.auth.security.web.webflux.ServerAuthenticationPermissionHandler;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.authorization.ReactiveAuthorizationManager;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
@@ -15,23 +15,24 @@ import org.springframework.web.cors.reactive.CorsConfigurationSource;
  * @author loyayz (loyayz@foxmail.com)
  */
 @Getter
-@RequiredArgsConstructor
 public class DefaultServerSecurityAdapter extends AbstractServerSecurityAdapter {
     private final AuthenticationWebFilter authenticationFilter;
-    private final ServerAuthExceptionResolver exceptionResolver;
+    private final ServerAuthenticationPermissionHandler permissionHandler;
     @Setter
     private ReactiveAuthorizationManager<AuthorizationContext> accessDecisionManager;
     @Setter
     private CorsConfigurationSource corsConfigurationSource;
 
-    @Override
-    protected AuthenticationWebFilter authFilter() {
-        return this.authenticationFilter;
+    public DefaultServerSecurityAdapter(AuthenticationWebFilter authenticationFilter,
+                                        ServerAuthenticationPermissionHandler permissionHandler) {
+        this.authenticationFilter = authenticationFilter;
+        this.permissionHandler = permissionHandler;
+        this.accessDecisionManager = new ServerAuthenticationPermissionAccess(permissionHandler);
     }
 
     @Override
-    protected ServerAuthExceptionResolver exceptionResolver() {
-        return this.exceptionResolver;
+    protected AuthenticationWebFilter authFilter() {
+        return this.authenticationFilter;
     }
 
     @Override
@@ -45,10 +46,11 @@ public class DefaultServerSecurityAdapter extends AbstractServerSecurityAdapter 
 
     @Override
     protected void authPath(ServerHttpSecurity security) {
-        super.authPath(security);
         ReactiveAuthorizationManager<AuthorizationContext> manager = this.getAccessDecisionManager();
         if (manager != null) {
             security.authorizeExchange().anyExchange().access(manager);
+        } else {
+            super.authPath(security);
         }
     }
 

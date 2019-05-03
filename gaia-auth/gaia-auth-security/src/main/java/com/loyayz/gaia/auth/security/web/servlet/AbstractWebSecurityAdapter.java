@@ -1,5 +1,6 @@
 package com.loyayz.gaia.auth.security.web.servlet;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
@@ -12,8 +13,6 @@ import org.springframework.security.web.savedrequest.NullRequestCache;
 public abstract class AbstractWebSecurityAdapter extends WebSecurityConfigurerAdapter {
 
     protected abstract AuthenticationFilter authFilter();
-
-    protected abstract AuthExceptionResolver exceptionResolver();
 
     /**
      * 其他配置
@@ -71,8 +70,8 @@ public abstract class AbstractWebSecurityAdapter extends WebSecurityConfigurerAd
 
     protected void exceptionHandling(HttpSecurity security) throws Exception {
         security.exceptionHandling()
-                .authenticationEntryPoint(this.exceptionResolver()::resolve)
-                .accessDeniedHandler(this.exceptionResolver()::resolve);
+                .authenticationEntryPoint(new HttpStatusAuthFailureHandler(HttpStatus.UNAUTHORIZED))
+                .accessDeniedHandler(new HttpStatusAuthFailureHandler(HttpStatus.FORBIDDEN));
     }
 
 }

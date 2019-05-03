@@ -1,5 +1,4 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
 com.loyayz.gaia.auth.autoconfigure.GaiaAuthAutoConfiguration,\
-com.loyayz.gaia.auth.autoconfigure.AuthExceptionAutoConfiguration,\
 com.loyayz.gaia.auth.autoconfigure.AuthWebServletAutoConfiguration,\
 com.loyayz.gaia.auth.autoconfigure.AuthWebFluxAutoConfiguration
