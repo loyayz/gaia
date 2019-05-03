@@ -2,8 +2,8 @@ package com.loyayz.gaia.auth.autoconfigure;
 
 import com.loyayz.gaia.auth.core.AuthCredentialsConfiguration;
 import com.loyayz.gaia.auth.core.resource.AuthResourceService;
-import com.loyayz.gaia.auth.core.security.DefaultAuthenticationProvider;
 import com.loyayz.gaia.auth.core.user.AuthUserExtractor;
+import com.loyayz.gaia.auth.security.DefaultAuthenticationProvider;
 import com.loyayz.gaia.auth.security.web.servlet.*;
 import com.loyayz.gaia.auth.security.web.servlet.impl.DefaultAuthenticationConverter;
 import com.loyayz.gaia.auth.security.web.servlet.impl.DefaultAuthenticationPermissionHandler;

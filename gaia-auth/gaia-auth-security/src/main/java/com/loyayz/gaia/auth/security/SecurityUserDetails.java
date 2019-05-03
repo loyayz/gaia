@@ -1,4 +1,4 @@
-package com.loyayz.gaia.auth.core.security;
+package com.loyayz.gaia.auth.security;
 
 import com.loyayz.gaia.auth.core.user.AuthUser;
 import lombok.Data;

@@ -2,7 +2,7 @@ package com.loyayz.gaia.auth.security.web.servlet.impl;
 
 import com.loyayz.gaia.auth.core.AuthCredentialsConfiguration;
 import com.loyayz.gaia.auth.core.credentials.AuthCredentials;
-import com.loyayz.gaia.auth.core.security.AuthenticationCredentialsToken;
+import com.loyayz.gaia.auth.security.AuthenticationCredentialsToken;
 import com.loyayz.gaia.auth.security.web.servlet.AuthenticationConverter;
 import com.loyayz.gaia.auth.security.web.servlet.ServletAuthCredentialsExtractor;
 import org.springframework.security.core.Authentication;
