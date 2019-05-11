@@ -1,7 +1,6 @@
 package com.loyayz.gaia.auth.security.web.servlet;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.alibaba.fastjson.JSON;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -24,7 +23,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class HttpStatusAuthFailureHandler implements AuthenticationEntryPoint, AuthenticationFailureHandler, AccessDeniedHandler {
     private final HttpStatus httpStatus;
-    private ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception)
@@ -52,18 +50,12 @@ public class HttpStatusAuthFailureHandler implements AuthenticationEntryPoint, A
     }
 
     private String responseBody(HttpServletRequest request, Exception exception) {
-        String result;
-        try {
-            Map<String, Object> param = new LinkedHashMap<>(8);
-            param.put("status", this.httpStatus.value());
-            param.put("code", this.httpStatus.value());
-            param.put("message", exception.getMessage());
-            param.put("path", request.getRequestURI());
-            result = objectMapper.writeValueAsString(param);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-        return result;
+        Map<String, Object> result = new LinkedHashMap<>(8);
+        result.put("status", this.httpStatus.value());
+        result.put("code", this.httpStatus.value());
+        result.put("message", exception.getMessage());
+        result.put("path", request.getRequestURI());
+        return JSON.toJSONString(result);
     }
 
 }
