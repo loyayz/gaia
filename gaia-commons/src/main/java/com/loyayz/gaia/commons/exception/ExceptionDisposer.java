@@ -5,7 +5,10 @@ import java.util.List;
 /**
  * @author loyayz (loyayz@foxmail.com)
  */
-public interface ExceptionDefiner {
+public interface ExceptionDisposer {
+    String DEFAULT_CODE = "500";
+    int DEFAULT_STATUS = 500;
+    int DEFAULT_LEVEL = 1;
 
     /**
      * 要处理的异常
@@ -15,7 +18,9 @@ public interface ExceptionDefiner {
     /**
      * 业务异常编码
      */
-    String code(Throwable e);
+    default String code(Throwable e) {
+        return DEFAULT_CODE;
+    }
 
     /**
      * 业务异常信息
@@ -28,14 +33,14 @@ public interface ExceptionDefiner {
      * http 状态码
      */
     default int status(Throwable e) {
-        return 501;
+        return DEFAULT_STATUS;
     }
 
     /**
      * 异常等级
      */
     default int level(Throwable e) {
-        return 1;
+        return DEFAULT_LEVEL;
     }
 
     default ExceptionResult getResult(Throwable exception) {

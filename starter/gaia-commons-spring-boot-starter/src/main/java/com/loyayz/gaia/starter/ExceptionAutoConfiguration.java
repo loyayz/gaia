@@ -1,10 +1,10 @@
 package com.loyayz.gaia.starter;
 
 import com.loyayz.gaia.commons.exception.*;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -21,17 +21,16 @@ import java.util.List;
  * @author loyayz (loyayz@foxmail.com)
  */
 @Configuration
-public class ExceptionAutoConfiguration {
-    private final List<ExceptionDefiner> definers;
+public class ExceptionAutoConfiguration implements InitializingBean {
+    private final List<ExceptionDisposer> disposers;
 
-    public ExceptionAutoConfiguration(List<ExceptionDefiner> disposers) {
-        this.definers = disposers;
+    public ExceptionAutoConfiguration(List<ExceptionDisposer> disposers) {
+        this.disposers = disposers;
     }
 
-    @ConditionalOnMissingBean(value = {ExceptionResolver.class})
-    @Bean
-    public ExceptionResolver exceptionResolver() {
-        return new ExceptionResolver(this.definers);
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        ExceptionDisposers.addExceptionDisposers(disposers);
     }
 
     @Configuration
@@ -42,10 +41,6 @@ public class ExceptionAutoConfiguration {
         @Component
         @Order(0)
         public class DefaultWebfluxExceptionResolver extends WebfluxExceptionResolver implements ErrorWebExceptionHandler {
-
-            DefaultWebfluxExceptionResolver(ExceptionResolver resolver) {
-                super(resolver);
-            }
 
             @Override
             public Mono<Void> handle(ServerWebExchange exchange, Throwable exception) {
@@ -64,10 +59,6 @@ public class ExceptionAutoConfiguration {
         @RestControllerAdvice
         @Order(0)
         public class DefaultWebmvcExceptionResolver extends WebmvcExceptionResolver {
-
-            DefaultWebmvcExceptionResolver(ExceptionResolver resolver) {
-                super(resolver);
-            }
 
             @ExceptionHandler(value = Throwable.class)
             public ExceptionResult handler(HttpServletRequest request, HttpServletResponse response, Throwable exception) {

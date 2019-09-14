@@ -1,78 +1,49 @@
 package com.loyayz.gaia.commons.exception;
 
-import lombok.RequiredArgsConstructor;
+import com.alibaba.fastjson.JSON;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.buffer.DataBuffer;
+import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.codec.HttpMessageWriter;
 import org.springframework.http.server.reactive.ServerHttpRequest;
-import org.springframework.web.reactive.function.BodyInserters;
-import org.springframework.web.reactive.function.server.HandlerStrategies;
-import org.springframework.web.reactive.function.server.ServerResponse;
-import org.springframework.web.reactive.result.view.ViewResolver;
+import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
-
-import java.util.List;
 
 /**
  * @author loyayz (loyayz@foxmail.com)
  */
 @Slf4j
-@RequiredArgsConstructor
 public class WebfluxExceptionResolver {
-    private final ExceptionResolver resolver;
+    @Setter
+    private ExceptionLoggerStrategy loggerStrategy = ExceptionLoggerStrategy.DEFAULT_STRATEGY;
 
     public Mono<Void> handlerException(ServerWebExchange exchange, Throwable exception) {
-        return Mono.just(this.resolver.getExceptionResult(exception))
-                .doOnNext(result -> this.writeLog(exchange, exception, result))
+        return Mono.just(ExceptionDisposers.resolveByException(exception))
+                .doOnNext(disposer -> this.writeLog(exchange, exception, disposer))
+                .map(disposer -> disposer.getResult(exception))
                 .flatMap(result -> this.writeResponse(exchange, result));
     }
 
     private Mono<? extends Void> writeResponse(ServerWebExchange exchange, ExceptionResult result) {
-        return ServerResponse.status(this.getHttpStatus(result))
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .body(BodyInserters.fromObject(result))
-                .flatMap(serverResponse -> {
-                    exchange.getResponse().getHeaders().setContentType(MediaType.APPLICATION_JSON_UTF8);
-                    return serverResponse.writeTo(exchange, new DefaultResponseContext());
-                });
+        return Mono.defer(() -> {
+            ServerHttpResponse response = exchange.getResponse();
+            response.setStatusCode(HttpStatus.valueOf(result.getStatus()));
+            response.getHeaders().setContentType(MediaType.APPLICATION_JSON_UTF8);
+
+            byte[] responseBody = JSON.toJSONBytes(result);
+            DataBuffer buffer = response.bufferFactory().wrap(responseBody);
+            return response.writeWith(Mono.just(buffer))
+                    .doOnError(error -> DataBufferUtils.release(buffer));
+        });
     }
 
-    private HttpStatus getHttpStatus(ExceptionResult result) {
-        Integer status = result.getStatus();
-        return HttpStatus.valueOf(status);
-    }
-
-    private void writeLog(ServerWebExchange exchange, Throwable exception, ExceptionResult result) {
-        if (log.isWarnEnabled()) {
-            log.warn(this.logMsg(exchange, result), exception);
-        } else if (log.isDebugEnabled()) {
-            log.debug(this.logMsg(exchange, result), exception);
-        }
-    }
-
-    private String logMsg(ServerWebExchange exchange, ExceptionResult result) {
+    private void writeLog(ServerWebExchange exchange, Throwable exception, ExceptionDisposer disposer) {
         ServerHttpRequest request = exchange.getRequest();
-        String method = request.getMethod().name();
-        String url = request.getURI().getPath();
-        return "[" + method + ": " + url + "]  " + result;
-    }
-
-    private class DefaultResponseContext implements ServerResponse.Context {
-
-        private final HandlerStrategies strategies = HandlerStrategies.withDefaults();
-
-        @Override
-        public List<HttpMessageWriter<?>> messageWriters() {
-            return this.strategies.messageWriters();
-        }
-
-        @Override
-        public List<ViewResolver> viewResolvers() {
-            return this.strategies.viewResolvers();
-        }
-
+        String apiUrl = request.getMethodValue() + "-" + request.getPath().value();
+        this.loggerStrategy.write(log, apiUrl, exception, disposer);
     }
 
 }

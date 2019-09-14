@@ -1,4 +1,4 @@
-package com.loyayz.gaia.commons.exception;
+package com.loyayz.gaia.commons.utils;
 
 import org.springframework.lang.Nullable;
 import org.springframework.util.CollectionUtils;
@@ -9,11 +9,9 @@ import java.util.Collection;
 import java.util.Map;
 
 /**
- * 异常断言工具类
- *
  * @author loyayz (loyayz@foxmail.com)
  */
-public class Exceptions {
+public class Assert {
 
     public static void isTrue(boolean expression, RuntimeException exception) {
         if (!expression) {
@@ -124,7 +122,7 @@ public class Exceptions {
         }
     }
 
-    private Exceptions() {
+    private Assert() {
 
     }
 
