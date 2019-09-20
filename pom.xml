@@ -21,7 +21,7 @@
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
 
-        <guava.version>24.0-jre</guava.version>
+        <guava.version>28.1-jre</guava.version>
         <fastjson.version>1.2.61</fastjson.version>
         <jjwt.version>0.9.1</jjwt.version>
     </properties>
