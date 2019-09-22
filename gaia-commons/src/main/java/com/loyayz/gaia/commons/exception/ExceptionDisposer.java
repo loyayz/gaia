@@ -38,6 +38,8 @@ public interface ExceptionDisposer {
 
     /**
      * 异常等级
+     *
+     * @see DefaultExceptionLoggerStrategy
      */
     default int level(Throwable e) {
         return DEFAULT_LEVEL;

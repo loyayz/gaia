@@ -2,7 +2,6 @@ package com.loyayz.gaia.commons.exception;
 
 import com.alibaba.fastjson.JSON;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.http.HttpStatus;
@@ -15,10 +14,9 @@ import reactor.core.publisher.Mono;
 /**
  * @author loyayz (loyayz@foxmail.com)
  */
-@Slf4j
 public class WebfluxExceptionResolver {
     @Setter
-    private ExceptionLoggerStrategy loggerStrategy = ExceptionLoggerStrategy.DEFAULT_STRATEGY;
+    private ExceptionLoggerStrategy loggerStrategy = new DefaultExceptionLoggerStrategy();
 
     public Mono<Void> handlerException(ServerWebExchange exchange, Throwable exception) {
         return Mono.just(ExceptionDisposers.resolveByException(exception))
@@ -42,8 +40,9 @@ public class WebfluxExceptionResolver {
 
     private void writeLog(ServerWebExchange exchange, Throwable exception, ExceptionDisposer disposer) {
         ServerHttpRequest request = exchange.getRequest();
-        String apiUrl = request.getMethodValue() + "-" + request.getPath().value();
-        this.loggerStrategy.write(log, apiUrl, exception, disposer);
+        String apiMethod = request.getMethodValue();
+        String apiUrl = request.getPath().value();
+        this.loggerStrategy.write(apiMethod, apiUrl, exception, disposer);
     }
 
 }
