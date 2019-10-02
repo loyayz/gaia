@@ -29,6 +29,7 @@
 
     <modules>
         <module>gaia-auth</module>
+        <module>gaia-exception</module>
     </modules>
 
     <dependencyManagement>
