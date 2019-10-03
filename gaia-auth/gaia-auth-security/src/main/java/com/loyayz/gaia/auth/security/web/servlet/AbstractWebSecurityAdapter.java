@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
+import org.springframework.security.web.authentication.AuthenticationFilter;
 import org.springframework.security.web.authentication.session.NullAuthenticatedSessionStrategy;
 import org.springframework.security.web.savedrequest.NullRequestCache;
 
@@ -27,7 +28,7 @@ public abstract class AbstractWebSecurityAdapter extends WebSecurityConfigurerAd
         this.header(security);
         this.sessionPolicy(security);
         this.authPath(security);
-        this.authUserFilter(security);
+        this.authFilter(security);
         this.exceptionHandling(security);
         this.additional(security);
     }
@@ -63,7 +64,7 @@ public abstract class AbstractWebSecurityAdapter extends WebSecurityConfigurerAd
         security.authorizeRequests().anyRequest().authenticated();
     }
 
-    protected void authUserFilter(HttpSecurity security) {
+    protected void authFilter(HttpSecurity security) {
         AuthenticationFilter filter = this.authFilter();
         security.addFilterBefore(filter, AnonymousAuthenticationFilter.class);
     }

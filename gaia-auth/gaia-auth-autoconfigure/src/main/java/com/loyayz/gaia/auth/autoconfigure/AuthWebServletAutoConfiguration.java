@@ -4,7 +4,10 @@ import com.loyayz.gaia.auth.core.AuthCredentialsConfiguration;
 import com.loyayz.gaia.auth.core.resource.AuthResourceService;
 import com.loyayz.gaia.auth.core.user.AuthUserExtractor;
 import com.loyayz.gaia.auth.security.DefaultAuthenticationProvider;
-import com.loyayz.gaia.auth.security.web.servlet.*;
+import com.loyayz.gaia.auth.security.web.servlet.AbstractWebSecurityAdapter;
+import com.loyayz.gaia.auth.security.web.servlet.AuthenticationPermissionHandler;
+import com.loyayz.gaia.auth.security.web.servlet.HttpStatusAuthFailureHandler;
+import com.loyayz.gaia.auth.security.web.servlet.NoopAuthenticationSuccessHandler;
 import com.loyayz.gaia.auth.security.web.servlet.impl.DefaultAuthenticationConverter;
 import com.loyayz.gaia.auth.security.web.servlet.impl.DefaultAuthenticationPermissionHandler;
 import com.loyayz.gaia.auth.security.web.servlet.impl.DefaultWebSecurityAdapter;
@@ -24,7 +27,9 @@ import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.authentication.AuthenticationConverter;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationFilter;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 import java.util.ArrayList;
@@ -71,11 +76,10 @@ public class AuthWebServletAutoConfiguration {
         AuthenticationSuccessHandler successHandler = new NoopAuthenticationSuccessHandler();
         AuthenticationFailureHandler failureHandler = new HttpStatusAuthFailureHandler(HttpStatus.UNAUTHORIZED);
 
-        AuthenticationFilter filter = new AuthenticationFilter(manager);
+        AuthenticationFilter filter = new AuthenticationFilter(manager, converter);
         filter.setRequestMatcher(permissionHandler.requiresAuthenticationMatcher());
-        filter.setAuthenticationConverter(converter);
-        filter.setAuthenticationSuccessHandler(successHandler);
-        filter.setAuthenticationFailureHandler(failureHandler);
+        filter.setSuccessHandler(successHandler);
+        filter.setFailureHandler(failureHandler);
         return filter;
     }
 

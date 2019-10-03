@@ -1,13 +1,13 @@
 package com.loyayz.gaia.auth.security.web.servlet.impl;
 
 import com.loyayz.gaia.auth.security.web.servlet.AbstractWebSecurityAdapter;
-import com.loyayz.gaia.auth.security.web.servlet.AuthenticationFilter;
 import com.loyayz.gaia.auth.security.web.servlet.AuthenticationPermissionAccessVoter;
 import com.loyayz.gaia.auth.security.web.servlet.AuthenticationPermissionHandler;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.web.authentication.AuthenticationFilter;
 import org.springframework.web.cors.CorsConfigurationSource;
 
 /**
@@ -44,7 +44,6 @@ public class DefaultWebSecurityAdapter extends AbstractWebSecurityAdapter {
 
     @Override
     protected void authPath(HttpSecurity security) throws Exception {
-        super.authPath(security);
         AccessDecisionManager manager = this.getAccessDecisionManager();
         if (manager != null) {
             security.authorizeRequests()

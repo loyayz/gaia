@@ -28,7 +28,7 @@ public abstract class AbstractServerSecurityAdapter {
         this.header(security);
         this.sessionPolicy(security);
         this.authPath(security);
-        this.authUserFilter(security);
+        this.authFilter(security);
         this.exceptionHandling(security);
         this.additional(security);
         return security.build();
@@ -65,7 +65,7 @@ public abstract class AbstractServerSecurityAdapter {
         security.authorizeExchange().anyExchange().authenticated();
     }
 
-    protected void authUserFilter(ServerHttpSecurity security) {
+    protected void authFilter(ServerHttpSecurity security) {
         WebFilter filter = this.authFilter();
         security.addFilterAt(filter, SecurityWebFiltersOrder.AUTHENTICATION);
     }

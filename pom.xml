@@ -24,6 +24,7 @@
         <guava.version>28.1-jre</guava.version>
         <fastjson.version>1.2.61</fastjson.version>
         <jjwt.version>0.9.1</jjwt.version>
+        <spring-security.version>5.2.0.RELEASE</spring-security.version>
     </properties>
 
 
