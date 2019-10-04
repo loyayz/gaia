@@ -16,24 +16,23 @@ public class AuthResourceConfiguration {
     private static final List<String> DEFAULT_PERMIT_STATIC = Arrays.asList("/css/**", "/js/**", "/images/**", "/webjars/**", "/**/favicon.ico", "/static/**");
 
     /**
-     * 不鉴权所有公共资源
+     * 是否不鉴权所有公共资源
      */
     private Boolean permitPublic = Boolean.TRUE;
     /**
-     * 不鉴权所有静态资源
+     * 是否不鉴权所有静态资源
      */
     private Boolean permitStatic = Boolean.TRUE;
     /**
-     * 不鉴权所有 options 请求
+     * 是否不鉴权所有 options 请求
      */
     private Boolean permitOptions = Boolean.TRUE;
     /**
-     * 不需要鉴权的资源组（resourceGroup）
+     * 不需要鉴权的资源
      */
     private List<AuthResource> permit;
-
     /**
-     * 权限配置
+     * 特殊资源权限配置
      */
     private List<AuthResourcePermission> permission;
 
@@ -77,9 +76,6 @@ public class AuthResourceConfiguration {
         return permission;
     }
 
-    /**
-     * 获取不需要鉴权的资源
-     */
     private List<AuthResource> getDefaultPermitResources() {
         List<AuthResource> result = new ArrayList<>();
         if (this.permitPublic) {
