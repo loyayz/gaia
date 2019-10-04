@@ -3,7 +3,7 @@ package com.loyayz.gaia.auth.autoconfigure;
 import com.loyayz.gaia.auth.core.AuthCredentialsConfiguration;
 import com.loyayz.gaia.auth.core.resource.AuthResourceService;
 import com.loyayz.gaia.auth.core.user.AuthUserExtractor;
-import com.loyayz.gaia.auth.security.DefaultAuthenticationProvider;
+import com.loyayz.gaia.auth.security.DefaultAuthenticationManager;
 import com.loyayz.gaia.auth.security.web.webflux.AbstractServerSecurityAdapter;
 import com.loyayz.gaia.auth.security.web.webflux.HttpStatusServerAuthFailureHandler;
 import com.loyayz.gaia.auth.security.web.webflux.ServerAuthenticationPermissionHandler;
@@ -19,7 +19,10 @@ import org.springframework.boot.autoconfigure.security.reactive.ReactiveSecurity
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.*;
+import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ReactiveAuthenticationManagerAdapter;
+import org.springframework.security.authentication.ReactiveAuthenticationManagerResolver;
 import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
@@ -27,9 +30,7 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.authentication.AuthenticationWebFilter;
 import org.springframework.security.web.server.authentication.ServerAuthenticationConverter;
 import org.springframework.security.web.server.authentication.ServerAuthenticationFailureHandler;
-
-import java.util.ArrayList;
-import java.util.List;
+import reactor.core.publisher.Mono;
 
 /**
  * @author loyayz (loyayz@foxmail.com)
@@ -50,13 +51,11 @@ public class AuthWebFluxAutoConfiguration {
     }
 
     @Bean
-    @ConditionalOnMissingBean(ReactiveAuthenticationManager.class)
-    public ReactiveAuthenticationManager reactiveAuthenticationManager(AuthUserExtractor userExtractor) {
-        AuthenticationProvider provider = new DefaultAuthenticationProvider(userExtractor);
-        List<AuthenticationProvider> providers = new ArrayList<>();
-        providers.add(provider);
-        AuthenticationManager authenticationManager = new ProviderManager(providers);
-        return new ReactiveAuthenticationManagerAdapter(authenticationManager);
+    @ConditionalOnMissingBean(ReactiveAuthenticationManagerResolver.class)
+    public ReactiveAuthenticationManagerResolver<ServerHttpRequest> reactiveAuthenticationManager(AuthUserExtractor userExtractor) {
+        AuthenticationManager manager = new DefaultAuthenticationManager(userExtractor);
+        ReactiveAuthenticationManagerAdapter authenticationManager = new ReactiveAuthenticationManagerAdapter(manager);
+        return context -> Mono.just(authenticationManager);
     }
 
     @Bean
@@ -67,12 +66,12 @@ public class AuthWebFluxAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean({AuthenticationWebFilter.class})
-    public AuthenticationWebFilter authenticationWebFilter(ReactiveAuthenticationManager manager,
-                                                           ServerAuthenticationPermissionHandler permissionHandler,
+    public AuthenticationWebFilter authenticationWebFilter(ServerAuthenticationPermissionHandler permissionHandler,
+                                                           ReactiveAuthenticationManagerResolver<ServerHttpRequest> managerResolver,
                                                            ServerAuthenticationConverter converter) {
         ServerAuthenticationFailureHandler failureHandler = new HttpStatusServerAuthFailureHandler(HttpStatus.UNAUTHORIZED);
 
-        AuthenticationWebFilter filter = new AuthenticationWebFilter(manager);
+        AuthenticationWebFilter filter = new AuthenticationWebFilter(managerResolver);
         filter.setRequiresAuthenticationMatcher(permissionHandler.requiresAuthenticationMatcher());
         filter.setServerAuthenticationConverter(converter);
         filter.setAuthenticationFailureHandler(failureHandler);

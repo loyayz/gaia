@@ -3,12 +3,19 @@ package com.loyayz.gaia.auth.security;
 import com.loyayz.gaia.auth.core.credentials.AuthCredentials;
 import com.loyayz.gaia.auth.core.user.AuthUser;
 import com.loyayz.gaia.auth.core.user.AuthUserExtractor;
+import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.springframework.security.authentication.*;
+import org.springframework.security.authentication.AccountStatusUserDetailsChecker;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.CredentialsContainer;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
 import org.springframework.security.core.authority.mapping.NullAuthoritiesMapper;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,23 +23,26 @@ import org.springframework.security.core.userdetails.UserDetailsChecker;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.util.StringUtils;
 
+import java.util.Collection;
+import java.util.stream.Collectors;
+
 /**
  * @author loyayz (loyayz@foxmail.com)
  */
 @Getter
 @Setter
 @RequiredArgsConstructor
-public class DefaultAuthenticationProvider implements AuthenticationProvider {
+public class DefaultAuthenticationManager implements AuthenticationManager {
     private final AuthUserExtractor authUserExtractor;
 
-    private UserDetailsChecker authenticationChecks = new DefaultAuthenticationChecks();
+    private UserDetailsChecker authenticationChecks = new AccountStatusUserDetailsChecker();
     private GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();
 
     /**
      * 鉴权
      *
-     * @param authentication 来自 {@link com.loyayz.gaia.auth.core.credentials.AuthCredentialsExtractor}
-     * @return Authentication. Principal from {@link AuthUserExtractor}
+     * @param authentication AuthCredentialsToken
+     * @return AuthCredentialsToken. Principal from {@link AuthUserExtractor}
      * @throws AuthenticationException 鉴权异常
      */
     @Override
@@ -43,7 +53,7 @@ public class DefaultAuthenticationProvider implements AuthenticationProvider {
         return this.createSuccessAuthentication(credentials, user);
     }
 
-    protected SecurityUserDetails retrieveUser(AuthCredentials credentials) {
+    private SecurityUserDetails retrieveUser(AuthCredentials credentials) {
         AuthUser user;
         try {
             user = this.authUserExtractor.extract(credentials);
@@ -62,40 +72,66 @@ public class DefaultAuthenticationProvider implements AuthenticationProvider {
         return userDetails;
     }
 
-    protected void validBeforeAuth(AuthCredentials credentials) {
+    private void validBeforeAuth(AuthCredentials credentials) {
         if (credentials == null || !StringUtils.hasText(credentials.getToken())) {
             throw new AuthenticationCredentialsNotFoundException("Could not find original Authentication object");
         }
     }
 
-    protected Authentication createSuccessAuthentication(AuthCredentials credentials, SecurityUserDetails userDetails) {
+    private Authentication createSuccessAuthentication(AuthCredentials credentials, SecurityUserDetails userDetails) {
         return new AuthenticationCredentialsToken(userDetails.getUser(), credentials,
                 this.authoritiesMapper.mapAuthorities(userDetails.getAuthorities()));
     }
 
-    @Override
-    public boolean supports(Class<?> authentication) {
-        return AuthenticationCredentialsToken.class.isAssignableFrom(authentication);
-    }
+    @Data
+    @RequiredArgsConstructor
+    private static class SecurityUserDetails implements UserDetails, CredentialsContainer {
+        private static final long serialVersionUID = -1L;
+        private final String DEFAULT_ROLE_PREFIX = "ROLE_";
 
-    public class DefaultAuthenticationChecks implements UserDetailsChecker {
+        private final AuthUser user;
+
         @Override
-        public void check(UserDetails user) {
-            if (!user.isAccountNonLocked()) {
-                throw new LockedException("User account is locked");
-            }
+        public Collection<? extends GrantedAuthority> getAuthorities() {
+            return getUser().getRoles()
+                    .stream()
+                    .map(role -> new SimpleGrantedAuthority(DEFAULT_ROLE_PREFIX + role))
+                    .collect(Collectors.toList());
+        }
 
-            if (!user.isEnabled()) {
-                throw new DisabledException("User is disabled");
-            }
+        @Override
+        public String getPassword() {
+            return null;
+        }
 
-            if (!user.isAccountNonExpired()) {
-                throw new AccountExpiredException("User account has expired");
-            }
+        @Override
+        public String getUsername() {
+            return getUser().getName();
+        }
 
-            if (!user.isCredentialsNonExpired()) {
-                throw new CredentialsExpiredException("User credentials have expired");
-            }
+        @Override
+        public boolean isAccountNonExpired() {
+            return true;
+        }
+
+        @Override
+        public boolean isAccountNonLocked() {
+            return true;
+        }
+
+        @Override
+        public boolean isCredentialsNonExpired() {
+            return true;
+        }
+
+        @Override
+        public boolean isEnabled() {
+            return true;
+        }
+
+        @Override
+        public void eraseCredentials() {
+
         }
 
     }

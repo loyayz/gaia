@@ -29,8 +29,6 @@ public class SecurityContextHelper {
 
     /**
      * 获取当前用户
-     *
-     * @see DefaultAuthenticationProvider
      */
     public static AuthUser getUser() {
         return getAuthentication()
@@ -40,8 +38,6 @@ public class SecurityContextHelper {
 
     /**
      * 当前用户请求携带的 token
-     *
-     * @see DefaultAuthenticationProvider
      */
     public static AuthCredentials getCredentials() {
         return getAuthentication()
