@@ -28,15 +28,6 @@ public interface AuthUserCache {
      *
      * @param credentials {@link #putUserInCache result}
      */
-    default void removeUserFromCache(AuthCredentials credentials) {
-        this.removeUserFromCache(credentials.getToken());
-    }
-
-    /**
-     * 删除缓存
-     *
-     * @param token {@link #removeUserFromCache(AuthCredentials)}
-     */
-    void removeUserFromCache(String token);
+    void removeUserFromCache(AuthCredentials credentials);
 
 }

@@ -5,8 +5,6 @@ import com.loyayz.gaia.auth.core.AuthResourceConfiguration;
 import com.loyayz.gaia.auth.core.resource.AuthResourceService;
 import com.loyayz.gaia.auth.core.resource.DefaultAuthResourceService;
 import com.loyayz.gaia.auth.core.user.AuthUserCache;
-import com.loyayz.gaia.auth.core.user.AuthUserExtractor;
-import com.loyayz.gaia.auth.core.user.DefaultAuthUserExtractor;
 import com.loyayz.gaia.auth.core.user.strategy.JwtAuthUserCache;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -43,12 +41,6 @@ public class GaiaAuthAutoConfiguration {
     @ConditionalOnMissingBean(AuthUserCache.class)
     public AuthUserCache authUserCache(AuthCredentialsConfiguration authCredentialsConfiguration) {
         return new JwtAuthUserCache(authCredentialsConfiguration);
-    }
-
-    @Bean
-    @ConditionalOnMissingBean(AuthUserExtractor.class)
-    public AuthUserExtractor authUserExtractor(AuthUserCache authUserCache) {
-        return new DefaultAuthUserExtractor(authUserCache);
     }
 
 }

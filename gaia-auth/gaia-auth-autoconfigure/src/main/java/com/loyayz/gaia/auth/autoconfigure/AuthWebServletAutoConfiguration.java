@@ -2,7 +2,7 @@ package com.loyayz.gaia.auth.autoconfigure;
 
 import com.loyayz.gaia.auth.core.AuthCredentialsConfiguration;
 import com.loyayz.gaia.auth.core.resource.AuthResourceService;
-import com.loyayz.gaia.auth.core.user.AuthUserExtractor;
+import com.loyayz.gaia.auth.core.user.AuthUserCache;
 import com.loyayz.gaia.auth.security.DefaultAuthenticationManager;
 import com.loyayz.gaia.auth.security.web.servlet.AbstractWebSecurityAdapter;
 import com.loyayz.gaia.auth.security.web.servlet.AuthenticationPermissionHandler;
@@ -53,8 +53,8 @@ public class AuthWebServletAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(AuthenticationManagerResolver.class)
-    public AuthenticationManagerResolver<HttpServletRequest> authenticationManagerResolver(AuthUserExtractor userExtractor) {
-        AuthenticationManager manager = new DefaultAuthenticationManager(userExtractor);
+    public AuthenticationManagerResolver<HttpServletRequest> authenticationManagerResolver(AuthUserCache userCache) {
+        AuthenticationManager manager = new DefaultAuthenticationManager(userCache);
         return context -> manager;
     }
 

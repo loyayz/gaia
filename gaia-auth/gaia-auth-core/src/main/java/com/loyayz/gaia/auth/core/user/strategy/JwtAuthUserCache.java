@@ -47,7 +47,7 @@ public class JwtAuthUserCache implements AuthUserCache {
     }
 
     @Override
-    public void removeUserFromCache(String token) {
+    public void removeUserFromCache(AuthCredentials credentials) {
 
     }
 

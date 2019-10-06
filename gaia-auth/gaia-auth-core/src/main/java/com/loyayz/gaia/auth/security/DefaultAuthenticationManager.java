@@ -2,7 +2,7 @@ package com.loyayz.gaia.auth.security;
 
 import com.loyayz.gaia.auth.core.credentials.AuthCredentials;
 import com.loyayz.gaia.auth.core.user.AuthUser;
-import com.loyayz.gaia.auth.core.user.AuthUserExtractor;
+import com.loyayz.gaia.auth.core.user.AuthUserCache;
 import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 @Setter
 @RequiredArgsConstructor
 public class DefaultAuthenticationManager implements AuthenticationManager {
-    private final AuthUserExtractor authUserExtractor;
+    private final AuthUserCache authUserCache;
 
     private UserDetailsChecker authenticationChecks = new AccountStatusUserDetailsChecker();
     private GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();
@@ -42,7 +42,7 @@ public class DefaultAuthenticationManager implements AuthenticationManager {
      * 鉴权
      *
      * @param authentication AuthCredentialsToken
-     * @return AuthCredentialsToken. Principal from {@link AuthUserExtractor}
+     * @return AuthCredentialsToken. Principal from {@link AuthUserCache#getUserFromCache(AuthCredentials)}
      * @throws AuthenticationException 鉴权异常
      */
     @Override
@@ -56,7 +56,7 @@ public class DefaultAuthenticationManager implements AuthenticationManager {
     private SecurityUserDetails retrieveUser(AuthCredentials credentials) {
         AuthUser user;
         try {
-            user = this.authUserExtractor.extract(credentials);
+            user = this.authUserCache.getUserFromCache(credentials);
         } catch (Exception e) {
             if (AuthenticationException.class.isAssignableFrom(e.getClass())) {
                 throw e;
