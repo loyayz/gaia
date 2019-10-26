@@ -42,9 +42,10 @@ public class HttpStatusAuthFailureHandler implements AuthenticationEntryPoint, A
         this.responseError(request, response, exception);
     }
 
-    private void responseError(HttpServletRequest request, HttpServletResponse response, Exception exception) throws IOException {
+    private void responseError(HttpServletRequest request, HttpServletResponse response, Exception exception)
+            throws IOException, ServletException {
         response.setStatus(this.httpStatus.value());
-        response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         String responseBody = this.responseBody(request, exception);
         response.getWriter().write(responseBody);
     }

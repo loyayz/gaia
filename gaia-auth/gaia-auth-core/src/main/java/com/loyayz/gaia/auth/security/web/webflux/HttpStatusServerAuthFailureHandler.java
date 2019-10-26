@@ -46,7 +46,7 @@ public class HttpStatusServerAuthFailureHandler
         return Mono.defer(() -> {
             ServerHttpResponse response = exchange.getResponse();
             response.setStatusCode(this.httpStatus);
-            response.getHeaders().setContentType(MediaType.APPLICATION_JSON_UTF8);
+            response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
             byte[] responseBody = this.responseBody(exchange, exception);
             DataBuffer buffer = response.bufferFactory().wrap(responseBody);
             return response.writeWith(Mono.just(buffer))

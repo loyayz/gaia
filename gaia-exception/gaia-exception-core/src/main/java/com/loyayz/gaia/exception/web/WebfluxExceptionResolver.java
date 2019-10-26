@@ -34,7 +34,7 @@ public class WebfluxExceptionResolver {
         return Mono.defer(() -> {
             ServerHttpResponse response = exchange.getResponse();
             response.setStatusCode(HttpStatus.valueOf(result.getStatus()));
-            response.getHeaders().setContentType(MediaType.APPLICATION_JSON_UTF8);
+            response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
 
             byte[] responseBody = JSON.toJSONBytes(result);
             DataBuffer buffer = response.bufferFactory().wrap(responseBody);
