@@ -1,11 +1,10 @@
-package com.loyayz.gaia.exception.web;
+package com.loyayz.gaia.exception.autoconfigure;
 
 import com.loyayz.gaia.exception.ExceptionDisposer;
 import com.loyayz.gaia.exception.ExceptionDisposers;
 import com.loyayz.gaia.exception.ExceptionResult;
-import com.loyayz.gaia.exception.DefaultExceptionLoggerStrategy;
-import com.loyayz.gaia.exception.ExceptionLoggerStrategy;
-import lombok.Setter;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -13,14 +12,14 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * @author loyayz (loyayz@foxmail.com)
  */
-public class WebmvcExceptionResolver {
-    @Setter
-    private ExceptionLoggerStrategy loggerStrategy = new DefaultExceptionLoggerStrategy();
+@RequiredArgsConstructor
+public class ExceptionWebmvcResolver {
+    private final ExceptionLoggerStrategy loggerStrategy;
 
-    public ExceptionResult handlerException(HttpServletRequest request, HttpServletResponse response, Throwable exception) {
+    @ExceptionHandler(value = Throwable.class)
+    public ExceptionResult handler(HttpServletRequest request, HttpServletResponse response, Throwable exception) {
         ExceptionDisposer disposer = ExceptionDisposers.resolveByException(exception);
         this.writeLog(request, exception, disposer);
-
         ExceptionResult result = disposer.getResult(exception);
         response.setStatus(result.getStatus());
         return result;

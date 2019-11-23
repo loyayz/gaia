@@ -1,12 +1,11 @@
-package com.loyayz.gaia.exception.web;
+package com.loyayz.gaia.exception.autoconfigure;
 
 import com.alibaba.fastjson.JSON;
 import com.loyayz.gaia.exception.ExceptionDisposer;
 import com.loyayz.gaia.exception.ExceptionDisposers;
 import com.loyayz.gaia.exception.ExceptionResult;
-import com.loyayz.gaia.exception.DefaultExceptionLoggerStrategy;
-import com.loyayz.gaia.exception.ExceptionLoggerStrategy;
-import lombok.Setter;
+import lombok.RequiredArgsConstructor;
+import org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.http.HttpStatus;
@@ -19,11 +18,12 @@ import reactor.core.publisher.Mono;
 /**
  * @author loyayz (loyayz@foxmail.com)
  */
-public class WebfluxExceptionResolver {
-    @Setter
-    private ExceptionLoggerStrategy loggerStrategy = new DefaultExceptionLoggerStrategy();
+@RequiredArgsConstructor
+public class ExceptionWebfluxResolver implements ErrorWebExceptionHandler {
+    private final ExceptionLoggerStrategy loggerStrategy;
 
-    public Mono<Void> handlerException(ServerWebExchange exchange, Throwable exception) {
+    @Override
+    public Mono<Void> handle(ServerWebExchange exchange, Throwable exception) {
         return Mono.just(ExceptionDisposers.resolveByException(exception))
                 .doOnNext(disposer -> this.writeLog(exchange, exception, disposer))
                 .map(disposer -> disposer.getResult(exception))

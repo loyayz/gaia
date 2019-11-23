@@ -1,5 +1,7 @@
 package com.loyayz.gaia.exception;
 
+import com.loyayz.gaia.exception.autoconfigure.ExceptionLoggerStrategy;
+
 import java.util.List;
 
 /**

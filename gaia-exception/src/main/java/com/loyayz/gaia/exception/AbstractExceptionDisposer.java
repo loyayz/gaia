@@ -3,6 +3,7 @@ package com.loyayz.gaia.exception;
 import lombok.Data;
 import org.springframework.core.ExceptionDepthComparator;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +16,16 @@ public abstract class AbstractExceptionDisposer implements ExceptionDisposer {
     private Container defaultContainer;
     private Map<Class<? extends Throwable>, Container> mapped = new HashMap<>(16);
     private Map<Class<? extends Throwable>, Container> lookupCache = new HashMap<>(16);
+
+    @PostConstruct
+    public void init() {
+        this.doAddExceptions();
+    }
+
+    /**
+     * 初始化异常处理
+     */
+    protected abstract void doAddExceptions();
 
     protected AbstractExceptionDisposer() {
         this(ExceptionDisposer.DEFAULT_CODE);
@@ -36,25 +47,24 @@ public abstract class AbstractExceptionDisposer implements ExceptionDisposer {
         this.defaultContainer = container;
     }
 
-    protected AbstractExceptionDisposer addException(Class<? extends Throwable> e, Container container) {
+    protected void addException(Class<? extends Throwable> e, Container container) {
         this.mapped.put(e, container);
-        return this;
     }
 
-    protected AbstractExceptionDisposer addException(Class<? extends Throwable> e) {
-        return this.addException(e, this.defaultContainer);
+    protected void addException(Class<? extends Throwable> e) {
+        this.addException(e, this.defaultContainer);
     }
 
-    protected AbstractExceptionDisposer addException(Class<? extends Throwable> e, String code) {
-        return this.addException(e, new Container(code));
+    protected void addException(Class<? extends Throwable> e, String code) {
+        this.addException(e, new Container(code));
     }
 
-    protected AbstractExceptionDisposer addException(Class<? extends Throwable> e, String code, int status) {
-        return this.addException(e, new Container(code, status));
+    protected void addException(Class<? extends Throwable> e, String code, int status) {
+        this.addException(e, new Container(code, status));
     }
 
-    protected AbstractExceptionDisposer addException(Class<? extends Throwable> e, String code, int status, int level) {
-        return this.addException(e, new Container(code, status, level));
+    protected void addException(Class<? extends Throwable> e, String code, int status, int level) {
+        this.addException(e, new Container(code, status, level));
     }
 
     @Override

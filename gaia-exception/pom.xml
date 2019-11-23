@@ -11,11 +11,34 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>gaia-exception</artifactId>
-    <packaging>pom</packaging>
 
-    <modules>
-        <module>gaia-exception-core</module>
-        <module>gaia-exception-autoconfigure</module>
-    </modules>
+    <dependencies>
+        <dependency>
+            <groupId>com.loyayz.gaia</groupId>
+            <artifactId>gaia-util</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webflux</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
 
 </project>

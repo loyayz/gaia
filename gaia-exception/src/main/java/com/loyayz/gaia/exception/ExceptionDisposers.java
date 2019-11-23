@@ -15,6 +15,10 @@ public class ExceptionDisposers {
     private static Map<Class<? extends Throwable>, ExceptionDisposer> mapped = new HashMap<>(16);
     private static Map<Class<? extends Throwable>, ExceptionDisposer> lookupCache = new HashMap<>(16);
     private static ExceptionDisposer defaultExceptionDisposer = new AbstractExceptionDisposer() {
+        @Override
+        protected void doAddExceptions() {
+
+        }
     };
 
     public synchronized static void addExceptionDisposer(ExceptionDisposer disposer) {

@@ -1,2 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.loyayz.gaia.exception.autoconfigure.ExceptionAutoConfiguration

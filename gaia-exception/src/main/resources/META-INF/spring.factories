@@ -1,0 +1,4 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.loyayz.gaia.exception.autoconfigure.ExceptionAutoConfiguration,\
+com.loyayz.gaia.exception.autoconfigure.ExceptionWebfluxAutoConfiguration,\
+com.loyayz.gaia.exception.autoconfigure.ExceptionWebmvcAutoConfiguration

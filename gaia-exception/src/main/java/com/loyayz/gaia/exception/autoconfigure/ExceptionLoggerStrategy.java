@@ -1,4 +1,4 @@
-package com.loyayz.gaia.exception;
+package com.loyayz.gaia.exception.autoconfigure;
 
 import com.loyayz.gaia.exception.ExceptionDisposer;
 
