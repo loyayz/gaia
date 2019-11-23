@@ -1,7 +1,5 @@
-package com.loyayz.gaia.exception;
+package com.loyayz.gaia.util;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 import org.springframework.lang.Nullable;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
@@ -13,8 +11,7 @@ import java.util.Map;
 /**
  * @author loyayz (loyayz@foxmail.com)
  */
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class Exceptions {
+public abstract class Exceptions {
 
     /**
      * 将异常转换为 RuntimeException
