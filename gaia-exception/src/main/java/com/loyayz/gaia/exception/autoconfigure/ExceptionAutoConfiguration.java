@@ -1,15 +1,31 @@
 package com.loyayz.gaia.exception.autoconfigure;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.loyayz.gaia.exception.ExceptionDisposer;
 import com.loyayz.gaia.exception.ExceptionDisposers;
 import com.loyayz.gaia.exception.ExceptionResult;
+import com.loyayz.gaia.exception.helper.ExceptionWebfluxResolver;
+import com.loyayz.gaia.exception.helper.ExceptionWebmvcResolver;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.context.annotation.Bean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
+import org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
+import org.springframework.core.io.buffer.DataBuffer;
+import org.springframework.core.io.buffer.DataBufferUtils;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.server.reactive.ServerHttpResponse;
+import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.server.ServerWebExchange;
+import reactor.core.publisher.Mono;
 
-import java.util.ArrayList;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -24,89 +40,53 @@ public class ExceptionAutoConfiguration implements InitializingBean {
         this.disposers = disposers;
     }
 
-    @ConditionalOnMissingBean(ExceptionLoggerStrategy.class)
-    @Bean
-    public ExceptionLoggerStrategy exceptionLoggerStrategy() {
-       return new DefaultExceptionLoggerStrategy();
+    @RestControllerAdvice
+    @Order(0)
+    @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
+    public class DefaultExceptionWebmvcResolver extends ExceptionWebmvcResolver {
+        @ExceptionHandler(value = Throwable.class)
+        public ExceptionResult handler(HttpServletRequest request, HttpServletResponse response, Throwable exception) {
+            return super.resolve(request, response, exception);
+        }
+    }
+
+    @Component
+    @Order(0)
+    @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.REACTIVE)
+    public class DefaultExceptionWebfluxResolver extends ExceptionWebfluxResolver implements ErrorWebExceptionHandler {
+        private ObjectMapper objectMapper = new ObjectMapper();
+
+        @Override
+        public Mono<Void> handle(ServerWebExchange exchange, Throwable exception) {
+            return super.resolve(exchange, exception)
+                    .flatMap(result -> this.writeResponse(exchange, result));
+        }
+
+        private Mono<Void> writeResponse(ServerWebExchange exchange, ExceptionResult result) {
+            return Mono.just(result)
+                    .map(r -> {
+                        byte[] responseBody;
+                        try {
+                            responseBody = objectMapper.writeValueAsBytes(result);
+                        } catch (JsonProcessingException e) {
+                            throw new RuntimeException(e);
+                        }
+                        return responseBody;
+                    })
+                    .flatMap(responseBody -> {
+                        ServerHttpResponse response = exchange.getResponse();
+                        response.setStatusCode(HttpStatus.valueOf(result.getStatus()));
+                        response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
+                        DataBuffer buffer = response.bufferFactory().wrap(responseBody);
+                        return response.writeWith(Mono.just(buffer))
+                                .doOnError(error -> DataBufferUtils.release(buffer));
+                    });
+        }
     }
 
     @Override
     public void afterPropertiesSet() throws Exception {
         ExceptionDisposers.addExceptionDisposers(disposers);
-    }
-
-    private class DefaultExceptionLoggerStrategy implements ExceptionLoggerStrategy {
-        /**
-         * 1 级异常：warn
-         * 1 级以上：error
-         */
-        @Override
-        public void write(String apiMethod, String apiUrl, Throwable exception, ExceptionDisposer disposer) {
-            int exceptionLevel = this.getExceptionLevel(disposer, exception);
-            ExceptionResult result = disposer.getResult(exception);
-            String logPre = this.logPre(apiMethod, apiUrl);
-
-            if (exceptionLevel > 1) {
-                this.writeInError(logPre, exception, result);
-            } else if (exceptionLevel == 1) {
-                this.writeInWarn(logPre, exception, result);
-            }
-        }
-
-        /**
-         * 异常等级
-         * 当为默认等级 {@code ExceptionDisposer.DEFAULT_LEVEL } 时，则等级赋值为：
-         * unchecked Exception:1, checked Exception:2, Error:3
-         */
-        private int getExceptionLevel(ExceptionDisposer disposer, Throwable exception) {
-            int result = disposer.level(exception);
-            if (result == ExceptionDisposer.DEFAULT_LEVEL) {
-                if (exception instanceof RuntimeException) {
-                    result = 1;
-                } else if (exception instanceof Exception) {
-                    result = 2;
-                } else {
-                    result = 3;
-                }
-            }
-            return result;
-        }
-
-        private void writeInWarn(String logPre, Throwable exception, ExceptionResult result) {
-            if (log.isWarnEnabled()) {
-                String logMsg = this.logMsg(logPre, result);
-                log.warn(logMsg, exception);
-            }
-        }
-
-        private void writeInError(String logPre, Throwable exception, ExceptionResult result) {
-            if (log.isErrorEnabled()) {
-                String logMsg = this.logMsg(logPre, result);
-                log.error(logMsg, exception);
-            }
-        }
-
-        private String logPre(String apiMethod, String apiUrl) {
-            List<String> items = new ArrayList<>();
-            if (apiMethod != null && !"".equals(apiMethod)) {
-                items.add(apiMethod);
-            }
-            if (apiUrl != null && !"".equals(apiUrl)) {
-                items.add(apiUrl);
-            }
-            if (items.isEmpty()) {
-                return "";
-            } else if (items.size() == 1) {
-                return "[" + items.get(0) + "] ";
-            } else {
-                return "[" + items.get(0) + "-" + items.get(1) + "] ";
-            }
-        }
-
-        private String logMsg(String pre, ExceptionResult result) {
-            return pre + result;
-        }
-
     }
 
 }

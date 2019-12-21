@@ -44,14 +44,18 @@ public class ExceptionDisposers {
      */
     public static ExceptionDisposer resolveByException(Throwable exception) {
         ExceptionDisposer result = null;
+        ExceptionDisposer topDisposer = resolveByExceptionType(Throwable.class);
+        if (topDisposer == null) {
+            topDisposer = defaultExceptionDisposer;
+        }
         while (exception != null) {
             result = resolveByExceptionType(exception.getClass());
-            if (result != null) {
+            if (result != null && result != topDisposer) {
                 break;
             }
             exception = exception.getCause();
         }
-        return result == null ? defaultExceptionDisposer : result;
+        return result == null ? topDisposer : result;
     }
 
     /**

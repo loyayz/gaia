@@ -36,19 +36,15 @@ public abstract class AbstractExceptionDisposer implements ExceptionDisposer {
     }
 
     protected AbstractExceptionDisposer(String defaultCode, int defaultStatus) {
-        this(defaultCode, defaultStatus, ExceptionDisposer.DEFAULT_LEVEL);
+        this(defaultCode, defaultStatus, null);
     }
 
-    protected AbstractExceptionDisposer(String defaultCode, int defaultStatus, int defaultLevel) {
-        this(new Container(defaultCode, defaultStatus, defaultLevel));
+    protected AbstractExceptionDisposer(String defaultCode, int defaultStatus, String defaultMessage) {
+        this(defaultCode, defaultStatus, defaultMessage, ExceptionDisposer.DEFAULT_LOG_LEVEL);
     }
 
-    protected AbstractExceptionDisposer(Container container) {
-        this.defaultContainer = container;
-    }
-
-    protected void addException(Class<? extends Throwable> e, Container container) {
-        this.mapped.put(e, container);
+    protected AbstractExceptionDisposer(String defaultCode, int defaultStatus, String defaultMessage, String defaultLogLevel) {
+        this(new Container(defaultCode, defaultStatus, defaultMessage, defaultLogLevel));
     }
 
     protected void addException(Class<? extends Throwable> e) {
@@ -63,8 +59,20 @@ public abstract class AbstractExceptionDisposer implements ExceptionDisposer {
         this.addException(e, new Container(code, status));
     }
 
-    protected void addException(Class<? extends Throwable> e, String code, int status, int level) {
-        this.addException(e, new Container(code, status, level));
+    protected void addException(Class<? extends Throwable> e, String code, int status, String message) {
+        this.addException(e, new Container(code, status, message));
+    }
+
+    protected void addException(Class<? extends Throwable> e, String code, int status, String message, String logLevel) {
+        this.addException(e, new Container(code, status, message, logLevel));
+    }
+
+    protected void addException(Class<? extends Throwable> e, Container container) {
+        this.mapped.put(e, container);
+    }
+
+    private AbstractExceptionDisposer(Container container) {
+        this.defaultContainer = container;
     }
 
     @Override
@@ -80,18 +88,27 @@ public abstract class AbstractExceptionDisposer implements ExceptionDisposer {
     }
 
     @Override
+    public String message(Throwable e) {
+        String result = this.resolveByException(e).getMessage();
+        result = (result == null || "".equals(result.trim())) ?
+                this.defaultContainer.getMessage() : result;
+        return (result == null || "".equals(result.trim())) ?
+                e.getMessage() : result;
+    }
+
+    @Override
     public int status(Throwable e) {
         Integer result = this.resolveByException(e).getStatus();
         return result == null ? this.defaultContainer.getStatus() : result;
     }
 
     @Override
-    public int level(Throwable e) {
-        Integer result = this.resolveByException(e).getLevel();
-        return result == null ? this.defaultContainer.getLevel() : result;
+    public String logLevel(Throwable e) {
+        String result = this.resolveByException(e).getLogLevel();
+        return result == null ? this.defaultContainer.getLogLevel() : result;
     }
 
-    protected Container resolveByException(Throwable exception) {
+    private Container resolveByException(Throwable exception) {
         Container result = null;
         while (exception != null) {
             result = resolveByExceptionType(exception.getClass());
@@ -103,7 +120,7 @@ public abstract class AbstractExceptionDisposer implements ExceptionDisposer {
         return result == null ? this.defaultContainer : result;
     }
 
-    protected Container resolveByExceptionType(Class<? extends Throwable> exceptionType) {
+    private Container resolveByExceptionType(Class<? extends Throwable> exceptionType) {
         Container result = this.lookupCache.get(exceptionType);
         if (result == null) {
             result = this.getMappedContainer(exceptionType);
@@ -134,21 +151,26 @@ public abstract class AbstractExceptionDisposer implements ExceptionDisposer {
     protected static class Container {
         private String code;
         private Integer status;
-        private Integer level;
+        private String message;
+        private String logLevel;
 
-        public Container(String code) {
-            this.code = code;
+        Container(String code) {
+            this(code, null);
         }
 
-        public Container(String code, Integer status) {
-            this.code = code;
-            this.status = status;
+        Container(String code, Integer status) {
+            this(code, status, null);
         }
 
-        public Container(String code, Integer status, Integer level) {
+        Container(String code, Integer status, String message) {
+            this(code, status, message, null);
+        }
+
+        Container(String code, Integer status, String message, String logLevel) {
             this.code = code;
             this.status = status;
-            this.level = level;
+            this.message = message;
+            this.logLevel = logLevel;
         }
     }
 

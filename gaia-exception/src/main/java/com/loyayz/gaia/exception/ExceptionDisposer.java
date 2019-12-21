@@ -1,7 +1,5 @@
 package com.loyayz.gaia.exception;
 
-import com.loyayz.gaia.exception.autoconfigure.ExceptionLoggerStrategy;
-
 import java.util.List;
 
 /**
@@ -10,7 +8,7 @@ import java.util.List;
 public interface ExceptionDisposer {
     String DEFAULT_CODE = "500";
     int DEFAULT_STATUS = 500;
-    int DEFAULT_LEVEL = -1;
+    String DEFAULT_LOG_LEVEL = "WARN";
 
     /**
      * 要处理的异常
@@ -39,12 +37,11 @@ public interface ExceptionDisposer {
     }
 
     /**
-     * 异常等级
-     *
-     * @see ExceptionLoggerStrategy
+     * 日志等级
+     * TRACE,TRACE,DEBUG,INFO,WARN,ERROR
      */
-    default int level(Throwable e) {
-        return DEFAULT_LEVEL;
+    default String logLevel(Throwable e) {
+        return DEFAULT_LOG_LEVEL;
     }
 
     default ExceptionResult getResult(Throwable exception) {
