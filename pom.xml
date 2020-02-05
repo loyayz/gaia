@@ -24,12 +24,18 @@
         <guava.version>28.1-jre</guava.version>
         <fastjson.version>1.2.61</fastjson.version>
         <jjwt.version>0.9.1</jjwt.version>
+
+        <mybatis.version>3.5.4</mybatis.version>
+        <mybatis-spring.version>2.0.3</mybatis-spring.version>
+        <mybatis-plus.version>3.3.1</mybatis-plus.version>
+        <pagehelper.version>5.1.11</pagehelper.version>
     </properties>
 
 
     <modules>
         <module>gaia-core</module>
         <module>gaia-auth</module>
+        <module>gaia-data</module>
         <module>gaia-exception</module>
     </modules>
 
@@ -49,6 +55,32 @@
                 <groupId>io.jsonwebtoken</groupId>
                 <artifactId>jjwt</artifactId>
                 <version>${jjwt.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.mybatis</groupId>
+                <artifactId>mybatis</artifactId>
+                <version>${mybatis.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mybatis</groupId>
+                <artifactId>mybatis-spring</artifactId>
+                <version>${mybatis-spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.pagehelper</groupId>
+                <artifactId>pagehelper</artifactId>
+                <version>${pagehelper.version}</version>
             </dependency>
 
         </dependencies>
