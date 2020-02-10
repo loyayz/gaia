@@ -1,10 +1,12 @@
 package com.loyayz.gaia.auth.core.credentials;
 
+import com.google.common.base.Splitter;
 import com.loyayz.gaia.auth.core.AuthCredentialsProperties;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -35,9 +37,17 @@ public abstract class AbstractAuthCredentialsExtractor<T> implements AuthCredent
 
     @Override
     public AuthCredentials extract(T request) {
-        String token = this.getHeaderToken(request).orElse(
+        String token = this.extractToken(request);
+        return this.buildCredentials(request, token);
+    }
+
+    protected String extractToken(T request) {
+        return this.getHeaderToken(request).orElse(
                 this.getParamToken(request).orElse("")
         );
+    }
+
+    protected AuthCredentials buildCredentials(T request, String token) {
         return new AuthCredentials(token);
     }
 
@@ -46,7 +56,8 @@ public abstract class AbstractAuthCredentialsExtractor<T> implements AuthCredent
         if (headerName == null || headerName.isEmpty()) {
             return Optional.empty();
         }
-        return Optional.ofNullable(this.getHeaderToken(request, headerName));
+        return Optional.ofNullable(this.getHeaderToken(request, headerName))
+                .map(this::parseToken);
     }
 
     private Optional<String> getParamToken(T request) {
@@ -54,7 +65,17 @@ public abstract class AbstractAuthCredentialsExtractor<T> implements AuthCredent
         if (paramName == null || paramName.isEmpty()) {
             return Optional.empty();
         }
-        return Optional.ofNullable(this.getParamToken(request, paramName));
+        return Optional.ofNullable(this.getParamToken(request, paramName))
+                .map(this::parseToken);
+    }
+
+    private String parseToken(String token) {
+        if (token == null) {
+            return "";
+        }
+        String separator = " ";
+        List<String> tokens = Splitter.on(separator).omitEmptyStrings().trimResults().splitToList(token);
+        return tokens.size() > 1 ? tokens.get(1) : token;
     }
 
 }
