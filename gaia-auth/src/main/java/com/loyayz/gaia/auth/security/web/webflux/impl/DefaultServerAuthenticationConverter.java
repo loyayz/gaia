@@ -1,6 +1,6 @@
 package com.loyayz.gaia.auth.security.web.webflux.impl;
 
-import com.loyayz.gaia.auth.core.AuthCredentialsConfiguration;
+import com.loyayz.gaia.auth.core.AuthCredentialsProperties;
 import com.loyayz.gaia.auth.core.credentials.AuthCredentials;
 import com.loyayz.gaia.auth.security.AuthenticationCredentialsToken;
 import com.loyayz.gaia.auth.security.web.webflux.ServerAuthCredentialsExtractor;
@@ -15,8 +15,8 @@ import reactor.core.publisher.Mono;
 public class DefaultServerAuthenticationConverter implements ServerAuthenticationConverter {
     private final ServerAuthCredentialsExtractor authCredentialsExtractor;
 
-    public DefaultServerAuthenticationConverter(AuthCredentialsConfiguration credentialsConfiguration) {
-        this.authCredentialsExtractor = new ServerAuthCredentialsExtractor(credentialsConfiguration);
+    public DefaultServerAuthenticationConverter(AuthCredentialsProperties credentialsProperties) {
+        this.authCredentialsExtractor = new ServerAuthCredentialsExtractor(credentialsProperties);
     }
 
     @Override

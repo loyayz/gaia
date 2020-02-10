@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
  * @author loyayz (loyayz@foxmail.com)
  */
 @Data
-public class AuthResourceConfiguration {
+public class AuthResourceProperties {
     private static final List<String> DEFAULT_PERMIT_PUBLIC = Arrays.asList("/public/**", "/error/**");
     private static final List<String> DEFAULT_PERMIT_STATIC = Arrays.asList("/css/**", "/js/**", "/images/**", "/webjars/**", "/**/favicon.ico", "/static/**");
 

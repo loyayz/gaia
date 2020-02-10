@@ -1,6 +1,6 @@
 package com.loyayz.gaia.auth.core.resource;
 
-import com.loyayz.gaia.auth.core.AuthResourceConfiguration;
+import com.loyayz.gaia.auth.core.AuthResourceProperties;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -14,16 +14,16 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class DefaultAuthResourceService implements AuthResourceService {
     @Getter(AccessLevel.PROTECTED)
-    private final AuthResourceConfiguration authResourceConfiguration;
+    private final AuthResourceProperties resourceProperties;
 
     @Override
     public List<AuthResource> listPermitResources() {
-        return this.authResourceConfiguration.listPermitResources();
+        return this.resourceProperties.listPermitResources();
     }
 
     @Override
     public Map<AuthResource, AuthResourcePermission> listProtectResourcePermission() {
-        return this.authResourceConfiguration.listProtectResources();
+        return this.resourceProperties.listProtectResources();
     }
 
 }

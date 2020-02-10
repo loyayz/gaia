@@ -1,6 +1,6 @@
 package com.loyayz.gaia.auth.security.web.servlet;
 
-import com.loyayz.gaia.auth.core.AuthCredentialsConfiguration;
+import com.loyayz.gaia.auth.core.AuthCredentialsProperties;
 import com.loyayz.gaia.auth.core.credentials.AbstractAuthCredentialsExtractor;
 import com.loyayz.gaia.auth.core.credentials.AuthCredentialsExtractor;
 
@@ -12,8 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 public class ServletAuthCredentialsExtractor extends AbstractAuthCredentialsExtractor<HttpServletRequest>
         implements AuthCredentialsExtractor<HttpServletRequest> {
 
-    public ServletAuthCredentialsExtractor(AuthCredentialsConfiguration credentialsConfiguration) {
-        super(credentialsConfiguration);
+    public ServletAuthCredentialsExtractor(AuthCredentialsProperties credentialsProperties) {
+        super(credentialsProperties);
     }
 
     @Override

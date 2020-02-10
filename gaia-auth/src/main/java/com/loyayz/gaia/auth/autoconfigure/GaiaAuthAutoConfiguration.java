@@ -1,7 +1,7 @@
 package com.loyayz.gaia.auth.autoconfigure;
 
-import com.loyayz.gaia.auth.core.AuthCredentialsConfiguration;
-import com.loyayz.gaia.auth.core.AuthResourceConfiguration;
+import com.loyayz.gaia.auth.core.AuthCredentialsProperties;
+import com.loyayz.gaia.auth.core.AuthResourceProperties;
 import com.loyayz.gaia.auth.core.resource.AuthResourceService;
 import com.loyayz.gaia.auth.core.resource.DefaultAuthResourceService;
 import com.loyayz.gaia.auth.core.user.AuthUserCache;
@@ -18,29 +18,29 @@ import org.springframework.context.annotation.Configuration;
 public class GaiaAuthAutoConfiguration {
 
     @Bean
-    @ConditionalOnMissingBean(AuthCredentialsConfiguration.class)
+    @ConditionalOnMissingBean(AuthCredentialsProperties.class)
     @ConfigurationProperties(prefix = "gaia.auth.credentials")
-    public AuthCredentialsConfiguration authCredentialsConfiguration() {
-        return new AuthCredentialsConfiguration();
+    public AuthCredentialsProperties authCredentialsProperties() {
+        return new AuthCredentialsProperties();
     }
 
     @Bean
-    @ConditionalOnMissingBean(AuthResourceConfiguration.class)
+    @ConditionalOnMissingBean(AuthResourceProperties.class)
     @ConfigurationProperties(prefix = "gaia.auth.resource")
-    public AuthResourceConfiguration authResourceConfiguration() {
-        return new AuthResourceConfiguration();
+    public AuthResourceProperties authResourceProperties() {
+        return new AuthResourceProperties();
     }
 
     @Bean
     @ConditionalOnMissingBean(AuthResourceService.class)
-    public AuthResourceService authResourceService(AuthResourceConfiguration authResourceConfiguration) {
-        return new DefaultAuthResourceService(authResourceConfiguration);
+    public AuthResourceService authResourceService(AuthResourceProperties resourceProperties) {
+        return new DefaultAuthResourceService(resourceProperties);
     }
 
     @Bean
     @ConditionalOnMissingBean(AuthUserCache.class)
-    public AuthUserCache authUserCache(AuthCredentialsConfiguration authCredentialsConfiguration) {
-        return new JwtAuthUserCache(authCredentialsConfiguration);
+    public AuthUserCache authUserCache(AuthCredentialsProperties credentialsProperties) {
+        return new JwtAuthUserCache(credentialsProperties);
     }
 
 }

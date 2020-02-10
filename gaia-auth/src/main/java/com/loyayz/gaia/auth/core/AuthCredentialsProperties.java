@@ -13,7 +13,7 @@ import java.util.Date;
  * @author loyayz (loyayz@foxmail.com)
  */
 @Data
-public class AuthCredentialsConfiguration {
+public class AuthCredentialsProperties {
 
     private static final String DEFAULT_TOKEN_HEADER_NAME = "Authorization";
     private static final String DEFAULT_TOKEN_PARAM_NAME = "_token";

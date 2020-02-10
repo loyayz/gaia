@@ -1,6 +1,6 @@
 package com.loyayz.gaia.auth.core.credentials;
 
-import com.loyayz.gaia.auth.core.AuthCredentialsConfiguration;
+import com.loyayz.gaia.auth.core.AuthCredentialsProperties;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +13,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public abstract class AbstractAuthCredentialsExtractor<T> implements AuthCredentialsExtractor<T> {
     @Getter(AccessLevel.PROTECTED)
-    private final AuthCredentialsConfiguration authCredentialsConfiguration;
+    private final AuthCredentialsProperties credentialsProperties;
 
     /**
      * 从 header 提取
@@ -42,7 +42,7 @@ public abstract class AbstractAuthCredentialsExtractor<T> implements AuthCredent
     }
 
     private Optional<String> getHeaderToken(T request) {
-        String headerName = this.authCredentialsConfiguration.getTokenHeaderName();
+        String headerName = this.credentialsProperties.getTokenHeaderName();
         if (headerName == null || headerName.isEmpty()) {
             return Optional.empty();
         }
@@ -50,7 +50,7 @@ public abstract class AbstractAuthCredentialsExtractor<T> implements AuthCredent
     }
 
     private Optional<String> getParamToken(T request) {
-        String paramName = this.authCredentialsConfiguration.getTokenParamName();
+        String paramName = this.credentialsProperties.getTokenParamName();
         if (paramName == null || paramName.isEmpty()) {
             return Optional.empty();
         }

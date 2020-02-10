@@ -1,6 +1,6 @@
 package com.loyayz.gaia.auth.security.web.servlet.impl;
 
-import com.loyayz.gaia.auth.core.AuthCredentialsConfiguration;
+import com.loyayz.gaia.auth.core.AuthCredentialsProperties;
 import com.loyayz.gaia.auth.core.credentials.AuthCredentials;
 import com.loyayz.gaia.auth.security.AuthenticationCredentialsToken;
 import com.loyayz.gaia.auth.security.web.servlet.ServletAuthCredentialsExtractor;
@@ -15,8 +15,8 @@ import javax.servlet.http.HttpServletRequest;
 public class DefaultAuthenticationConverter implements AuthenticationConverter {
     private final ServletAuthCredentialsExtractor authCredentialsExtractor;
 
-    public DefaultAuthenticationConverter(AuthCredentialsConfiguration credentialsConfiguration) {
-        this.authCredentialsExtractor = new ServletAuthCredentialsExtractor(credentialsConfiguration);
+    public DefaultAuthenticationConverter(AuthCredentialsProperties credentialsProperties) {
+        this.authCredentialsExtractor = new ServletAuthCredentialsExtractor(credentialsProperties);
     }
 
     @Override

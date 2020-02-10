@@ -1,6 +1,6 @@
 package com.loyayz.gaia.auth.autoconfigure;
 
-import com.loyayz.gaia.auth.core.AuthCredentialsConfiguration;
+import com.loyayz.gaia.auth.core.AuthCredentialsProperties;
 import com.loyayz.gaia.auth.core.resource.AuthResourceService;
 import com.loyayz.gaia.auth.core.user.AuthUserCache;
 import com.loyayz.gaia.auth.security.DefaultAuthenticationManager;
@@ -60,8 +60,8 @@ public class AuthWebFluxAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(ServerAuthenticationConverter.class)
-    public ServerAuthenticationConverter serverAuthenticationConverter(AuthCredentialsConfiguration credentialsConfiguration) {
-        return new DefaultServerAuthenticationConverter(credentialsConfiguration);
+    public ServerAuthenticationConverter serverAuthenticationConverter(AuthCredentialsProperties credentialsProperties) {
+        return new DefaultServerAuthenticationConverter(credentialsProperties);
     }
 
     @Bean

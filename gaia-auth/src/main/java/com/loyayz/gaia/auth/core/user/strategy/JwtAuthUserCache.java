@@ -1,6 +1,6 @@
 package com.loyayz.gaia.auth.core.user.strategy;
 
-import com.loyayz.gaia.auth.core.AuthCredentialsConfiguration;
+import com.loyayz.gaia.auth.core.AuthCredentialsProperties;
 import com.loyayz.gaia.auth.core.credentials.AuthCredentials;
 import com.loyayz.gaia.auth.core.user.AuthUser;
 import com.loyayz.gaia.auth.core.user.AuthUserCache;
@@ -18,7 +18,7 @@ import java.util.Map;
  */
 @RequiredArgsConstructor
 public class JwtAuthUserCache implements AuthUserCache {
-    private final AuthCredentialsConfiguration authCredentialsConfiguration;
+    private final AuthCredentialsProperties credentialsProperties;
 
     @Override
     @SuppressWarnings("unchecked")
@@ -53,8 +53,8 @@ public class JwtAuthUserCache implements AuthUserCache {
 
     private String generateToken(String id, Map<String, Object> claims) {
         Date now = new Date();
-        Date expirationDate = this.authCredentialsConfiguration.getExpirationDate(now);
-        AuthCredentialsConfiguration.Jwt jwt = this.authCredentialsConfiguration.getJwt();
+        Date expirationDate = this.credentialsProperties.getExpirationDate(now);
+        AuthCredentialsProperties.Jwt jwt = this.credentialsProperties.getJwt();
         return Jwts.builder()
                 .setClaims(claims)
                 .setId(id)
@@ -66,7 +66,7 @@ public class JwtAuthUserCache implements AuthUserCache {
     }
 
     private Claims parseToken(String token) {
-        AuthCredentialsConfiguration.Jwt jwt = this.authCredentialsConfiguration.getJwt();
+        AuthCredentialsProperties.Jwt jwt = this.credentialsProperties.getJwt();
         return Jwts.parser()
                 .setSigningKey(jwt.getSignSecret())
                 .parseClaimsJws(token)

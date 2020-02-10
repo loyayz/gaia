@@ -1,6 +1,6 @@
 package com.loyayz.gaia.auth.autoconfigure;
 
-import com.loyayz.gaia.auth.core.AuthCredentialsConfiguration;
+import com.loyayz.gaia.auth.core.AuthCredentialsProperties;
 import com.loyayz.gaia.auth.core.resource.AuthResourceService;
 import com.loyayz.gaia.auth.core.user.AuthUserCache;
 import com.loyayz.gaia.auth.security.DefaultAuthenticationManager;
@@ -60,8 +60,8 @@ public class AuthWebServletAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(AuthenticationConverter.class)
-    public AuthenticationConverter authenticationConverter(AuthCredentialsConfiguration credentialsConfiguration) {
-        return new DefaultAuthenticationConverter(credentialsConfiguration);
+    public AuthenticationConverter authenticationConverter(AuthCredentialsProperties credentialsProperties) {
+        return new DefaultAuthenticationConverter(credentialsProperties);
     }
 
     @Bean
