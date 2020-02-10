@@ -47,7 +47,7 @@ public class DefaultAuthenticationManager implements AuthenticationManager {
      */
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        AuthCredentials credentials = ((AuthenticationCredentialsToken) authentication).getCredentials();
+        AuthCredentials credentials = ((SecurityToken) authentication).getCredentials();
         this.validBeforeAuth(credentials);
         SecurityUserDetails user = this.retrieveUser(credentials);
         return this.createSuccessAuthentication(credentials, user);
@@ -79,7 +79,7 @@ public class DefaultAuthenticationManager implements AuthenticationManager {
     }
 
     private Authentication createSuccessAuthentication(AuthCredentials credentials, SecurityUserDetails userDetails) {
-        return new AuthenticationCredentialsToken(userDetails.getUser(), credentials,
+        return new SecurityToken(userDetails.getUser(), credentials,
                 this.authoritiesMapper.mapAuthorities(userDetails.getAuthorities()));
     }
 

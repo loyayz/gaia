@@ -1,12 +1,11 @@
-package com.loyayz.gaia.auth.security.web.webflux.impl;
+package com.loyayz.gaia.auth.security.web.webflux;
 
 import com.google.common.collect.Maps;
 import com.loyayz.gaia.auth.core.resource.AuthResource;
 import com.loyayz.gaia.auth.core.resource.AuthResourcePermission;
 import com.loyayz.gaia.auth.core.resource.AuthResourceRefreshedListener;
 import com.loyayz.gaia.auth.core.resource.AuthResourceService;
-import com.loyayz.gaia.auth.security.web.webflux.DelegatingServerWebExchangeMatcher;
-import com.loyayz.gaia.auth.security.web.webflux.ServerAuthenticationPermissionHandler;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.access.expression.SecurityExpressionOperations;
@@ -19,6 +18,7 @@ import org.springframework.security.web.server.util.matcher.ServerWebExchangeMat
 import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatchers;
 import org.springframework.util.StringUtils;
 import org.springframework.web.server.ServerWebExchange;
+import reactor.core.publisher.Mono;
 
 import java.util.Collections;
 import java.util.List;
@@ -31,14 +31,13 @@ import java.util.stream.Collectors;
 @Slf4j
 public class DefaultServerAuthenticationPermissionHandler implements ServerAuthenticationPermissionHandler, AuthResourceRefreshedListener {
     private final AuthResourceService resourceService;
+    private DelegatingServerWebExchangeMatcher protectMatcher = new DelegatingServerWebExchangeMatcher(ServerWebExchangeMatchers.anyExchange());
+    private Map<ServerWebExchangeMatcher, AuthResourcePermission> protectMatcherPermission;
 
     public DefaultServerAuthenticationPermissionHandler(AuthResourceService resourceService) {
         this.resourceService = resourceService;
         this.init();
     }
-
-    private DelegatingServerWebExchangeMatcher protectMatcher = new DelegatingServerWebExchangeMatcher(ServerWebExchangeMatchers.anyExchange());
-    private Map<ServerWebExchangeMatcher, AuthResourcePermission> protectMatcherPermission;
 
     @Override
     public ServerWebExchangeMatcher requiresAuthenticationMatcher() {
@@ -123,10 +122,25 @@ public class DefaultServerAuthenticationPermissionHandler implements ServerAuthe
         this.init();
     }
 
-    class DefaultSecurityExpressionRoot extends SecurityExpressionRoot {
+    private static class DefaultSecurityExpressionRoot extends SecurityExpressionRoot {
         DefaultSecurityExpressionRoot(Authentication authentication) {
             super(authentication);
         }
+    }
+
+    private static class DelegatingServerWebExchangeMatcher implements ServerWebExchangeMatcher {
+        @Setter
+        private ServerWebExchangeMatcher matcher;
+
+        DelegatingServerWebExchangeMatcher(ServerWebExchangeMatcher matcher) {
+            this.matcher = matcher;
+        }
+
+        @Override
+        public Mono<MatchResult> matches(ServerWebExchange exchange) {
+            return this.matcher.matches(exchange);
+        }
+
     }
 
 }

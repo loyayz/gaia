@@ -2,14 +2,18 @@ package com.loyayz.gaia.auth.autoconfigure;
 
 import com.loyayz.gaia.auth.core.AuthCredentialsProperties;
 import com.loyayz.gaia.auth.core.AuthResourceProperties;
+import com.loyayz.gaia.auth.core.resource.AuthResource;
+import com.loyayz.gaia.auth.core.resource.AuthResourcePermission;
 import com.loyayz.gaia.auth.core.resource.AuthResourceService;
-import com.loyayz.gaia.auth.core.resource.DefaultAuthResourceService;
 import com.loyayz.gaia.auth.core.user.AuthUserCache;
 import com.loyayz.gaia.auth.core.user.strategy.JwtAuthUserCache;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author loyayz (loyayz@foxmail.com)
@@ -34,7 +38,17 @@ public class GaiaAuthAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(AuthResourceService.class)
     public AuthResourceService authResourceService(AuthResourceProperties resourceProperties) {
-        return new DefaultAuthResourceService(resourceProperties);
+        return new AuthResourceService() {
+            @Override
+            public List<AuthResource> listPermitResources() {
+                return resourceProperties.listPermitResources();
+            }
+
+            @Override
+            public Map<AuthResource, AuthResourcePermission> listProtectResourcePermission() {
+                return resourceProperties.listProtectResources();
+            }
+        };
     }
 
     @Bean

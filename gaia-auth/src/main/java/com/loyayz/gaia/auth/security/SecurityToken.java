@@ -11,26 +11,26 @@ import java.util.Collection;
 /**
  * @author loyayz (loyayz@foxmail.com)
  */
-public class AuthenticationCredentialsToken extends AbstractAuthenticationToken {
+public class SecurityToken extends AbstractAuthenticationToken {
 
     private static final long serialVersionUID = SpringSecurityCoreVersion.SERIAL_VERSION_UID;
 
     private AuthUser principal;
     private AuthCredentials credentials;
 
-    public AuthenticationCredentialsToken(AuthCredentials credentials) {
+    public SecurityToken(AuthCredentials credentials) {
         this(null, credentials);
     }
 
-    public AuthenticationCredentialsToken(AuthUser principal, AuthCredentials credentials) {
+    public SecurityToken(AuthUser principal, AuthCredentials credentials) {
         super(null);
         this.principal = principal;
         this.credentials = credentials;
         super.setAuthenticated(false);
     }
 
-    public AuthenticationCredentialsToken(AuthUser principal, AuthCredentials credentials,
-                                          Collection<? extends GrantedAuthority> authorities) {
+    public SecurityToken(AuthUser principal, AuthCredentials credentials,
+                         Collection<? extends GrantedAuthority> authorities) {
         super(authorities);
         this.principal = principal;
         this.credentials = credentials;

@@ -1,15 +1,17 @@
 package com.loyayz.gaia.auth.autoconfigure;
 
 import com.loyayz.gaia.auth.core.AuthCredentialsProperties;
+import com.loyayz.gaia.auth.core.credentials.AbstractAuthCredentialsExtractor;
+import com.loyayz.gaia.auth.core.credentials.AuthCredentialsExtractor;
 import com.loyayz.gaia.auth.core.resource.AuthResourceService;
 import com.loyayz.gaia.auth.core.user.AuthUserCache;
+import com.loyayz.gaia.auth.security.SecurityToken;
 import com.loyayz.gaia.auth.security.DefaultAuthenticationManager;
 import com.loyayz.gaia.auth.security.web.webflux.AbstractServerSecurityAdapter;
 import com.loyayz.gaia.auth.security.web.webflux.HttpStatusServerAuthFailureHandler;
 import com.loyayz.gaia.auth.security.web.webflux.ServerAuthenticationPermissionHandler;
-import com.loyayz.gaia.auth.security.web.webflux.impl.DefaultServerAuthenticationConverter;
-import com.loyayz.gaia.auth.security.web.webflux.impl.DefaultServerAuthenticationPermissionHandler;
-import com.loyayz.gaia.auth.security.web.webflux.impl.DefaultServerSecurityAdapter;
+import com.loyayz.gaia.auth.security.web.webflux.DefaultServerAuthenticationPermissionHandler;
+import com.loyayz.gaia.auth.security.web.webflux.DefaultServerSecurityAdapter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
@@ -30,6 +32,7 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.authentication.AuthenticationWebFilter;
 import org.springframework.security.web.server.authentication.ServerAuthenticationConverter;
 import org.springframework.security.web.server.authentication.ServerAuthenticationFailureHandler;
+import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 /**
@@ -42,7 +45,7 @@ import reactor.core.publisher.Mono;
 @EnableReactiveMethodSecurity
 @RequiredArgsConstructor
 @Slf4j
-public class AuthWebFluxAutoConfiguration {
+public class GaiaAuthWebFluxAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(ServerAuthenticationPermissionHandler.class)
@@ -61,7 +64,22 @@ public class AuthWebFluxAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(ServerAuthenticationConverter.class)
     public ServerAuthenticationConverter serverAuthenticationConverter(AuthCredentialsProperties credentialsProperties) {
-        return new DefaultServerAuthenticationConverter(credentialsProperties);
+        AuthCredentialsExtractor<ServerWebExchange> extractor =
+                new AbstractAuthCredentialsExtractor<ServerWebExchange>(credentialsProperties) {
+                    @Override
+                    protected String getHeaderToken(ServerWebExchange exchange, String headerName) {
+                        return exchange.getRequest().getHeaders().getFirst(headerName);
+                    }
+
+                    @Override
+                    protected String getParamToken(ServerWebExchange exchange, String paramName) {
+                        return exchange.getRequest().getQueryParams().getFirst(paramName);
+                    }
+                };
+
+        return exchange ->
+                Mono.just(extractor.extract(exchange))
+                        .map(SecurityToken::new);
     }
 
     @Bean

@@ -1,15 +1,16 @@
-package com.loyayz.gaia.auth.security.web.webflux.impl;
+package com.loyayz.gaia.auth.security.web.webflux;
 
-import com.loyayz.gaia.auth.security.web.webflux.AbstractServerSecurityAdapter;
-import com.loyayz.gaia.auth.security.web.webflux.ServerAuthenticationPermissionAccess;
-import com.loyayz.gaia.auth.security.web.webflux.ServerAuthenticationPermissionHandler;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.authorization.ReactiveAuthorizationManager;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.web.server.authentication.AuthenticationWebFilter;
 import org.springframework.security.web.server.authorization.AuthorizationContext;
 import org.springframework.web.cors.reactive.CorsConfigurationSource;
+import reactor.core.publisher.Mono;
 
 /**
  * @author loyayz (loyayz@foxmail.com)
@@ -52,6 +53,20 @@ public class DefaultServerSecurityAdapter extends AbstractServerSecurityAdapter 
         } else {
             super.authPath(security);
         }
+    }
+
+    @RequiredArgsConstructor
+    protected static class ServerAuthenticationPermissionAccess implements ReactiveAuthorizationManager<AuthorizationContext> {
+        private final ServerAuthenticationPermissionHandler permissionHandler;
+
+        @Override
+        public Mono<AuthorizationDecision> check(Mono<Authentication> authentication, AuthorizationContext object) {
+            return authentication
+                    .map(auth -> this.permissionHandler.hasPermission(auth, object.getExchange()))
+                    .map(AuthorizationDecision::new)
+                    .defaultIfEmpty(new AuthorizationDecision(false));
+        }
+
     }
 
 }

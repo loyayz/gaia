@@ -1,16 +1,14 @@
 package com.loyayz.gaia.auth.autoconfigure;
 
 import com.loyayz.gaia.auth.core.AuthCredentialsProperties;
+import com.loyayz.gaia.auth.core.credentials.AbstractAuthCredentialsExtractor;
+import com.loyayz.gaia.auth.core.credentials.AuthCredentials;
+import com.loyayz.gaia.auth.core.credentials.AuthCredentialsExtractor;
 import com.loyayz.gaia.auth.core.resource.AuthResourceService;
 import com.loyayz.gaia.auth.core.user.AuthUserCache;
+import com.loyayz.gaia.auth.security.SecurityToken;
 import com.loyayz.gaia.auth.security.DefaultAuthenticationManager;
-import com.loyayz.gaia.auth.security.web.servlet.AbstractWebSecurityAdapter;
-import com.loyayz.gaia.auth.security.web.servlet.AuthenticationPermissionHandler;
-import com.loyayz.gaia.auth.security.web.servlet.HttpStatusAuthFailureHandler;
-import com.loyayz.gaia.auth.security.web.servlet.NoopAuthenticationSuccessHandler;
-import com.loyayz.gaia.auth.security.web.servlet.impl.DefaultAuthenticationConverter;
-import com.loyayz.gaia.auth.security.web.servlet.impl.DefaultAuthenticationPermissionHandler;
-import com.loyayz.gaia.auth.security.web.servlet.impl.DefaultWebSecurityAdapter;
+import com.loyayz.gaia.auth.security.web.servlet.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
@@ -43,7 +41,7 @@ import javax.servlet.http.HttpServletRequest;
 @EnableGlobalMethodSecurity(prePostEnabled = true, jsr250Enabled = true)
 @RequiredArgsConstructor
 @Slf4j
-public class AuthWebServletAutoConfiguration {
+public class GaiaAuthWebServletAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(AuthenticationPermissionHandler.class)
@@ -61,7 +59,22 @@ public class AuthWebServletAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(AuthenticationConverter.class)
     public AuthenticationConverter authenticationConverter(AuthCredentialsProperties credentialsProperties) {
-        return new DefaultAuthenticationConverter(credentialsProperties);
+        AuthCredentialsExtractor<HttpServletRequest> extractor =
+                new AbstractAuthCredentialsExtractor<HttpServletRequest>(credentialsProperties) {
+                    @Override
+                    protected String getHeaderToken(HttpServletRequest request, String headerName) {
+                        return request.getHeader(headerName);
+                    }
+
+                    @Override
+                    protected String getParamToken(HttpServletRequest request, String paramName) {
+                        return request.getParameter(paramName);
+                    }
+                };
+        return request -> {
+            AuthCredentials credentials = extractor.extract(request);
+            return new SecurityToken(credentials);
+        };
     }
 
     @Bean
@@ -69,7 +82,9 @@ public class AuthWebServletAutoConfiguration {
     public AuthenticationFilter authenticationFilter(AuthenticationPermissionHandler permissionHandler,
                                                      AuthenticationManagerResolver<HttpServletRequest> managerResolver,
                                                      AuthenticationConverter converter) {
-        AuthenticationSuccessHandler successHandler = new NoopAuthenticationSuccessHandler();
+        AuthenticationSuccessHandler successHandler = (request, response, authentication) -> {
+
+        };
         AuthenticationFailureHandler failureHandler = new HttpStatusAuthFailureHandler(HttpStatus.UNAUTHORIZED);
 
         AuthenticationFilter filter = new AuthenticationFilter(managerResolver, converter);

@@ -1,4 +1,4 @@
-package com.loyayz.gaia.auth.security.web.servlet.impl;
+package com.loyayz.gaia.auth.security.web.servlet;
 
 
 import com.google.common.collect.Maps;
@@ -6,8 +6,7 @@ import com.loyayz.gaia.auth.core.resource.AuthResource;
 import com.loyayz.gaia.auth.core.resource.AuthResourcePermission;
 import com.loyayz.gaia.auth.core.resource.AuthResourceRefreshedListener;
 import com.loyayz.gaia.auth.core.resource.AuthResourceService;
-import com.loyayz.gaia.auth.security.web.servlet.AuthenticationPermissionHandler;
-import com.loyayz.gaia.auth.security.web.servlet.DelegatingRequestMatcher;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.access.expression.SecurityExpressionOperations;
@@ -29,14 +28,13 @@ import java.util.stream.Collectors;
 @Slf4j
 public class DefaultAuthenticationPermissionHandler implements AuthenticationPermissionHandler, AuthResourceRefreshedListener {
     private final AuthResourceService resourceService;
+    private DelegatingRequestMatcher protectMatcher = new DelegatingRequestMatcher(AnyRequestMatcher.INSTANCE);
+    private Map<RequestMatcher, AuthResourcePermission> protectMatcherPermission;
 
     public DefaultAuthenticationPermissionHandler(AuthResourceService resourceService) {
         this.resourceService = resourceService;
         this.init();
     }
-
-    private DelegatingRequestMatcher protectMatcher = new DelegatingRequestMatcher(AnyRequestMatcher.INSTANCE);
-    private Map<RequestMatcher, AuthResourcePermission> protectMatcherPermission;
 
     @Override
     public RequestMatcher requiresAuthenticationMatcher() {
@@ -124,10 +122,25 @@ public class DefaultAuthenticationPermissionHandler implements AuthenticationPer
         this.init();
     }
 
-    class DefaultSecurityExpressionRoot extends SecurityExpressionRoot {
+    private static class DefaultSecurityExpressionRoot extends SecurityExpressionRoot {
         DefaultSecurityExpressionRoot(Authentication authentication) {
             super(authentication);
         }
+    }
+
+    private static class DelegatingRequestMatcher implements RequestMatcher {
+        @Setter
+        private RequestMatcher matcher;
+
+        DelegatingRequestMatcher(RequestMatcher matcher) {
+            this.matcher = matcher;
+        }
+
+        @Override
+        public boolean matches(HttpServletRequest request) {
+            return this.matcher.matches(request);
+        }
+
     }
 
 }

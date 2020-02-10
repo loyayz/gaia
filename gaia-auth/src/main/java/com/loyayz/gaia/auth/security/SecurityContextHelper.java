@@ -19,12 +19,12 @@ public class SecurityContextHelper {
         return SecurityContextHolder.getContext();
     }
 
-    public static Optional<AuthenticationCredentialsToken> getAuthentication() {
+    public static Optional<SecurityToken> getAuthentication() {
         Authentication authentication = getSecurityContext().getAuthentication();
-        if (!(authentication instanceof AuthenticationCredentialsToken)) {
+        if (!(authentication instanceof SecurityToken)) {
             authentication = null;
         }
-        return Optional.ofNullable((AuthenticationCredentialsToken) authentication);
+        return Optional.ofNullable((SecurityToken) authentication);
     }
 
     /**
@@ -32,7 +32,7 @@ public class SecurityContextHelper {
      */
     public static AuthUser getUser() {
         return getAuthentication()
-                .map(AuthenticationCredentialsToken::getPrincipal)
+                .map(SecurityToken::getPrincipal)
                 .orElse(null);
     }
 
@@ -41,7 +41,7 @@ public class SecurityContextHelper {
      */
     public static AuthCredentials getCredentials() {
         return getAuthentication()
-                .map(AuthenticationCredentialsToken::getCredentials)
+                .map(SecurityToken::getCredentials)
                 .orElse(null);
     }
 
