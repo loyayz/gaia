@@ -1,7 +1,8 @@
 package com.loyayz.gaia.auth.security.web.webflux;
 
-import com.alibaba.fastjson.JSON;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,7 @@ import java.util.Map;
 public class HttpStatusServerAuthFailureHandler
         implements ServerAuthenticationEntryPoint, ServerAuthenticationFailureHandler, ServerAccessDeniedHandler {
     private final HttpStatus httpStatus;
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public Mono<Void> commence(ServerWebExchange exchange, AuthenticationException exception) {
@@ -54,13 +56,14 @@ public class HttpStatusServerAuthFailureHandler
         });
     }
 
+    @SneakyThrows
     private byte[] responseBody(ServerWebExchange exchange, Exception exception) {
         Map<String, Object> result = new LinkedHashMap<>(8);
         result.put("status", this.httpStatus.value());
         result.put("code", this.httpStatus.value());
         result.put("message", exception.getMessage());
         result.put("path", exchange.getRequest().getPath().value());
-        return JSON.toJSONBytes(result);
+        return objectMapper.writeValueAsBytes(result);
     }
 
 }

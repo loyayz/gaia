@@ -1,7 +1,8 @@
 package com.loyayz.gaia.auth.security.web.servlet;
 
-import com.alibaba.fastjson.JSON;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
@@ -21,8 +22,10 @@ import java.util.Map;
  * @author loyayz (loyayz@foxmail.com)
  */
 @RequiredArgsConstructor
-public class HttpStatusAuthFailureHandler implements AuthenticationEntryPoint, AuthenticationFailureHandler, AccessDeniedHandler {
+public class HttpStatusAuthFailureHandler
+        implements AuthenticationEntryPoint, AuthenticationFailureHandler, AccessDeniedHandler {
     private final HttpStatus httpStatus;
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception)
@@ -50,13 +53,14 @@ public class HttpStatusAuthFailureHandler implements AuthenticationEntryPoint, A
         response.getWriter().write(responseBody);
     }
 
+    @SneakyThrows
     private String responseBody(HttpServletRequest request, Exception exception) {
         Map<String, Object> result = new LinkedHashMap<>(8);
         result.put("status", this.httpStatus.value());
         result.put("code", this.httpStatus.value());
         result.put("message", exception.getMessage());
         result.put("path", request.getRequestURI());
-        return JSON.toJSONString(result);
+        return objectMapper.writeValueAsString(result);
     }
 
 }
