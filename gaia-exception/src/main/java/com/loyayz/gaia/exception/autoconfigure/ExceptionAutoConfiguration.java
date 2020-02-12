@@ -1,12 +1,12 @@
 package com.loyayz.gaia.exception.autoconfigure;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.loyayz.gaia.exception.ExceptionDisposer;
 import com.loyayz.gaia.exception.ExceptionDisposers;
 import com.loyayz.gaia.exception.ExceptionResult;
 import com.loyayz.gaia.exception.helper.ExceptionWebfluxResolver;
 import com.loyayz.gaia.exception.helper.ExceptionWebmvcResolver;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
@@ -63,24 +63,20 @@ public class ExceptionAutoConfiguration implements InitializingBean {
         }
 
         private Mono<Void> writeResponse(ServerWebExchange exchange, ExceptionResult result) {
-            return Mono.just(result)
-                    .map(r -> {
-                        byte[] responseBody;
-                        try {
-                            responseBody = objectMapper.writeValueAsBytes(result);
-                        } catch (JsonProcessingException e) {
-                            throw new RuntimeException(e);
-                        }
-                        return responseBody;
-                    })
-                    .flatMap(responseBody -> {
-                        ServerHttpResponse response = exchange.getResponse();
-                        response.setStatusCode(HttpStatus.valueOf(result.getStatus()));
-                        response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
-                        DataBuffer buffer = response.bufferFactory().wrap(responseBody);
-                        return response.writeWith(Mono.just(buffer))
-                                .doOnError(error -> DataBufferUtils.release(buffer));
-                    });
+            return Mono.defer(() -> {
+                ServerHttpResponse response = exchange.getResponse();
+                response.setStatusCode(HttpStatus.valueOf(result.getStatus()));
+                response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
+                byte[] responseBody = this.responseBody(result);
+                DataBuffer buffer = response.bufferFactory().wrap(responseBody);
+                return response.writeWith(Mono.just(buffer))
+                        .doOnError(error -> DataBufferUtils.release(buffer));
+            });
+        }
+
+        @SneakyThrows
+        private byte[] responseBody(ExceptionResult result) {
+            return objectMapper.writeValueAsBytes(result);
         }
     }
 
