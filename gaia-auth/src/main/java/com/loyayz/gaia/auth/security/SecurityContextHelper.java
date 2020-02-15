@@ -2,6 +2,7 @@ package com.loyayz.gaia.auth.security;
 
 import com.loyayz.gaia.auth.core.credentials.AuthCredentials;
 import com.loyayz.gaia.auth.core.user.AuthUser;
+import com.loyayz.gaia.auth.core.user.AuthUserRole;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -9,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @author loyayz (loyayz@foxmail.com)
@@ -30,18 +32,18 @@ public class SecurityContextHelper {
     /**
      * 获取当前用户
      */
-    public static AuthUser getUser() {
+    public static <T extends AuthUser> T getUser() {
         return getAuthentication()
-                .map(SecurityToken::getPrincipal)
+                .map(token -> (T) token.getPrincipal())
                 .orElse(null);
     }
 
     /**
      * 当前用户请求携带的 token
      */
-    public static AuthCredentials getCredentials() {
+    public static <T extends AuthCredentials> T getCredentials() {
         return getAuthentication()
-                .map(SecurityToken::getCredentials)
+                .map(token -> (T) token.getCredentials())
                 .orElse(null);
     }
 
@@ -72,12 +74,27 @@ public class SecurityContextHelper {
     /**
      * 获取当前用户的角色
      */
-    public static List<String> getUserRoles() {
+    public static List<String> getUserRoleNames() {
+        return getUserRoles().stream()
+                .map(AuthUserRole::getName)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * 获取当前用户的角色
+     */
+    public static List<String> getUserRoleCodes() {
+        return getUserRoles().stream()
+                .map(AuthUserRole::getCode)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * 获取当前用户的角色
+     */
+    public static List<AuthUserRole> getUserRoles() {
         AuthUser user = getUser();
         return user == null ? Collections.emptyList() : user.getRoles();
     }
 
-    private SecurityContextHelper() {
-
-    }
 }

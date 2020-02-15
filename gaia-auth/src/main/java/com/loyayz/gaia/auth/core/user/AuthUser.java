@@ -28,9 +28,9 @@ public class AuthUser implements Serializable {
     /**
      * 角色
      */
-    private List<String> roles = new ArrayList<>();
+    private List<AuthUserRole> roles = new ArrayList<>();
 
-    public List<String> getRoles() {
+    public List<AuthUserRole> getRoles() {
         if (this.roles == null) {
             return Collections.emptyList();
         }

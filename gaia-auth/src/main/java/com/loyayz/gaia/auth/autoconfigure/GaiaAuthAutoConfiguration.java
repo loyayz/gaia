@@ -6,7 +6,11 @@ import com.loyayz.gaia.auth.core.resource.AuthResource;
 import com.loyayz.gaia.auth.core.resource.AuthResourcePermission;
 import com.loyayz.gaia.auth.core.resource.AuthResourceService;
 import com.loyayz.gaia.auth.core.user.AuthUserCache;
-import com.loyayz.gaia.auth.core.user.strategy.JwtAuthUserCache;
+import com.loyayz.gaia.auth.core.user.AuthUserCacheItemConverter;
+import com.loyayz.gaia.auth.core.user.AuthUserService;
+import com.loyayz.gaia.auth.core.user.impl.DefaultAuthUserCacheItemConverter;
+import com.loyayz.gaia.auth.core.user.impl.DefaultAuthUserService;
+import com.loyayz.gaia.auth.core.user.impl.JwtAuthUserCache;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -24,14 +28,14 @@ public class GaiaAuthAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(AuthCredentialsProperties.class)
     @ConfigurationProperties(prefix = "gaia.auth.credentials")
-    public AuthCredentialsProperties authCredentialsProperties() {
+    public AuthCredentialsProperties authCredentialsConfiguration() {
         return new AuthCredentialsProperties();
     }
 
     @Bean
     @ConditionalOnMissingBean(AuthResourceProperties.class)
     @ConfigurationProperties(prefix = "gaia.auth.resource")
-    public AuthResourceProperties authResourceProperties() {
+    public AuthResourceProperties authResourceConfiguration() {
         return new AuthResourceProperties();
     }
 
@@ -55,6 +59,19 @@ public class GaiaAuthAutoConfiguration {
     @ConditionalOnMissingBean(AuthUserCache.class)
     public AuthUserCache authUserCache(AuthCredentialsProperties credentialsProperties) {
         return new JwtAuthUserCache(credentialsProperties);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(AuthUserCacheItemConverter.class)
+    public AuthUserCacheItemConverter authUserCacheItemConverter() {
+        return new DefaultAuthUserCacheItemConverter();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(AuthUserService.class)
+    public AuthUserService authUserService(AuthUserCache authUserCache,
+                                           AuthUserCacheItemConverter authUserCacheItemConverter) {
+        return new DefaultAuthUserService(authUserCache, authUserCacheItemConverter);
     }
 
 }

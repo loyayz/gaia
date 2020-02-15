@@ -2,7 +2,7 @@ package com.loyayz.gaia.auth.security;
 
 import com.loyayz.gaia.auth.core.credentials.AuthCredentials;
 import com.loyayz.gaia.auth.core.user.AuthUser;
-import com.loyayz.gaia.auth.core.user.AuthUserCache;
+import com.loyayz.gaia.auth.core.user.AuthUserService;
 import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -33,16 +33,20 @@ import java.util.stream.Collectors;
 @Setter
 @RequiredArgsConstructor
 public class DefaultAuthenticationManager implements AuthenticationManager {
-    private final AuthUserCache authUserCache;
+    private final AuthUserService authUserService;
 
+    @Setter
+    @Getter
     private UserDetailsChecker authenticationChecks = new AccountStatusUserDetailsChecker();
+    @Setter
+    @Getter
     private GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();
 
     /**
      * 鉴权
      *
-     * @param authentication AuthCredentialsToken
-     * @return AuthCredentialsToken. Principal from {@link AuthUserCache#getUserFromCache(AuthCredentials)}
+     * @param authentication {@link SecurityToken}
+     * @return AuthCredentialsToken. Principal from {@link AuthUserService#extract(AuthCredentials)}
      * @throws AuthenticationException 鉴权异常
      */
     @Override
@@ -56,7 +60,7 @@ public class DefaultAuthenticationManager implements AuthenticationManager {
     private SecurityUserDetails retrieveUser(AuthCredentials credentials) {
         AuthUser user;
         try {
-            user = this.authUserCache.getUserFromCache(credentials);
+            user = this.authUserService.extract(credentials);
         } catch (Exception e) {
             if (AuthenticationException.class.isAssignableFrom(e.getClass())) {
                 throw e;
@@ -95,7 +99,7 @@ public class DefaultAuthenticationManager implements AuthenticationManager {
         public Collection<? extends GrantedAuthority> getAuthorities() {
             return getUser().getRoles()
                     .stream()
-                    .map(role -> new SimpleGrantedAuthority(DEFAULT_ROLE_PREFIX + role))
+                    .map(role -> new SimpleGrantedAuthority(DEFAULT_ROLE_PREFIX + role.getCode()))
                     .collect(Collectors.toList());
         }
 

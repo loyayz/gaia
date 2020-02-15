@@ -1,5 +1,7 @@
 package com.loyayz.gaia.auth.core;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.Data;
 
@@ -8,6 +10,7 @@ import java.security.Key;
 import java.time.Duration;
 import java.util.Base64;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * @author loyayz (loyayz@foxmail.com)
@@ -19,11 +22,11 @@ public class AuthCredentialsProperties {
     private static final String DEFAULT_TOKEN_PARAM_NAME = "_token";
 
     /**
-     * 存放 token 的 header
+     * token 放在哪个 header
      */
     private String tokenHeaderName = DEFAULT_TOKEN_HEADER_NAME;
     /**
-     * 存放 token 的 url 参数
+     * token 放在哪个 url 参数
      * 当 header 没找到时，查 url 参数
      */
     private String tokenParamName = DEFAULT_TOKEN_PARAM_NAME;
@@ -38,8 +41,9 @@ public class AuthCredentialsProperties {
     private Jwt jwt = new Jwt();
 
     public Date getExpirationDate(Date now) {
-        long ttlTime = this.getTtl().getSeconds() * 1000;
-        long expMillis = now.getTime() + ttlTime;
+        long currentTime = now.getTime();
+        long ttlTime = this.getTtl().toMillis();
+        long expMillis = currentTime + ttlTime;
         return new Date(expMillis);
     }
 
@@ -68,6 +72,24 @@ public class AuthCredentialsProperties {
                 return DEFAULT_ALGORITHM;
             }
             return SignatureAlgorithm.forName(algorithm);
+        }
+
+        public String generateToken(String id, Map<String, Object> claims, Date now, Date expirationDate) {
+            return Jwts.builder()
+                    .setClaims(claims)
+                    .setId(id)
+                    .setSubject("user")
+                    .setIssuedAt(now)
+                    .setExpiration(expirationDate)
+                    .signWith(this.getSignAlgorithm(), this.getSignSecret())
+                    .compact();
+        }
+
+        public Claims parseToken(String token) {
+            return Jwts.parser()
+                    .setSigningKey(this.getSignSecret())
+                    .parseClaimsJws(token)
+                    .getBody();
         }
 
     }

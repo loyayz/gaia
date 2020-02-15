@@ -5,9 +5,9 @@ import com.loyayz.gaia.auth.core.credentials.AbstractAuthCredentialsExtractor;
 import com.loyayz.gaia.auth.core.credentials.AuthCredentials;
 import com.loyayz.gaia.auth.core.credentials.AuthCredentialsExtractor;
 import com.loyayz.gaia.auth.core.resource.AuthResourceService;
-import com.loyayz.gaia.auth.core.user.AuthUserCache;
-import com.loyayz.gaia.auth.security.SecurityToken;
+import com.loyayz.gaia.auth.core.user.AuthUserService;
 import com.loyayz.gaia.auth.security.DefaultAuthenticationManager;
+import com.loyayz.gaia.auth.security.SecurityToken;
 import com.loyayz.gaia.auth.security.web.servlet.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -51,8 +51,8 @@ public class GaiaAuthWebServletAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(AuthenticationManagerResolver.class)
-    public AuthenticationManagerResolver<HttpServletRequest> authenticationManagerResolver(AuthUserCache userCache) {
-        AuthenticationManager manager = new DefaultAuthenticationManager(userCache);
+    public AuthenticationManagerResolver<HttpServletRequest> authenticationManagerResolver(AuthUserService userService) {
+        AuthenticationManager manager = new DefaultAuthenticationManager(userService);
         return context -> manager;
     }
 
