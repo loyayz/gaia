@@ -25,9 +25,11 @@ public class AuthResource implements Serializable {
         this.path = path;
     }
 
-    public AuthResource(AuthResource other) {
-        this.path = other.getPath();
-        this.methods = other.getMethods();
+    public List<String> getMethods() {
+        if (this.methods == null || this.methods.isEmpty() || this.methods.contains(ALL_METHOD)) {
+            return Lists.newArrayList(ALL_METHOD);
+        }
+        return this.methods;
     }
 
     public void setMethods(String methods) {
@@ -44,22 +46,6 @@ public class AuthResource implements Serializable {
         } else {
             this.methods = Lists.newArrayList(Sets.newHashSet(methods));
         }
-    }
-
-    public List<String> getMethods() {
-        if (this.methods == null || this.methods.isEmpty() || this.methods.contains(ALL_METHOD)) {
-            return Lists.newArrayList(ALL_METHOD);
-        }
-        return this.methods;
-    }
-
-    public AuthResource getResource() {
-        return new AuthResource(this);
-    }
-
-    public boolean valid() {
-        return this.path != null
-                && !"".equals(this.path.trim());
     }
 
 }

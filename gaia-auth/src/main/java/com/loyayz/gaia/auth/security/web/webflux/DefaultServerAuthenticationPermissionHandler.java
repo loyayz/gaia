@@ -65,9 +65,6 @@ public class DefaultServerAuthenticationPermissionHandler implements ServerAuthe
                         .map(match -> {
                             if (match.isMatch()) {
                                 AuthResourcePermission permission = protectMatcher.getValue();
-                                if (permission.isPermit()) {
-                                    return false;
-                                }
                                 String[] roles = permission.getAllowedRoles().toArray(new String[]{});
                                 return !authenticationOperations.hasAnyRole(roles);
                             } else {
@@ -95,11 +92,9 @@ public class DefaultServerAuthenticationPermissionHandler implements ServerAuthe
 
     private void setProtectMatcherPermission() {
         Map<ServerWebExchangeMatcher, AuthResourcePermission> permissions = Maps.newHashMap();
-        this.resourceService.listProtectResourcePermission().forEach((resource, permission) -> {
-            this.resourceToMatchers(resource).forEach((matcher -> {
-                permissions.put(matcher, permission);
-            }));
-        });
+        this.resourceService.listResourcePermissions().forEach((permission) ->
+                this.resourceToMatchers(permission).forEach((matcher -> permissions.put(matcher, permission)))
+        );
         this.protectMatcherPermission = permissions;
     }
 

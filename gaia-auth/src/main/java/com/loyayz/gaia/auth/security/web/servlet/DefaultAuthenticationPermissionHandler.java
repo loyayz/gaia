@@ -62,9 +62,6 @@ public class DefaultAuthenticationPermissionHandler implements AuthenticationPer
                     boolean matchPath = protectMatcher.getKey().matches(request);
                     if (matchPath) {
                         AuthResourcePermission permission = protectMatcher.getValue();
-                        if (permission.isPermit()) {
-                            return false;
-                        }
                         String[] roles = permission.getAllowedRoles().toArray(new String[]{});
                         return !authenticationOperations.hasAnyRole(roles);
                     } else {
@@ -90,11 +87,9 @@ public class DefaultAuthenticationPermissionHandler implements AuthenticationPer
 
     private void setProtectMatcherPermission() {
         Map<RequestMatcher, AuthResourcePermission> permissions = Maps.newHashMap();
-        this.resourceService.listProtectResourcePermission().forEach((resource, permission) -> {
-            this.resourceToMatchers(resource).forEach((matcher -> {
-                permissions.put(matcher, permission);
-            }));
-        });
+        this.resourceService.listResourcePermissions().forEach((permission) ->
+                this.resourceToMatchers(permission).forEach(matcher -> permissions.put(matcher, permission))
+        );
         this.protectMatcherPermission = permissions;
     }
 

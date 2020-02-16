@@ -1,65 +1,62 @@
-package com.loyayz.gaia.auth.core;
+package com.loyayz.gaia.auth.core.resource.impl;
 
 import com.loyayz.gaia.auth.core.resource.AuthResource;
 import com.loyayz.gaia.auth.core.resource.AuthResourcePermission;
+import com.loyayz.gaia.auth.core.resource.AuthResourceService;
 import lombok.Data;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author loyayz (loyayz@foxmail.com)
  */
 @Data
-public class AuthResourceProperties {
+public class PropertiesAuthResourceService implements AuthResourceService {
     private static final List<String> DEFAULT_PERMIT_PUBLIC = Arrays.asList("/public/**", "/error/**");
     private static final List<String> DEFAULT_PERMIT_STATIC = Arrays.asList("/css/**", "/js/**", "/images/**", "/webjars/**", "/**/favicon.ico", "/static/**");
 
     /**
-     * 是否不鉴权所有公共资源
+     * 不鉴权所有公共资源
      */
     private Boolean permitPublic = Boolean.TRUE;
     /**
-     * 是否不鉴权所有静态资源
+     * 不鉴权所有静态资源
      */
     private Boolean permitStatic = Boolean.TRUE;
     /**
-     * 是否不鉴权所有 options 请求
+     * 不鉴权所有 options 请求
      */
     private Boolean permitOptions = Boolean.TRUE;
     /**
      * 不需要鉴权的资源
      */
     private List<AuthResource> permit;
-    /**
-     * 特殊资源权限配置
-     */
-    private List<AuthResourcePermission> permission;
 
     /**
-     * 获取受保护资源的权限设置
+     * 资源权限
      */
-    public Map<AuthResource, AuthResourcePermission> listProtectResources() {
-        return this.getPermission()
-                .stream()
-                // 过滤掉不合法的配置
-                .filter(p -> p != null && p.valid())
-                // 转为 map<resource,permission>
-                .collect(Collectors.toMap(
-                        AuthResourcePermission::getResource,
-                        AuthResourcePermission::new,
-                        AuthResourcePermission::combine)
-                );
-    }
+    private List<AuthResourcePermission> resourcePermissions;
 
     /**
      * 获取公开的资源列表
      */
+    @Override
     public List<AuthResource> listPermitResources() {
         List<AuthResource> resources = new ArrayList<>();
         resources.addAll(this.getPermit());
         resources.addAll(this.getDefaultPermitResources());
         return resources;
+    }
+
+    @Override
+    public List<AuthResourcePermission> listResourcePermissions() {
+        if (this.resourcePermissions == null) {
+            return Collections.emptyList();
+        }
+        return resourcePermissions;
     }
 
     public List<AuthResource> getPermit() {
@@ -69,13 +66,9 @@ public class AuthResourceProperties {
         return permit;
     }
 
-    public List<AuthResourcePermission> getPermission() {
-        if (this.permission == null) {
-            return Collections.emptyList();
-        }
-        return permission;
-    }
-
+    /**
+     * 获取不需要鉴权的资源
+     */
     private List<AuthResource> getDefaultPermitResources() {
         List<AuthResource> result = new ArrayList<>();
         if (this.permitPublic) {
