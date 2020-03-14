@@ -17,4 +17,9 @@ public interface AuthResourceService {
      */
     List<AuthResourcePermission> listResourcePermissions();
 
+    /**
+     * 获取角色只能访问的资源
+     */
+    List<AuthRolePermission> listRolePermissions();
+
 }

@@ -3,6 +3,7 @@ package com.loyayz.gaia.auth.core.resource.impl;
 import com.loyayz.gaia.auth.core.resource.AuthResource;
 import com.loyayz.gaia.auth.core.resource.AuthResourcePermission;
 import com.loyayz.gaia.auth.core.resource.AuthResourceService;
+import com.loyayz.gaia.auth.core.resource.AuthRolePermission;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -39,6 +40,11 @@ public class PropertiesAuthResourceService implements AuthResourceService {
      * 资源权限
      */
     private List<AuthResourcePermission> resourcePermissions;
+    /**
+     * 角色权限
+     * 角色只能访问的资源
+     */
+    private List<AuthRolePermission> rolePermissions;
 
     /**
      * 获取公开的资源列表
@@ -57,6 +63,14 @@ public class PropertiesAuthResourceService implements AuthResourceService {
             return Collections.emptyList();
         }
         return resourcePermissions;
+    }
+
+    @Override
+    public List<AuthRolePermission> listRolePermissions() {
+        if (this.rolePermissions == null) {
+            return Collections.emptyList();
+        }
+        return rolePermissions;
     }
 
     public List<AuthResource> getPermit() {

@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 /**
  * @author loyayz (loyayz@foxmail.com)
  */
+@SuppressWarnings("unchecked")
 public class SecurityContextHelper {
 
     public static SecurityContext getSecurityContext() {
