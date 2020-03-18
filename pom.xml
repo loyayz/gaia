@@ -36,6 +36,7 @@
         <module>gaia-core</module>
         <module>gaia-auth</module>
         <module>gaia-data</module>
+        <module>gaia-data-mybatis-starter</module>
         <module>gaia-exception</module>
     </modules>
 
