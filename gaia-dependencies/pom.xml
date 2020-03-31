@@ -6,13 +6,13 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.2.5.RELEASE</version>
+        <version>2.2.6.RELEASE</version>
     </parent>
 
     <groupId>com.loyayz.gaia</groupId>
     <artifactId>gaia-dependencies</artifactId>
     <packaging>pom</packaging>
-    <version>0.1.0</version>
+    <version>0.1.1-SNAPSHOT</version>
 
     <description>Gaia Project Dependencies</description>
     <url>https://github.com/loyayz/gaia</url>
@@ -24,10 +24,7 @@
         <project.build.encoding>UTF-8</project.build.encoding>
 
         <!-- gaia -->
-        <gaia-auth.version>0.1.0</gaia-auth.version>
-        <gaia-core.version>0.1.0</gaia-core.version>
-        <gaia-data.version>0.1.0</gaia-data.version>
-        <gaia-exception.version>0.1.0</gaia-exception.version>
+        <gaia.version>0.1.1-SNAPSHOT</gaia.version>
 
         <!-- 3rd lib dependency -->
         <guava.version>28.1-jre</guava.version>
@@ -39,6 +36,7 @@
         <pagehelper.version>5.1.11</pagehelper.version>
 
         <!--maven plugin-->
+        <versions-maven-plugin.version>2.7</versions-maven-plugin.version>
         <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
     </properties>
@@ -69,27 +67,27 @@
             <dependency>
                 <groupId>com.loyayz.gaia</groupId>
                 <artifactId>gaia-auth</artifactId>
-                <version>${gaia-auth.version}</version>
+                <version>${gaia.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.loyayz.gaia</groupId>
                 <artifactId>gaia-core</artifactId>
-                <version>${gaia-core.version}</version>
+                <version>${gaia.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.loyayz.gaia</groupId>
                 <artifactId>gaia-data</artifactId>
-                <version>${gaia-data.version}</version>
+                <version>${gaia.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.loyayz.gaia</groupId>
                 <artifactId>gaia-data-mybatis-starter</artifactId>
-                <version>${gaia-data.version}</version>
+                <version>${gaia.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.loyayz.gaia</groupId>
                 <artifactId>gaia-exception</artifactId>
-                <version>${gaia-exception.version}</version>
+                <version>${gaia.version}</version>
             </dependency>
 
 
@@ -139,6 +137,18 @@
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>versions-maven-plugin</artifactId>
+                        <version>${versions-maven-plugin.version}</version>
+                        <configuration>
+                            <generateBackupPoms>false</generateBackupPoms>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
         <profile>
             <id>release</id>
