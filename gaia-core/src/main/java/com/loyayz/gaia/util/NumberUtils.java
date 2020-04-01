@@ -57,6 +57,42 @@ public class NumberUtils {
     }
 
     /**
+     * 是否大于
+     */
+    public static boolean isLarger(Number n1, Number n2) {
+        return isLarger(n1, n2, false);
+    }
+
+    /**
+     * 是否大于
+     */
+    public static boolean isLarger(Number n1, Number n2, boolean equals) {
+        if (n1 != null && n2 != null) {
+            int compare = toBigDecimal(n1).compareTo(toBigDecimal(n2));
+            return equals ? compare >= 0 : compare > 0;
+        }
+        return false;
+    }
+
+    /**
+     * 是否小于
+     */
+    public static boolean isLess(Number n1, Number n2) {
+        return isLess(n1, n2, false);
+    }
+
+    /**
+     * 是否小于
+     */
+    public static boolean isLess(Number n1, Number n2, boolean equals) {
+        if (n1 != null && n2 != null) {
+            int compare = toBigDecimal(n1).compareTo(toBigDecimal(n2));
+            return equals ? compare <= 0 : compare < 0;
+        }
+        return false;
+    }
+
+    /**
      * 加法
      */
     public static <T extends Number> BigDecimal add(T... datas) {
