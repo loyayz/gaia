@@ -17,14 +17,14 @@ import java.util.Properties;
  */
 @Configuration
 @ConditionalOnBean(SqlSessionFactory.class)
-@AutoConfigureAfter({MybatisPlusAutoConfiguration.class})
+@AutoConfigureAfter({GaiaMybatisPlusAutoConfiguration.class, MybatisPlusAutoConfiguration.class})
 @EnableConfigurationProperties({GaiaMybatisProperties.class})
-public class GaiaMybatisAutoConfiguration implements InitializingBean {
+public class GaiaMybatisPageHelperAutoConfiguration implements InitializingBean {
     private List<SqlSessionFactory> sqlSessionFactoryList;
     private GaiaMybatisProperties mybatisProperties;
 
-    public GaiaMybatisAutoConfiguration(List<SqlSessionFactory> sqlSessionFactoryList,
-                                        GaiaMybatisProperties mybatisProperties) {
+    public GaiaMybatisPageHelperAutoConfiguration(List<SqlSessionFactory> sqlSessionFactoryList,
+                                                  GaiaMybatisProperties mybatisProperties) {
         this.sqlSessionFactoryList = sqlSessionFactoryList;
         this.mybatisProperties = mybatisProperties;
     }
