@@ -2,8 +2,6 @@ package com.loyayz.gaia.data.mybatis;
 
 import com.baomidou.mybatisplus.core.mapper.Mapper;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
-import com.github.pagehelper.Page;
-import com.github.pagehelper.PageHelper;
 import com.loyayz.gaia.data.PageModel;
 import com.loyayz.gaia.data.Sorter;
 import com.loyayz.gaia.data.mybatis.extension.MybatisConstants;
@@ -86,22 +84,10 @@ public interface BaseEntityMapper<T> extends Mapper<T> {
      * @param sorters  排序
      */
     default PageModel<T> pageByCondition(T entity, int pageNum, int pageSize, Sorter... sorters) {
-        Page<T> page = PageHelper.startPage(pageNum, pageSize, false)
-                .doSelectPage(() -> this.listByCondition(entity, sorters));
-        page.setTotal(this.countByCondition(entity));
-
-        Pages.doSelectPage(pageNum, pageSize,
+        return Pages.doSelectPage(pageNum, pageSize,
                 () -> this.listByCondition(entity, sorters),
                 () -> this.countByCondition(entity)
         );
-        return PageModel.<T>builder()
-                .items(page.getResult())
-                .pageNum(pageNum)
-                .pageSize(pageSize)
-                .total((int) (page.getTotal()))
-                .pages(page.getPages())
-                .offset(page.getStartRow())
-                .build();
     }
 
     /**

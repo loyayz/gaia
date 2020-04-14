@@ -19,6 +19,10 @@ public class Pages {
         return doSelectPage(pageNum, pageSize, listAction, null);
     }
 
+    public static <T> PageModel<T> doSelectPage(int pageNum, int pageSize, Supplier<List<T>> listAction, int count) {
+        return doSelectPage(pageNum, pageSize, listAction, () -> count);
+    }
+
     public static <T> PageModel<T> doSelectPage(int pageNum, int pageSize,
                                                 Supplier<List<T>> listAction,
                                                 Supplier<Integer> countAction) {
