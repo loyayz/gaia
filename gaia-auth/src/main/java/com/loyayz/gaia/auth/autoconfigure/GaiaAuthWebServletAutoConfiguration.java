@@ -1,5 +1,6 @@
 package com.loyayz.gaia.auth.autoconfigure;
 
+import com.loyayz.gaia.auth.core.AuthCorsProperties;
 import com.loyayz.gaia.auth.core.AuthCredentialsProperties;
 import com.loyayz.gaia.auth.core.credentials.AbstractAuthCredentialsExtractor;
 import com.loyayz.gaia.auth.core.credentials.AuthCredentials;
@@ -10,7 +11,6 @@ import com.loyayz.gaia.auth.security.DefaultAuthenticationManager;
 import com.loyayz.gaia.auth.security.SecurityToken;
 import com.loyayz.gaia.auth.security.web.servlet.*;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
@@ -40,7 +40,6 @@ import javax.servlet.http.HttpServletRequest;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, jsr250Enabled = true)
 @RequiredArgsConstructor
-@Slf4j
 public class GaiaAuthWebServletAutoConfiguration {
 
     @Bean
@@ -97,8 +96,9 @@ public class GaiaAuthWebServletAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean({WebSecurityConfigurerAdapter.class, AbstractWebSecurityAdapter.class})
     public WebSecurityConfigurerAdapter webSecurityConfigurerAdapter(AuthenticationFilter authenticationFilter,
-                                                                     AuthenticationPermissionHandler permissionHandler) {
-        return new DefaultWebSecurityAdapter(authenticationFilter, permissionHandler);
+                                                                     AuthenticationPermissionHandler permissionHandler,
+                                                                     AuthCorsProperties corsProperties) {
+        return new DefaultWebSecurityAdapter(authenticationFilter, permissionHandler, corsProperties);
     }
 
     @Bean

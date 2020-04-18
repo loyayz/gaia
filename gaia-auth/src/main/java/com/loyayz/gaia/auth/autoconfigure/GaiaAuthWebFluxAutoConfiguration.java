@@ -1,5 +1,6 @@
 package com.loyayz.gaia.auth.autoconfigure;
 
+import com.loyayz.gaia.auth.core.AuthCorsProperties;
 import com.loyayz.gaia.auth.core.AuthCredentialsProperties;
 import com.loyayz.gaia.auth.core.credentials.AbstractAuthCredentialsExtractor;
 import com.loyayz.gaia.auth.core.credentials.AuthCredentialsExtractor;
@@ -9,7 +10,6 @@ import com.loyayz.gaia.auth.security.DefaultAuthenticationManager;
 import com.loyayz.gaia.auth.security.SecurityToken;
 import com.loyayz.gaia.auth.security.web.webflux.*;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
@@ -40,7 +40,6 @@ import reactor.core.publisher.Mono;
 @EnableWebFluxSecurity
 @EnableReactiveMethodSecurity
 @RequiredArgsConstructor
-@Slf4j
 public class GaiaAuthWebFluxAutoConfiguration {
 
     @Bean
@@ -95,8 +94,9 @@ public class GaiaAuthWebFluxAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(AbstractServerSecurityAdapter.class)
     public AbstractServerSecurityAdapter serverSecurityAdapter(AuthenticationWebFilter authenticationFilter,
-                                                               ServerAuthenticationPermissionHandler permissionHandler) {
-        return new DefaultServerSecurityAdapter(authenticationFilter, permissionHandler);
+                                                               ServerAuthenticationPermissionHandler permissionHandler,
+                                                               AuthCorsProperties corsProperties) {
+        return new DefaultServerSecurityAdapter(authenticationFilter, permissionHandler, corsProperties);
     }
 
     @Bean
