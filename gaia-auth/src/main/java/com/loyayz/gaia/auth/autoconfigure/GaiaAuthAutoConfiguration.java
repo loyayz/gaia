@@ -2,8 +2,8 @@ package com.loyayz.gaia.auth.autoconfigure;
 
 import com.loyayz.gaia.auth.core.AuthCorsProperties;
 import com.loyayz.gaia.auth.core.AuthCredentialsProperties;
-import com.loyayz.gaia.auth.core.resource.AuthResourceService;
-import com.loyayz.gaia.auth.core.resource.impl.PropertiesAuthResourceService;
+import com.loyayz.gaia.auth.core.authorization.AuthResourceService;
+import com.loyayz.gaia.auth.core.authorization.PropertiesAuthResourceService;
 import com.loyayz.gaia.auth.core.user.AuthUserCache;
 import com.loyayz.gaia.auth.core.user.AuthUserCacheItemConverter;
 import com.loyayz.gaia.auth.core.user.AuthUserService;

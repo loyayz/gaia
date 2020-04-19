@@ -1,6 +1,6 @@
 package com.loyayz.gaia.auth.security;
 
-import com.loyayz.gaia.auth.core.credentials.AuthCredentials;
+import com.loyayz.gaia.auth.core.authentication.AuthCredentials;
 import com.loyayz.gaia.auth.core.user.AuthUser;
 import com.loyayz.gaia.auth.core.user.AuthUserRole;
 import org.springframework.security.core.Authentication;

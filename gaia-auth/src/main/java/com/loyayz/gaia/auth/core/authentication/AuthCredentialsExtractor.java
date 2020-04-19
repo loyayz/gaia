@@ -1,4 +1,4 @@
-package com.loyayz.gaia.auth.core.credentials;
+package com.loyayz.gaia.auth.core.authentication;
 
 /**
  * @author loyayz (loyayz@foxmail.com)

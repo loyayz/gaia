@@ -1,9 +1,9 @@
-package com.loyayz.gaia.auth.core.resource.impl;
+package com.loyayz.gaia.auth.core.authorization;
 
-import com.loyayz.gaia.auth.core.resource.AuthResource;
-import com.loyayz.gaia.auth.core.resource.AuthResourcePermission;
-import com.loyayz.gaia.auth.core.resource.AuthResourceService;
-import com.loyayz.gaia.auth.core.resource.AuthRolePermission;
+import com.loyayz.gaia.auth.core.authorization.AuthResource;
+import com.loyayz.gaia.auth.core.authorization.AuthResourcePermission;
+import com.loyayz.gaia.auth.core.authorization.AuthResourceService;
+import com.loyayz.gaia.auth.core.authorization.AuthRolePermission;
 import lombok.Data;
 
 import java.util.ArrayList;

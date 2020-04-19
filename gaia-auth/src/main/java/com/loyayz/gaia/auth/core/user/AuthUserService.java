@@ -1,6 +1,6 @@
 package com.loyayz.gaia.auth.core.user;
 
-import com.loyayz.gaia.auth.core.credentials.AuthCredentials;
+import com.loyayz.gaia.auth.core.authentication.AuthCredentials;
 
 /**
  * @author loyayz (loyayz@foxmail.com)

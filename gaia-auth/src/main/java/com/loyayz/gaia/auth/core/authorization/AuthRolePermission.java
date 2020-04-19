@@ -1,4 +1,4 @@
-package com.loyayz.gaia.auth.core.resource;
+package com.loyayz.gaia.auth.core.authorization;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

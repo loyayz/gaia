@@ -1,4 +1,4 @@
-package com.loyayz.gaia.auth.core.credentials;
+package com.loyayz.gaia.auth.core.authentication;
 
 import com.google.common.base.Splitter;
 import com.loyayz.gaia.auth.core.AuthCredentialsProperties;

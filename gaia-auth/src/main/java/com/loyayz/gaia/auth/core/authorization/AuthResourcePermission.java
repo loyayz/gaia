@@ -1,4 +1,4 @@
-package com.loyayz.gaia.auth.core.resource;
+package com.loyayz.gaia.auth.core.authorization;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;

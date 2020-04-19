@@ -1,6 +1,6 @@
 package com.loyayz.gaia.auth.core.user.impl;
 
-import com.loyayz.gaia.auth.core.credentials.AuthCredentials;
+import com.loyayz.gaia.auth.core.authentication.AuthCredentials;
 import com.loyayz.gaia.auth.core.user.AuthUser;
 import com.loyayz.gaia.auth.core.user.AuthUserCache;
 import com.loyayz.gaia.auth.core.user.AuthUserCacheItemConverter;

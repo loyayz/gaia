@@ -2,10 +2,10 @@ package com.loyayz.gaia.auth.autoconfigure;
 
 import com.loyayz.gaia.auth.core.AuthCorsProperties;
 import com.loyayz.gaia.auth.core.AuthCredentialsProperties;
-import com.loyayz.gaia.auth.core.credentials.AbstractAuthCredentialsExtractor;
-import com.loyayz.gaia.auth.core.credentials.AuthCredentials;
-import com.loyayz.gaia.auth.core.credentials.AuthCredentialsExtractor;
-import com.loyayz.gaia.auth.core.resource.AuthResourceService;
+import com.loyayz.gaia.auth.core.authentication.AbstractAuthCredentialsExtractor;
+import com.loyayz.gaia.auth.core.authentication.AuthCredentials;
+import com.loyayz.gaia.auth.core.authentication.AuthCredentialsExtractor;
+import com.loyayz.gaia.auth.core.authorization.AuthResourceService;
 import com.loyayz.gaia.auth.core.user.AuthUserService;
 import com.loyayz.gaia.auth.security.DefaultAuthenticationManager;
 import com.loyayz.gaia.auth.security.SecurityToken;
