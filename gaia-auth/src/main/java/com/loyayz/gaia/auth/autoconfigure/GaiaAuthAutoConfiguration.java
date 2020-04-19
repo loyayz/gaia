@@ -2,8 +2,8 @@ package com.loyayz.gaia.auth.autoconfigure;
 
 import com.loyayz.gaia.auth.core.AuthCorsProperties;
 import com.loyayz.gaia.auth.core.AuthCredentialsProperties;
-import com.loyayz.gaia.auth.core.authorization.AuthResourceService;
-import com.loyayz.gaia.auth.core.authorization.PropertiesAuthResourceService;
+import com.loyayz.gaia.auth.core.authorization.AuthPermissionProvider;
+import com.loyayz.gaia.auth.core.authorization.DefaultAuthPermissionProvider;
 import com.loyayz.gaia.auth.core.user.AuthUserCache;
 import com.loyayz.gaia.auth.core.user.AuthUserCacheItemConverter;
 import com.loyayz.gaia.auth.core.user.AuthUserService;
@@ -45,10 +45,10 @@ public class GaiaAuthAutoConfiguration {
     }
 
     @Bean
-    @ConditionalOnMissingBean(AuthResourceService.class)
-    @ConfigurationProperties(prefix = "gaia.auth.resource")
-    public AuthResourceService authResourceService() {
-        return new PropertiesAuthResourceService();
+    @ConditionalOnMissingBean(AuthPermissionProvider.class)
+    @ConfigurationProperties(prefix = "gaia.auth.permission")
+    public AuthPermissionProvider authPermissionProvider() {
+        return new DefaultAuthPermissionProvider();
     }
 
     @Bean

@@ -9,6 +9,8 @@ import org.springframework.web.server.ServerWebExchange;
  */
 public interface ServerAuthenticationPermissionHandler {
 
+    void refresh();
+
     /**
      * 需要鉴权的校验器
      */

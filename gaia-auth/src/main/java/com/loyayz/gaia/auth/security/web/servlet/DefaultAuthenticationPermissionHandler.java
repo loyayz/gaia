@@ -1,14 +1,9 @@
 package com.loyayz.gaia.auth.security.web.servlet;
 
-
-import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Multimap;
+import com.loyayz.gaia.auth.core.authorization.AuthPermission;
+import com.loyayz.gaia.auth.core.authorization.AuthPermissionProvider;
 import com.loyayz.gaia.auth.core.authorization.AuthResource;
-import com.loyayz.gaia.auth.core.authorization.AuthResourcePermission;
-import com.loyayz.gaia.auth.core.authorization.AuthResourceRefreshedListener;
-import com.loyayz.gaia.auth.core.authorization.AuthResourceService;
 import com.loyayz.gaia.auth.security.SecurityToken;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -28,21 +23,20 @@ import java.util.stream.Collectors;
  * @author loyayz (loyayz@foxmail.com)
  */
 @Slf4j
-public class DefaultAuthenticationPermissionHandler implements AuthenticationPermissionHandler, AuthResourceRefreshedListener {
-    private final AuthResourceService resourceService;
-    private DelegatingRequestMatcher protectMatcher = new DelegatingRequestMatcher(AnyRequestMatcher.INSTANCE);
-    /**
-     * 资源对应的权限配置
-     */
-    private Map<RequestMatcher, AuthResourcePermission> protectMatcherResourcePermissions;
-    /**
-     * 角色只能访问的资源
-     * <roleCode,matcher>
-     */
+public class DefaultAuthenticationPermissionHandler implements AuthenticationPermissionHandler {
+    private static RequestMatcher ALL_MATCHER = AnyRequestMatcher.INSTANCE;
+    private final AuthPermissionProvider permissionProvider;
+    private DelegatingRequestMatcher protectMatcher = new DelegatingRequestMatcher(ALL_MATCHER);
+    private Map<RequestMatcher, List<String>> matcherRoles;
     private Map<String, RequestMatcher> roleMatchers;
 
-    public DefaultAuthenticationPermissionHandler(AuthResourceService resourceService) {
-        this.resourceService = resourceService;
+    public DefaultAuthenticationPermissionHandler(AuthPermissionProvider permissionProvider) {
+        this.permissionProvider = permissionProvider;
+        this.init();
+    }
+
+    @Override
+    public void refresh() {
         this.init();
     }
 
@@ -71,7 +65,7 @@ public class DefaultAuthenticationPermissionHandler implements AuthenticationPer
     }
 
     private boolean hasResourcePermission(SecurityToken token, HttpServletRequest request) {
-        boolean reject = this.protectMatcherResourcePermissions
+        boolean reject = this.matcherRoles
                 .entrySet()
                 .parallelStream()
                 // 无权限访问受保护资源
@@ -79,8 +73,7 @@ public class DefaultAuthenticationPermissionHandler implements AuthenticationPer
                     boolean hasPermission = true;
                     boolean matchPath = protectMatcher.getKey().matches(request);
                     if (matchPath) {
-                        AuthResourcePermission permission = protectMatcher.getValue();
-                        hasPermission = token.hasAnyRole(permission.getAllowedRoles());
+                        hasPermission = token.hasAnyRole(protectMatcher.getValue());
                     }
                     return !hasPermission;
                 });
@@ -106,41 +99,35 @@ public class DefaultAuthenticationPermissionHandler implements AuthenticationPer
 
     private void init() {
         this.setProtectMatcher();
-        this.setProtectMatcherResourcePermissions();
-        this.setProtectMatcherRolePermissions();
+        this.setProtectMatcherPermission();
     }
 
     private void setProtectMatcher() {
-        List<AuthResource> publicResources = this.resourceService.listPermitResources();
-        this.resourceToMatcher(publicResources).ifPresent(matcher ->
-                this.protectMatcher.setMatcher(new NegatedRequestMatcher(matcher))
-        );
+        List<AuthResource> publicResources = this.permissionProvider.listPermitResources();
+        Optional<RequestMatcher> matcherOptional = this.resourceToMatcher(publicResources);
+        if (matcherOptional.isPresent()) {
+            this.protectMatcher.setMatcher(new NegatedRequestMatcher(matcherOptional.get()));
+        } else {
+            this.protectMatcher.setMatcher(ALL_MATCHER);
+        }
     }
 
-    private void setProtectMatcherResourcePermissions() {
-        Map<RequestMatcher, AuthResourcePermission> permissions = Maps.newHashMap();
-        this.resourceService.listResourcePermissions().forEach(permission ->
-                this.resourceToMatcher(permission).ifPresent(matcher ->
-                        permissions.put(matcher, permission)
-                )
-        );
-        this.protectMatcherResourcePermissions = permissions;
-    }
+    private void setProtectMatcherPermission() {
+        AuthPermission resourcePermission = this.permissionProvider.getPermission();
 
-    private void setProtectMatcherRolePermissions() {
-        Multimap<String, RequestMatcher> roleMatcherMap = HashMultimap.create();
-        this.resourceService.listRolePermissions().forEach(rolePermission -> {
-            if (rolePermission.valid()) {
-                String role = rolePermission.getRole();
-                List<AuthResource> resources = rolePermission.getResources();
-                this.resourceToMatcher(resources).ifPresent(matcher -> roleMatcherMap.put(role, matcher));
-            }
-        });
-        this.roleMatchers = roleMatcherMap.asMap().entrySet()
+        this.matcherRoles = resourcePermission.getResourceRoles()
+                .entrySet()
+                .stream()
+                .collect(Collectors.toMap(
+                        p -> this.resourceToMatcher(p.getKey()).orElse(ALL_MATCHER),
+                        Map.Entry::getValue
+                ));
+        this.roleMatchers = resourcePermission.getRoleResources()
+                .entrySet()
                 .stream()
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
-                        e -> new OrRequestMatcher(Lists.newArrayList(e.getValue()))
+                        p -> this.resourceToMatcher(p.getValue()).orElse(ALL_MATCHER)
                 ));
     }
 
@@ -174,11 +161,6 @@ public class DefaultAuthenticationPermissionHandler implements AuthenticationPer
                 )
                 .collect(Collectors.toList());
         return matchers.isEmpty() ? Optional.empty() : Optional.of(new OrRequestMatcher(matchers));
-    }
-
-    @Override
-    public void onResourceRefreshed() {
-        this.init();
     }
 
     private static class DelegatingRequestMatcher implements RequestMatcher {

@@ -1,9 +1,5 @@
 package com.loyayz.gaia.auth.core.authorization;
 
-import com.loyayz.gaia.auth.core.authorization.AuthResource;
-import com.loyayz.gaia.auth.core.authorization.AuthResourcePermission;
-import com.loyayz.gaia.auth.core.authorization.AuthResourceService;
-import com.loyayz.gaia.auth.core.authorization.AuthRolePermission;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -15,7 +11,7 @@ import java.util.List;
  * @author loyayz (loyayz@foxmail.com)
  */
 @Data
-public class PropertiesAuthResourceService implements AuthResourceService {
+public class DefaultAuthPermissionProvider implements AuthPermissionProvider {
     private static final List<String> DEFAULT_PERMIT_PUBLIC = Arrays.asList("/public/**", "/error/**");
     private static final List<String> DEFAULT_PERMIT_STATIC = Arrays.asList("/css/**", "/js/**", "/images/**", "/webjars/**", "/**/favicon.ico", "/static/**");
 
@@ -35,16 +31,10 @@ public class PropertiesAuthResourceService implements AuthResourceService {
      * 不需要鉴权的资源
      */
     private List<AuthResource> permit;
-
     /**
      * 资源权限
      */
-    private List<AuthResourcePermission> resourcePermissions;
-    /**
-     * 角色权限
-     * 角色只能访问的资源
-     */
-    private List<AuthRolePermission> rolePermissions;
+    private AuthPermission permission;
 
     /**
      * 获取公开的资源列表
@@ -58,22 +48,14 @@ public class PropertiesAuthResourceService implements AuthResourceService {
     }
 
     @Override
-    public List<AuthResourcePermission> listResourcePermissions() {
-        if (this.resourcePermissions == null) {
-            return Collections.emptyList();
+    public AuthPermission getPermission() {
+        if (this.permission == null) {
+            return new AuthPermission();
         }
-        return resourcePermissions;
+        return this.permission;
     }
 
-    @Override
-    public List<AuthRolePermission> listRolePermissions() {
-        if (this.rolePermissions == null) {
-            return Collections.emptyList();
-        }
-        return rolePermissions;
-    }
-
-    public List<AuthResource> getPermit() {
+    private List<AuthResource> getPermit() {
         if (this.permit == null) {
             return Collections.emptyList();
         }

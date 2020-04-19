@@ -4,7 +4,7 @@ import com.loyayz.gaia.auth.core.AuthCorsProperties;
 import com.loyayz.gaia.auth.core.AuthCredentialsProperties;
 import com.loyayz.gaia.auth.core.authentication.AbstractAuthCredentialsExtractor;
 import com.loyayz.gaia.auth.core.authentication.AuthCredentialsExtractor;
-import com.loyayz.gaia.auth.core.authorization.AuthResourceService;
+import com.loyayz.gaia.auth.core.authorization.AuthPermissionProvider;
 import com.loyayz.gaia.auth.core.user.AuthUserService;
 import com.loyayz.gaia.auth.security.DefaultAuthenticationManager;
 import com.loyayz.gaia.auth.security.SecurityToken;
@@ -44,8 +44,8 @@ public class GaiaAuthWebFluxAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(ServerAuthenticationPermissionHandler.class)
-    public ServerAuthenticationPermissionHandler serverAuthenticationPermissionHandler(AuthResourceService resourceService) {
-        return new DefaultServerAuthenticationPermissionHandler(resourceService);
+    public ServerAuthenticationPermissionHandler serverAuthenticationPermissionHandler(AuthPermissionProvider permissionProvider) {
+        return new DefaultServerAuthenticationPermissionHandler(permissionProvider);
     }
 
     @Bean

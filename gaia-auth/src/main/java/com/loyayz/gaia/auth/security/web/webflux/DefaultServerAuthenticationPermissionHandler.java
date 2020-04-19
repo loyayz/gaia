@@ -1,13 +1,9 @@
 package com.loyayz.gaia.auth.security.web.webflux;
 
-import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Multimap;
+import com.loyayz.gaia.auth.core.authorization.AuthPermission;
+import com.loyayz.gaia.auth.core.authorization.AuthPermissionProvider;
 import com.loyayz.gaia.auth.core.authorization.AuthResource;
-import com.loyayz.gaia.auth.core.authorization.AuthResourcePermission;
-import com.loyayz.gaia.auth.core.authorization.AuthResourceRefreshedListener;
-import com.loyayz.gaia.auth.core.authorization.AuthResourceService;
 import com.loyayz.gaia.auth.security.SecurityToken;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -31,14 +27,20 @@ import java.util.stream.Collectors;
  * @author loyayz (loyayz@foxmail.com)
  */
 @Slf4j
-public class DefaultServerAuthenticationPermissionHandler implements ServerAuthenticationPermissionHandler, AuthResourceRefreshedListener {
-    private final AuthResourceService resourceService;
-    private DelegatingServerWebExchangeMatcher protectMatcher = new DelegatingServerWebExchangeMatcher(ServerWebExchangeMatchers.anyExchange());
-    private Map<ServerWebExchangeMatcher, AuthResourcePermission> protectMatcherResourcePermissions;
+public class DefaultServerAuthenticationPermissionHandler implements ServerAuthenticationPermissionHandler {
+    private static ServerWebExchangeMatcher ALL_MATCHER = ServerWebExchangeMatchers.anyExchange();
+    private final AuthPermissionProvider permissionProvider;
+    private DelegatingServerWebExchangeMatcher protectMatcher = new DelegatingServerWebExchangeMatcher(ALL_MATCHER);
+    private Map<ServerWebExchangeMatcher, List<String>> matcherRoles;
     private Map<String, ServerWebExchangeMatcher> roleMatchers;
 
-    public DefaultServerAuthenticationPermissionHandler(AuthResourceService resourceService) {
-        this.resourceService = resourceService;
+    public DefaultServerAuthenticationPermissionHandler(AuthPermissionProvider permissionProvider) {
+        this.permissionProvider = permissionProvider;
+        this.init();
+    }
+
+    @Override
+    public void refresh() {
         this.init();
     }
 
@@ -67,7 +69,7 @@ public class DefaultServerAuthenticationPermissionHandler implements ServerAuthe
     }
 
     private boolean hasResourcePermission(SecurityToken token, ServerWebExchange exchange) {
-        boolean reject = this.protectMatcherResourcePermissions
+        boolean reject = this.matcherRoles
                 .entrySet()
                 .parallelStream()
                 // 无权限访问受保护资源
@@ -75,8 +77,7 @@ public class DefaultServerAuthenticationPermissionHandler implements ServerAuthe
                         .map(matchPath -> {
                             boolean hasPermission = true;
                             if (matchPath.isMatch()) {
-                                AuthResourcePermission permission = protectMatcher.getValue();
-                                hasPermission = token.hasAnyRole(permission.getAllowedRoles());
+                                hasPermission = token.hasAnyRole(protectMatcher.getValue());
                             }
                             return !hasPermission;
                         })
@@ -107,41 +108,31 @@ public class DefaultServerAuthenticationPermissionHandler implements ServerAuthe
 
     private void init() {
         this.setProtectMatcher();
-        this.setProtectMatcherResourcePermissions();
-        this.setProtectMatcherRolePermissions();
+        this.setProtectMatcherPermission();
     }
 
     private void setProtectMatcher() {
-        List<AuthResource> publicResources = this.resourceService.listPermitResources();
+        List<AuthResource> publicResources = this.permissionProvider.listPermitResources();
         this.resourceToMatcher(publicResources).ifPresent(matcher ->
                 this.protectMatcher.setMatcher(new NegatedServerWebExchangeMatcher(matcher))
         );
     }
 
-    private void setProtectMatcherResourcePermissions() {
-        Map<ServerWebExchangeMatcher, AuthResourcePermission> permissions = Maps.newHashMap();
-        this.resourceService.listResourcePermissions().forEach(permission ->
-                this.resourceToMatcher(permission).ifPresent(matcher ->
-                        permissions.put(matcher, permission)
-                )
-        );
-        this.protectMatcherResourcePermissions = permissions;
-    }
-
-    private void setProtectMatcherRolePermissions() {
-        Multimap<String, ServerWebExchangeMatcher> roleMatcherMap = HashMultimap.create();
-        this.resourceService.listRolePermissions().forEach(rolePermission -> {
-            if (rolePermission.valid()) {
-                String role = rolePermission.getRole();
-                List<AuthResource> resources = rolePermission.getResources();
-                this.resourceToMatcher(resources).ifPresent(matcher -> roleMatcherMap.put(role, matcher));
-            }
-        });
-        this.roleMatchers = roleMatcherMap.asMap().entrySet()
+    private void setProtectMatcherPermission() {
+        AuthPermission resourcePermission = this.permissionProvider.getPermission();
+        this.matcherRoles = resourcePermission.getResourceRoles()
+                .entrySet()
+                .stream()
+                .collect(Collectors.toMap(
+                        p -> this.resourceToMatcher(p.getKey()).orElse(ALL_MATCHER),
+                        Map.Entry::getValue
+                ));
+        this.roleMatchers = resourcePermission.getRoleResources()
+                .entrySet()
                 .stream()
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
-                        e -> new OrServerWebExchangeMatcher(Lists.newArrayList(e.getValue()))
+                        p -> this.resourceToMatcher(p.getValue()).orElse(ALL_MATCHER)
                 ));
     }
 
@@ -170,11 +161,6 @@ public class DefaultServerAuthenticationPermissionHandler implements ServerAuthe
                 })
                 .collect(Collectors.toList());
         return matchers.isEmpty() ? Optional.empty() : Optional.of(new OrServerWebExchangeMatcher(matchers));
-    }
-
-    @Override
-    public void onResourceRefreshed() {
-        this.init();
     }
 
     private static class DelegatingServerWebExchangeMatcher implements ServerWebExchangeMatcher {

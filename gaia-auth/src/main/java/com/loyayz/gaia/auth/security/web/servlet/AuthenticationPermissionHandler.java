@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletRequest;
  */
 public interface AuthenticationPermissionHandler {
 
+    void refresh();
+
     /**
      * 需要鉴权的校验器
      */
