@@ -18,7 +18,7 @@ public class DefaultAuthUserService implements AuthUserService {
     private final AuthUserCacheItemConverter userCacheItemConverter;
 
     @Override
-    public AuthUser extract(AuthCredentials credentials) {
+    public AuthUser retrieve(AuthCredentials credentials) {
         String token = credentials.getToken();
         Map<String, Object> item = this.userCache.get(token);
         return this.userCacheItemConverter.toUser(item);

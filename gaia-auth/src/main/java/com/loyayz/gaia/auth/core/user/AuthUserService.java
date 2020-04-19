@@ -13,7 +13,7 @@ public interface AuthUserService {
      * @param credentials token
      * @return 用户信息
      */
-    AuthUser extract(AuthCredentials credentials);
+    AuthUser retrieve(AuthCredentials credentials);
 
     /**
      * 存储用户信息

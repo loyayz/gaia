@@ -27,7 +27,7 @@ public class DefaultAuthenticationManager implements AuthenticationManager {
      * 鉴权
      *
      * @param authentication {@link SecurityToken}
-     * @return {@link SecurityToken}. Principal from {@link AuthUserService#extract(AuthCredentials)}
+     * @return {@link SecurityToken}. Principal from {@link AuthUserService#retrieve(AuthCredentials)}
      * @throws AuthenticationException 鉴权异常
      */
     @Override
@@ -41,7 +41,7 @@ public class DefaultAuthenticationManager implements AuthenticationManager {
     private AuthUser retrieveUser(AuthCredentials credentials) {
         AuthUser user;
         try {
-            user = this.authUserService.extract(credentials);
+            user = this.authUserService.retrieve(credentials);
         } catch (Exception e) {
             if (AuthenticationException.class.isAssignableFrom(e.getClass())) {
                 throw e;
