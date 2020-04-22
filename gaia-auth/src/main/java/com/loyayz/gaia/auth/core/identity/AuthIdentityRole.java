@@ -1,4 +1,4 @@
-package com.loyayz.gaia.auth.core.user;
+package com.loyayz.gaia.auth.core.identity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,7 +14,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AuthUserRole implements Serializable {
+public class AuthIdentityRole implements Serializable {
     private static final long serialVersionUID = -1L;
 
     private String code;

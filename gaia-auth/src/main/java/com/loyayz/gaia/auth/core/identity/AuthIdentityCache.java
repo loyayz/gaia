@@ -1,14 +1,14 @@
-package com.loyayz.gaia.auth.core.user;
+package com.loyayz.gaia.auth.core.identity;
 
 import java.util.Map;
 
 /**
  * @author loyayz (loyayz@foxmail.com)
  */
-public interface AuthUserCache {
+public interface AuthIdentityCache {
 
     /**
-     * 获取缓存的用户信息
+     * 获取缓存的身份信息
      *
      * @param token cacheKey
      * @return 查无缓存或缓存过期，则返回 null
@@ -16,13 +16,13 @@ public interface AuthUserCache {
     Map<String, Object> get(String token);
 
     /**
-     * 缓存用户信息
+     * 缓存身份信息
      *
-     * @param userId 用户id
-     * @param user   要缓存的用户详情
+     * @param identityId 身份id
+     * @param identity   要缓存的身份详情
      * @return token cacheKey
      */
-    String put(String userId, Map<String, Object> user);
+    String put(String identityId, Map<String, Object> identity);
 
     /**
      * 删除缓存

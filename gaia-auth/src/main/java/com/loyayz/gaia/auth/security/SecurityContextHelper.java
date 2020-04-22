@@ -1,8 +1,8 @@
 package com.loyayz.gaia.auth.security;
 
 import com.loyayz.gaia.auth.core.authentication.AuthCredentials;
-import com.loyayz.gaia.auth.core.user.AuthUser;
-import com.loyayz.gaia.auth.core.user.AuthUserRole;
+import com.loyayz.gaia.auth.core.identity.AuthIdentity;
+import com.loyayz.gaia.auth.core.identity.AuthIdentityRole;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -33,7 +33,7 @@ public class SecurityContextHelper {
     /**
      * 获取当前用户
      */
-    public static <T extends AuthUser> T getUser() {
+    public static <T extends AuthIdentity> T getUser() {
         return getAuthentication()
                 .map(token -> (T) token.getPrincipal())
                 .orElse(null);
@@ -60,7 +60,7 @@ public class SecurityContextHelper {
      * 获取当前用户的id
      */
     public static String getUserId() {
-        AuthUser user = getUser();
+        AuthIdentity user = getUser();
         return user == null ? null : user.getId();
     }
 
@@ -68,7 +68,7 @@ public class SecurityContextHelper {
      * 获取当前用户名
      */
     public static String getUserName() {
-        AuthUser user = getUser();
+        AuthIdentity user = getUser();
         return user == null ? null : user.getName();
     }
 
@@ -77,7 +77,7 @@ public class SecurityContextHelper {
      */
     public static List<String> getUserRoleNames() {
         return getUserRoles().stream()
-                .map(AuthUserRole::getName)
+                .map(AuthIdentityRole::getName)
                 .collect(Collectors.toList());
     }
 
@@ -86,15 +86,15 @@ public class SecurityContextHelper {
      */
     public static List<String> getUserRoleCodes() {
         return getUserRoles().stream()
-                .map(AuthUserRole::getCode)
+                .map(AuthIdentityRole::getCode)
                 .collect(Collectors.toList());
     }
 
     /**
      * 获取当前用户的角色
      */
-    public static List<AuthUserRole> getUserRoles() {
-        AuthUser user = getUser();
+    public static List<AuthIdentityRole> getUserRoles() {
+        AuthIdentity user = getUser();
         return user == null ? Collections.emptyList() : user.getRoles();
     }
 

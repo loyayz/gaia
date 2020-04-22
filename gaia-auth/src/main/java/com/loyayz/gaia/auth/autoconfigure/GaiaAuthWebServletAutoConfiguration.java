@@ -6,7 +6,7 @@ import com.loyayz.gaia.auth.core.authentication.AbstractAuthCredentialsExtractor
 import com.loyayz.gaia.auth.core.authentication.AuthCredentials;
 import com.loyayz.gaia.auth.core.authentication.AuthCredentialsExtractor;
 import com.loyayz.gaia.auth.core.authorization.AuthPermissionProvider;
-import com.loyayz.gaia.auth.core.user.AuthUserService;
+import com.loyayz.gaia.auth.core.identity.AuthIdentityService;
 import com.loyayz.gaia.auth.security.DefaultAuthenticationManager;
 import com.loyayz.gaia.auth.security.SecurityToken;
 import com.loyayz.gaia.auth.security.web.servlet.*;
@@ -50,8 +50,8 @@ public class GaiaAuthWebServletAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(AuthenticationManagerResolver.class)
-    public AuthenticationManagerResolver<HttpServletRequest> authenticationManagerResolver(AuthUserService userService) {
-        AuthenticationManager manager = new DefaultAuthenticationManager(userService);
+    public AuthenticationManagerResolver<HttpServletRequest> authenticationManagerResolver(AuthIdentityService identityService) {
+        AuthenticationManager manager = new DefaultAuthenticationManager(identityService);
         return context -> manager;
     }
 

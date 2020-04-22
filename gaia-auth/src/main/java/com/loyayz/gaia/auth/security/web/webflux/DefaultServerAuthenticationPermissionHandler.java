@@ -92,11 +92,11 @@ public class DefaultServerAuthenticationPermissionHandler implements ServerAuthe
             return true;
         }
         List<ServerWebExchangeMatcher> userMatchers = Lists.newArrayList();
-        for (String userRole : roleCodes) {
-            if (this.roleMatchers.containsKey(userRole)) {
-                userMatchers.add(this.roleMatchers.get(userRole));
+        for (String roleCode : roleCodes) {
+            if (this.roleMatchers.containsKey(roleCode)) {
+                userMatchers.add(this.roleMatchers.get(roleCode));
             } else {
-                // 用户中有无限制资源访问的角色
+                // 拥有不用限制资源访问的角色
                 return true;
             }
         }

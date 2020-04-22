@@ -1,4 +1,4 @@
-package com.loyayz.gaia.auth.core.user;
+package com.loyayz.gaia.auth.core.identity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,20 +17,24 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AuthUser implements Serializable {
+public class AuthIdentity implements Serializable {
     private static final long serialVersionUID = -1L;
 
     private String id;
     /**
-     * 用户名
+     * 类型
+     */
+    private String type;
+    /**
+     * 名称
      */
     private String name;
     /**
      * 角色
      */
-    private List<AuthUserRole> roles = new ArrayList<>();
+    private List<AuthIdentityRole> roles = new ArrayList<>();
 
-    public List<AuthUserRole> getRoles() {
+    public List<AuthIdentityRole> getRoles() {
         if (this.roles == null) {
             return Collections.emptyList();
         }

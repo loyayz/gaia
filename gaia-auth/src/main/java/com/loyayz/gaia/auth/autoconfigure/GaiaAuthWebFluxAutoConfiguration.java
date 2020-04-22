@@ -5,7 +5,7 @@ import com.loyayz.gaia.auth.core.AuthCredentialsProperties;
 import com.loyayz.gaia.auth.core.authentication.AbstractAuthCredentialsExtractor;
 import com.loyayz.gaia.auth.core.authentication.AuthCredentialsExtractor;
 import com.loyayz.gaia.auth.core.authorization.AuthPermissionProvider;
-import com.loyayz.gaia.auth.core.user.AuthUserService;
+import com.loyayz.gaia.auth.core.identity.AuthIdentityService;
 import com.loyayz.gaia.auth.security.DefaultAuthenticationManager;
 import com.loyayz.gaia.auth.security.SecurityToken;
 import com.loyayz.gaia.auth.security.web.webflux.*;
@@ -50,8 +50,8 @@ public class GaiaAuthWebFluxAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(ReactiveAuthenticationManagerResolver.class)
-    public ReactiveAuthenticationManagerResolver<ServerHttpRequest> reactiveAuthenticationManager(AuthUserService userService) {
-        AuthenticationManager manager = new DefaultAuthenticationManager(userService);
+    public ReactiveAuthenticationManagerResolver<ServerHttpRequest> reactiveAuthenticationManager(AuthIdentityService identityService) {
+        AuthenticationManager manager = new DefaultAuthenticationManager(identityService);
         ReactiveAuthenticationManagerAdapter authenticationManager = new ReactiveAuthenticationManagerAdapter(manager);
         return context -> Mono.just(authenticationManager);
     }
