@@ -12,7 +12,7 @@
     <groupId>com.loyayz.gaia</groupId>
     <artifactId>gaia-dependencies</artifactId>
     <packaging>pom</packaging>
-    <version>0.1.1-SNAPSHOT</version>
+    <version>0.2.1</version>
 
     <description>Gaia Project Dependencies</description>
     <url>https://github.com/loyayz/gaia</url>
@@ -24,7 +24,7 @@
         <project.build.encoding>UTF-8</project.build.encoding>
 
         <!-- gaia -->
-        <gaia.version>0.1.1-SNAPSHOT</gaia.version>
+        <gaia.version>0.2.0</gaia.version>
 
         <!-- 3rd lib dependency -->
         <guava.version>29.0-jre</guava.version>
