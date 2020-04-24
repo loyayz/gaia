@@ -1,4 +1,4 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.loyayz.gaia.data.autoconfigure.GaiaDataPropertiesAutoConfiguration,\
 com.loyayz.gaia.data.autoconfigure.GaiaMybatisPlusAutoConfiguration,\
-com.loyayz.gaia.data.autoconfigure.GaiaMybatisPageHelperAutoConfiguration,\
-com.loyayz.gaia.data.autoconfigure.GaiaMongodbAutoConfiguration
+com.loyayz.gaia.data.autoconfigure.GaiaMybatisPageHelperAutoConfiguration

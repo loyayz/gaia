@@ -6,7 +6,6 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
@@ -17,8 +16,7 @@ import java.util.Properties;
  */
 @Configuration
 @ConditionalOnBean(SqlSessionFactory.class)
-@AutoConfigureAfter({GaiaMybatisPlusAutoConfiguration.class, MybatisPlusAutoConfiguration.class})
-@EnableConfigurationProperties({GaiaMybatisProperties.class})
+@AutoConfigureAfter({GaiaDataPropertiesAutoConfiguration.class, GaiaMybatisPlusAutoConfiguration.class, MybatisPlusAutoConfiguration.class})
 public class GaiaMybatisPageHelperAutoConfiguration implements InitializingBean {
     private List<SqlSessionFactory> sqlSessionFactoryList;
     private GaiaMybatisProperties mybatisProperties;

@@ -1,8 +1,11 @@
 package com.loyayz.gaia.data.autoconfigure;
 
 import com.baomidou.mybatisplus.autoconfigure.MybatisPlusAutoConfiguration;
+import com.baomidou.mybatisplus.core.incrementer.IdentifierGenerator;
 import com.baomidou.mybatisplus.core.injector.ISqlInjector;
 import com.loyayz.gaia.data.mybatis.extension.DefaultSqlInjector;
+import com.loyayz.gaia.util.Sequence;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -13,14 +16,35 @@ import org.springframework.context.annotation.Configuration;
  * @author loyayz (loyayz@foxmail.com)
  */
 @Configuration
-@ConditionalOnClass(ISqlInjector.class)
+@AutoConfigureAfter({GaiaDataPropertiesAutoConfiguration.class})
 @AutoConfigureBefore({MybatisPlusAutoConfiguration.class})
 public class GaiaMybatisPlusAutoConfiguration {
+    private GaiaMybatisProperties mybatisProperties;
+
+    public GaiaMybatisPlusAutoConfiguration(GaiaMybatisProperties mybatisProperties) {
+        this.mybatisProperties = mybatisProperties;
+    }
 
     @Bean
+    @ConditionalOnClass(ISqlInjector.class)
     @ConditionalOnMissingBean(ISqlInjector.class)
     public ISqlInjector sqlInjector() {
         return new DefaultSqlInjector();
+    }
+
+    @Bean
+    @ConditionalOnClass(IdentifierGenerator.class)
+    @ConditionalOnMissingBean(IdentifierGenerator.class)
+    public IdentifierGenerator identifierGenerator() {
+        return new IdentifierGenerator() {
+            private final Sequence sequence = new Sequence(mybatisProperties.getIdEpoch());
+
+            @Override
+            public Number nextId(Object entity) {
+                return sequence.nextId();
+            }
+
+        };
     }
 
 }

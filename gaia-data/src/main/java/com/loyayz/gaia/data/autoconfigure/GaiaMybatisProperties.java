@@ -14,6 +14,11 @@ import java.util.Properties;
 @ConfigurationProperties(prefix = "gaia.mybatis")
 public class GaiaMybatisProperties {
 
+    /**
+     * id 生成器起始时间
+     * 默认 +8 2020-01-01 00:00:00
+     */
+    private Long idEpoch = 1577808000000L;
     private PageHelperProperties pageHelper;
 
     public Properties getPageHelperProperties() {
