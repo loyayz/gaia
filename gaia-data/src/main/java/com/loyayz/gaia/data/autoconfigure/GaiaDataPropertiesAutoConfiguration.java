@@ -19,18 +19,21 @@ import java.util.Arrays;
 @EnableConfigurationProperties({GaiaMybatisProperties.class})
 public class GaiaDataPropertiesAutoConfiguration {
 
-    /**
-     * mongodb
-     * BigDecimal 转为 mongodb 对应类型，未设置时会默认转为字符串
-     */
-    @Bean
+    @Configuration
     @ConditionalOnClass({MongoCustomConversions.class, Decimal128.class})
-    @ConditionalOnMissingBean(MongoCustomConversions.class)
-    public MongoCustomConversions mongoCustomConversions() {
-        return new MongoCustomConversions(Arrays.asList(
-                (Converter<BigDecimal, Decimal128>) Decimal128::new,
-                (Converter<Decimal128, BigDecimal>) Decimal128::bigDecimalValue
-        ));
+    public static class GaiaMongoAutoConfiguration {
+        /**
+         * mongodb
+         * BigDecimal 转为 mongodb 对应类型，未设置时会默认转为字符串
+         */
+        @Bean
+        @ConditionalOnMissingBean(MongoCustomConversions.class)
+        public MongoCustomConversions mongoCustomConversions() {
+            return new MongoCustomConversions(Arrays.asList(
+                    (Converter<BigDecimal, Decimal128>) Decimal128::new,
+                    (Converter<Decimal128, BigDecimal>) Decimal128::bigDecimalValue
+            ));
+        }
     }
 
 }
