@@ -3,6 +3,7 @@ package com.loyayz.gaia.data.mybatis.extension;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.loyayz.gaia.data.PageModel;
+import com.loyayz.gaia.model.request.PageRequest;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -13,7 +14,19 @@ import java.util.function.Supplier;
  * @author loyayz (loyayz@foxmail.com)
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class Pages {
+public abstract class Pages {
+
+    public static <T> PageModel<T> doSelectPage(PageRequest pageRequest, Supplier<List<T>> listAction) {
+        return doSelectPage(pageRequest, listAction, null);
+    }
+
+    public static <T> PageModel<T> doSelectPage(PageRequest pageRequest, Supplier<List<T>> listAction, int total) {
+        return doSelectPage(pageRequest, listAction, () -> total);
+    }
+
+    public static <T> PageModel<T> doSelectPage(PageRequest pageRequest, Supplier<List<T>> listAction, Supplier<Integer> countAction) {
+        return doSelectPage(pageRequest.getPageNum(), pageRequest.getPageSize(), listAction, countAction);
+    }
 
     public static <T> PageModel<T> doSelectPage(int pageNum, int pageSize, Supplier<List<T>> listAction) {
         return doSelectPage(pageNum, pageSize, listAction, null);
@@ -23,9 +36,7 @@ public class Pages {
         return doSelectPage(pageNum, pageSize, listAction, () -> count);
     }
 
-    public static <T> PageModel<T> doSelectPage(int pageNum, int pageSize,
-                                                Supplier<List<T>> listAction,
-                                                Supplier<Integer> countAction) {
+    public static <T> PageModel<T> doSelectPage(int pageNum, int pageSize, Supplier<List<T>> listAction, Supplier<Integer> countAction) {
         boolean autoCount = countAction == null;
         Page<T> page = PageHelper.startPage(pageNum, pageSize, autoCount)
                 .doSelectPage(listAction::get);
