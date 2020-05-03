@@ -45,12 +45,7 @@ public abstract class BaseEntity<T extends BaseEntity> implements Serializable {
 
     public boolean deleteById(Serializable id) {
         Assert.isFalse(StringUtils.checkValNull(id), "deleteById primaryKey is null.");
-        SqlSession sqlSession = sqlSession();
-        try {
-            return SqlHelper.retBool(sqlSession.delete(sqlStatement(MybatisConstants.METHOD_DELETE_BY_ID), id));
-        } finally {
-            closeSqlSession(sqlSession);
-        }
+        return this.executeDelete(MybatisConstants.METHOD_DELETE_BY_ID, id);
     }
 
     /**
@@ -60,12 +55,7 @@ public abstract class BaseEntity<T extends BaseEntity> implements Serializable {
         Assert.isFalse(CollectionUtils.isEmpty(ids), "deleteByIds primaryKeys is empty.");
         Map<String, Object> map = new HashMap<>(1);
         map.put(Constants.COLLECTION, ids);
-        SqlSession sqlSession = sqlSession();
-        try {
-            return SqlHelper.retBool(sqlSession.delete(sqlStatement(MybatisConstants.METHOD_DELETE_BY_IDS), map));
-        } finally {
-            closeSqlSession(sqlSession);
-        }
+        return this.executeDelete(MybatisConstants.METHOD_DELETE_BY_IDS, map);
     }
 
     /**
@@ -79,12 +69,7 @@ public abstract class BaseEntity<T extends BaseEntity> implements Serializable {
         Assert.isFalse(StringUtils.checkValNull(id), "updateById primaryKey is null.");
         Map<String, Object> map = new HashMap<>(1);
         map.put(Constants.ENTITY, this);
-        SqlSession sqlSession = sqlSession();
-        try {
-            return SqlHelper.retBool(sqlSession.update(sqlStatement(MybatisConstants.METHOD_UPDATE_BY_ID), map));
-        } finally {
-            closeSqlSession(sqlSession);
-        }
+        return this.executeUpdate(MybatisConstants.METHOD_UPDATE_BY_ID, map);
     }
 
     /**
@@ -96,12 +81,7 @@ public abstract class BaseEntity<T extends BaseEntity> implements Serializable {
 
     public T getById(Serializable id) {
         Assert.isFalse(StringUtils.checkValNull(id), "getById primaryKey is null.");
-        SqlSession sqlSession = sqlSession();
-        try {
-            return sqlSession.selectOne(sqlStatement(MybatisConstants.METHOD_GET_BY_ID), id);
-        } finally {
-            closeSqlSession(sqlSession);
-        }
+        return this.executeSelectOne(MybatisConstants.METHOD_GET_BY_ID, id);
     }
 
     /**
@@ -111,12 +91,7 @@ public abstract class BaseEntity<T extends BaseEntity> implements Serializable {
         Map<String, Object> map = new HashMap<>(1);
         map.put(Constants.COLLECTION, ids);
         map.put(MybatisConstants.CONDITION_SORTER, sorters);
-        SqlSession sqlSession = sqlSession();
-        try {
-            return sqlSession.selectList(sqlStatement(MybatisConstants.METHOD_LIST_BY_IDS), map);
-        } finally {
-            closeSqlSession(sqlSession);
-        }
+        return this.executeSelectList(MybatisConstants.METHOD_LIST_BY_IDS, map);
     }
 
     /**
@@ -126,12 +101,7 @@ public abstract class BaseEntity<T extends BaseEntity> implements Serializable {
         Map<String, Object> map = new HashMap<>(1);
         map.put(Constants.ENTITY, this);
         map.put(MybatisConstants.CONDITION_SORTER, sorters);
-        SqlSession sqlSession = sqlSession();
-        try {
-            return sqlSession.selectList(sqlStatement(MybatisConstants.METHOD_LIST_BY_CONDITION), map);
-        } finally {
-            closeSqlSession(sqlSession);
-        }
+        return this.executeSelectList(MybatisConstants.METHOD_LIST_BY_CONDITION, map);
     }
 
     /**
@@ -153,12 +123,8 @@ public abstract class BaseEntity<T extends BaseEntity> implements Serializable {
     public Integer countByCondition() {
         Map<String, Object> map = new HashMap<>(1);
         map.put(Constants.ENTITY, this);
-        SqlSession sqlSession = sqlSession();
-        try {
-            return SqlHelper.retCount(sqlSession.<Integer>selectOne(sqlStatement(MybatisConstants.METHOD_COUNT_BY_CONDITION), map));
-        } finally {
-            closeSqlSession(sqlSession);
-        }
+        Integer total = this.executeSelectOne(MybatisConstants.METHOD_COUNT_BY_CONDITION, map);
+        return SqlHelper.retCount(total);
     }
 
     /**
@@ -207,6 +173,42 @@ public abstract class BaseEntity<T extends BaseEntity> implements Serializable {
 
     protected IdentifierGenerator identifierGenerator() {
         return this.getGlobalConfig().getIdentifierGenerator();
+    }
+
+    protected <R> List<R> executeSelectList(String sqlMethod, Object param) {
+        SqlSession sqlSession = sqlSession();
+        try {
+            return sqlSession.selectList(sqlStatement(sqlMethod), param);
+        } finally {
+            closeSqlSession(sqlSession);
+        }
+    }
+
+    protected <R> R executeSelectOne(String sqlMethod, Object param) {
+        SqlSession sqlSession = sqlSession();
+        try {
+            return sqlSession.selectOne(sqlStatement(sqlMethod), param);
+        } finally {
+            closeSqlSession(sqlSession);
+        }
+    }
+
+    protected boolean executeUpdate(String sqlMethod, Object param) {
+        SqlSession sqlSession = sqlSession();
+        try {
+            return SqlHelper.retBool(sqlSession.update(sqlStatement(sqlMethod), param));
+        } finally {
+            closeSqlSession(sqlSession);
+        }
+    }
+
+    protected boolean executeDelete(String sqlMethod, Object param) {
+        SqlSession sqlSession = sqlSession();
+        try {
+            return SqlHelper.retBool(sqlSession.delete(sqlStatement(sqlMethod), param));
+        } finally {
+            closeSqlSession(sqlSession);
+        }
     }
 
 }
