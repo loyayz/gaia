@@ -19,6 +19,14 @@ public abstract class AbstractEntity<T extends BaseEntity> extends BaseEntity<T>
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date gmtModified;
 
+    /**
+     * 生成 id
+     */
+    public Long genId() {
+        this.id = (long) super.identifierGenerator().nextId(this);
+        return this.id;
+    }
+
     public Long getId() {
         return id;
     }

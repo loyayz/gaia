@@ -1,5 +1,7 @@
 package com.loyayz.gaia.data.mybatis;
 
+import com.baomidou.mybatisplus.core.config.GlobalConfig;
+import com.baomidou.mybatisplus.core.incrementer.IdentifierGenerator;
 import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
 import com.baomidou.mybatisplus.core.toolkit.*;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
@@ -197,6 +199,14 @@ public abstract class BaseEntity<T extends BaseEntity> implements Serializable {
      */
     protected void closeSqlSession(SqlSession sqlSession) {
         SqlSessionUtils.closeSqlSession(sqlSession, GlobalConfigUtils.currentSessionFactory(getClass()));
+    }
+
+    protected GlobalConfig getGlobalConfig() {
+        return GlobalConfigUtils.getGlobalConfig(TableInfoHelper.getTableInfo(getClass()).getConfiguration());
+    }
+
+    protected IdentifierGenerator identifierGenerator() {
+        return this.getGlobalConfig().getIdentifierGenerator();
     }
 
 }
