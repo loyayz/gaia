@@ -1,5 +1,6 @@
-package com.loyayz.gaia.data;
+package com.loyayz.gaia.model;
 
+import com.loyayz.gaia.model.response.PageResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -47,20 +48,24 @@ public class PageModel<T> implements Serializable {
      */
     private Integer offset;
 
-    public PageModel(PageModel other) {
+    public <R> PageModel<R> convert(Function<? super T, ? extends R> mapper) {
+        PageModel<R> result = new PageModel<>(this);
+        List<R> collect = this.getItems().stream().map(mapper).collect(toList());
+        result.setItems(collect);
+        return result;
+    }
+
+    public PageResponse<T> toResponse() {
+        return PageResponse.success(this.items, this.total, this.pages);
+    }
+
+    private PageModel(PageModel other) {
         this.items = new ArrayList<>();
         this.pageNum = other.getPageNum();
         this.pageSize = other.getPageSize();
         this.total = other.getTotal();
         this.pages = other.getPages();
         this.offset = other.getOffset();
-    }
-
-    public <R> PageModel<R> convert(Function<? super T, ? extends R> mapper) {
-        PageModel<R> result = new PageModel<>(this);
-        List<R> collect = this.getItems().stream().map(mapper).collect(toList());
-        result.setItems(collect);
-        return result;
     }
 
 }

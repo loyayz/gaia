@@ -2,7 +2,7 @@ package com.loyayz.gaia.data.mybatis.extension;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import com.loyayz.gaia.data.PageModel;
+import com.loyayz.gaia.model.PageModel;
 import com.loyayz.gaia.model.request.PageRequest;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

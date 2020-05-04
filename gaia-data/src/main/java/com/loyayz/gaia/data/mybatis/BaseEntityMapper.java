@@ -2,10 +2,10 @@ package com.loyayz.gaia.data.mybatis;
 
 import com.baomidou.mybatisplus.core.mapper.Mapper;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
-import com.loyayz.gaia.data.PageModel;
 import com.loyayz.gaia.data.Sorter;
 import com.loyayz.gaia.data.mybatis.extension.MybatisConstants;
 import com.loyayz.gaia.data.mybatis.extension.Pages;
+import com.loyayz.gaia.model.PageModel;
 import org.apache.ibatis.annotations.Param;
 
 import java.io.Serializable;
