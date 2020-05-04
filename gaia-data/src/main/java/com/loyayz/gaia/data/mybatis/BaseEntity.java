@@ -36,6 +36,15 @@ public abstract class BaseEntity<T extends BaseEntity> implements Serializable {
         }
     }
 
+    public boolean insert(List<T> entities) {
+        SqlSession sqlSession = sqlSession();
+        try {
+            return SqlHelper.retBool(sqlSession.insert(sqlStatement(MybatisConstants.METHOD_BATCH_INSERT), entities));
+        } finally {
+            closeSqlSession(sqlSession);
+        }
+    }
+
     /**
      * 根据主键删除
      */
