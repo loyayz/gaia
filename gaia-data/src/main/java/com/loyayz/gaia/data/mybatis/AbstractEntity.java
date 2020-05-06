@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.loyayz.gaia.data.mybatis.extension.MybatisUtils;
 
 import java.util.Date;
 
@@ -23,7 +24,7 @@ public abstract class AbstractEntity<T extends BaseEntity> extends BaseEntity<T>
      * 生成 id
      */
     public Long genId() {
-        this.id = (long) super.identifierGenerator().nextId(this);
+        this.id = (long) MybatisUtils.getIdentifierGenerator(getClass()).nextId(this);
         return this.id;
     }
 

@@ -14,7 +14,7 @@ import java.util.function.Supplier;
  * @author loyayz (loyayz@foxmail.com)
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public abstract class Pages {
+public class Pages {
 
     public static <T> PageModel<T> doSelectPage(PageRequest pageRequest, Supplier<List<T>> listAction) {
         return doSelectPage(pageRequest, listAction, null);

@@ -1,16 +1,13 @@
 package com.loyayz.gaia.data.mybatis;
 
-import com.baomidou.mybatisplus.core.config.GlobalConfig;
-import com.baomidou.mybatisplus.core.incrementer.IdentifierGenerator;
 import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
 import com.baomidou.mybatisplus.core.toolkit.*;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
 import com.loyayz.gaia.data.Sorter;
 import com.loyayz.gaia.data.mybatis.extension.MybatisConstants;
+import com.loyayz.gaia.data.mybatis.extension.MybatisUtils;
 import com.loyayz.gaia.data.mybatis.extension.Pages;
 import com.loyayz.gaia.model.PageModel;
-import org.apache.ibatis.session.SqlSession;
-import org.mybatis.spring.SqlSessionUtils;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -28,21 +25,14 @@ public abstract class BaseEntity<T extends BaseEntity> implements Serializable {
      * 插入（字段选择插入）
      */
     public boolean insert() {
-        SqlSession sqlSession = sqlSession();
-        try {
-            return SqlHelper.retBool(sqlSession.insert(sqlStatement(MybatisConstants.METHOD_INSERT), this));
-        } finally {
-            closeSqlSession(sqlSession);
-        }
+        return MybatisUtils.executeInsert(getClass(), MybatisConstants.METHOD_INSERT, this);
     }
 
+    /**
+     * 批量插入
+     */
     public boolean insert(List<T> entities) {
-        SqlSession sqlSession = sqlSession();
-        try {
-            return SqlHelper.retBool(sqlSession.insert(sqlStatement(MybatisConstants.METHOD_BATCH_INSERT), entities));
-        } finally {
-            closeSqlSession(sqlSession);
-        }
+        return MybatisUtils.executeInsert(getClass(), MybatisConstants.METHOD_BATCH_INSERT, entities);
     }
 
     /**
@@ -54,7 +44,7 @@ public abstract class BaseEntity<T extends BaseEntity> implements Serializable {
 
     public boolean deleteById(Serializable id) {
         Assert.isFalse(StringUtils.checkValNull(id), "deleteById primaryKey is null.");
-        return this.executeDelete(MybatisConstants.METHOD_DELETE_BY_ID, id);
+        return MybatisUtils.executeDelete(getClass(), MybatisConstants.METHOD_DELETE_BY_ID, id);
     }
 
     /**
@@ -64,7 +54,7 @@ public abstract class BaseEntity<T extends BaseEntity> implements Serializable {
         Assert.isFalse(CollectionUtils.isEmpty(ids), "deleteByIds primaryKeys is empty.");
         Map<String, Object> map = new HashMap<>(1);
         map.put(Constants.COLLECTION, ids);
-        return this.executeDelete(MybatisConstants.METHOD_DELETE_BY_IDS, map);
+        return MybatisUtils.executeDelete(getClass(), MybatisConstants.METHOD_DELETE_BY_IDS, map);
     }
 
     /**
@@ -78,7 +68,7 @@ public abstract class BaseEntity<T extends BaseEntity> implements Serializable {
         Assert.isFalse(StringUtils.checkValNull(id), "updateById primaryKey is null.");
         Map<String, Object> map = new HashMap<>(1);
         map.put(Constants.ENTITY, this);
-        return this.executeUpdate(MybatisConstants.METHOD_UPDATE_BY_ID, map);
+        return MybatisUtils.executeUpdate(getClass(), MybatisConstants.METHOD_UPDATE_BY_ID, map);
     }
 
     /**
@@ -90,7 +80,7 @@ public abstract class BaseEntity<T extends BaseEntity> implements Serializable {
 
     public T getById(Serializable id) {
         Assert.isFalse(StringUtils.checkValNull(id), "getById primaryKey is null.");
-        return this.executeSelectOne(MybatisConstants.METHOD_GET_BY_ID, id);
+        return MybatisUtils.executeSelectOne(getClass(), MybatisConstants.METHOD_GET_BY_ID, id);
     }
 
     /**
@@ -100,7 +90,7 @@ public abstract class BaseEntity<T extends BaseEntity> implements Serializable {
         Map<String, Object> map = new HashMap<>(1);
         map.put(Constants.COLLECTION, ids);
         map.put(MybatisConstants.CONDITION_SORTER, sorters);
-        return this.executeSelectList(MybatisConstants.METHOD_LIST_BY_IDS, map);
+        return MybatisUtils.executeSelectList(getClass(), MybatisConstants.METHOD_LIST_BY_IDS, map);
     }
 
     /**
@@ -110,7 +100,7 @@ public abstract class BaseEntity<T extends BaseEntity> implements Serializable {
         Map<String, Object> map = new HashMap<>(1);
         map.put(Constants.ENTITY, this);
         map.put(MybatisConstants.CONDITION_SORTER, sorters);
-        return this.executeSelectList(MybatisConstants.METHOD_LIST_BY_CONDITION, map);
+        return MybatisUtils.executeSelectList(getClass(), MybatisConstants.METHOD_LIST_BY_CONDITION, map);
     }
 
     /**
@@ -132,7 +122,7 @@ public abstract class BaseEntity<T extends BaseEntity> implements Serializable {
     public Integer countByCondition() {
         Map<String, Object> map = new HashMap<>(1);
         map.put(Constants.ENTITY, this);
-        Integer total = this.executeSelectOne(MybatisConstants.METHOD_COUNT_BY_CONDITION, map);
+        Integer total = MybatisUtils.executeSelectOne(getClass(), MybatisConstants.METHOD_COUNT_BY_CONDITION, map);
         return SqlHelper.retCount(total);
     }
 
@@ -145,79 +135,10 @@ public abstract class BaseEntity<T extends BaseEntity> implements Serializable {
     }
 
     /**
-     * 获取Session 默认自动提交
-     */
-    protected SqlSession sqlSession() {
-        return SqlHelper.sqlSession(getClass());
-    }
-
-    /**
-     * 获取SqlStatement
-     *
-     * @param sqlMethod sqlMethod
-     */
-    protected String sqlStatement(String sqlMethod) {
-        return SqlHelper.table(getClass()).getSqlStatement(sqlMethod);
-    }
-
-    /**
      * 主键值
      */
     protected Serializable pkVal() {
         return (Serializable) ReflectionKit.getMethodValue(this, TableInfoHelper.getTableInfo(getClass()).getKeyProperty());
-    }
-
-    /**
-     * 释放sqlSession
-     *
-     * @param sqlSession session
-     */
-    protected void closeSqlSession(SqlSession sqlSession) {
-        SqlSessionUtils.closeSqlSession(sqlSession, GlobalConfigUtils.currentSessionFactory(getClass()));
-    }
-
-    protected GlobalConfig getGlobalConfig() {
-        return GlobalConfigUtils.getGlobalConfig(TableInfoHelper.getTableInfo(getClass()).getConfiguration());
-    }
-
-    protected IdentifierGenerator identifierGenerator() {
-        return this.getGlobalConfig().getIdentifierGenerator();
-    }
-
-    protected <R> List<R> executeSelectList(String sqlMethod, Object param) {
-        SqlSession sqlSession = sqlSession();
-        try {
-            return sqlSession.selectList(sqlStatement(sqlMethod), param);
-        } finally {
-            closeSqlSession(sqlSession);
-        }
-    }
-
-    protected <R> R executeSelectOne(String sqlMethod, Object param) {
-        SqlSession sqlSession = sqlSession();
-        try {
-            return sqlSession.selectOne(sqlStatement(sqlMethod), param);
-        } finally {
-            closeSqlSession(sqlSession);
-        }
-    }
-
-    protected boolean executeUpdate(String sqlMethod, Object param) {
-        SqlSession sqlSession = sqlSession();
-        try {
-            return SqlHelper.retBool(sqlSession.update(sqlStatement(sqlMethod), param));
-        } finally {
-            closeSqlSession(sqlSession);
-        }
-    }
-
-    protected boolean executeDelete(String sqlMethod, Object param) {
-        SqlSession sqlSession = sqlSession();
-        try {
-            return SqlHelper.retBool(sqlSession.delete(sqlStatement(sqlMethod), param));
-        } finally {
-            closeSqlSession(sqlSession);
-        }
     }
 
 }
