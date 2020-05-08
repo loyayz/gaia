@@ -26,7 +26,6 @@
         <module>gaia-data-mybatis-starter</module>
         <module>gaia-exception</module>
 
-        <module>gaia-dependencies</module>
         <module>gaia-parent</module>
     </modules>
 
