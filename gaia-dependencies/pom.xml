@@ -9,10 +9,10 @@
         <version>2.2.7.RELEASE</version>
     </parent>
 
-    <groupId>com.loyayz.gaia</groupId>
+    <groupId>com.loyayz</groupId>
     <artifactId>gaia-dependencies</artifactId>
     <packaging>pom</packaging>
-    <version>0.2.2-SNAPSHOT</version>
+    <version>0.3.0</version>
 
     <description>Gaia Project Dependencies</description>
     <url>https://github.com/loyayz/gaia</url>
@@ -24,7 +24,7 @@
         <project.build.encoding>UTF-8</project.build.encoding>
 
         <!-- gaia -->
-        <gaia.version>0.2.2-SNAPSHOT</gaia.version>
+        <gaia.version>0.3.0</gaia.version>
 
         <!-- 3rd lib dependency -->
         <guava.version>29.0-jre</guava.version>
@@ -39,6 +39,9 @@
         <versions-maven-plugin.version>2.7</versions-maven-plugin.version>
         <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
+        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
+        <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
+        <maven-javadoc-plugin.version>3.2.0</maven-javadoc-plugin.version>
     </properties>
 
     <licenses>
@@ -65,27 +68,27 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>com.loyayz.gaia</groupId>
+                <groupId>com.loyayz</groupId>
                 <artifactId>gaia-auth</artifactId>
                 <version>${gaia.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.loyayz.gaia</groupId>
+                <groupId>com.loyayz</groupId>
                 <artifactId>gaia-core</artifactId>
                 <version>${gaia.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.loyayz.gaia</groupId>
+                <groupId>com.loyayz</groupId>
                 <artifactId>gaia-data</artifactId>
                 <version>${gaia.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.loyayz.gaia</groupId>
+                <groupId>com.loyayz</groupId>
                 <artifactId>gaia-data-mybatis-starter</artifactId>
                 <version>${gaia.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.loyayz.gaia</groupId>
+                <groupId>com.loyayz</groupId>
                 <artifactId>gaia-exception</artifactId>
                 <version>${gaia.version}</version>
             </dependency>
@@ -130,6 +133,50 @@
 
         </dependencies>
     </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
+                <configuration>
+                    <encoding>${project.encoding}</encoding>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>${maven-source-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>${maven-javadoc-plugin.version}</version>
+                <configuration>
+                    <failOnError>false</failOnError>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
     <profiles>
         <profile>

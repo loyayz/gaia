@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>gaia-parent</artifactId>
-        <groupId>com.loyayz.gaia</groupId>
-        <version>0.2.2-SNAPSHOT</version>
+        <groupId>com.loyayz</groupId>
+        <version>0.3.0</version>
         <relativePath>../gaia-parent</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
