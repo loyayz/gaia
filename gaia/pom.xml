@@ -5,20 +5,24 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.loyayz</groupId>
-    <artifactId>pantheon-root</artifactId>
-    <version>0.1.0</version>
+    <artifactId>gaia-build</artifactId>
+    <version>0.3.0</version>
     <packaging>pom</packaging>
 
-    <properties>
-        <main.user.dir>${basedir}</main.user.dir>
+    <modules>
+        <module>gaia-core</module>
+        <module>gaia-auth</module>
+        <module>gaia-data</module>
+        <module>gaia-data-mybatis-starter</module>
+        <module>gaia-exception</module>
 
+        <module>gaia-parent</module>
+    </modules>
+
+    <properties>
+        <main.user.dir>${basedir}/..</main.user.dir>
         <maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
     </properties>
-
-
-    <modules>
-        <module>gaia</module>
-    </modules>
 
     <build>
         <plugins>
@@ -32,4 +36,5 @@
             </plugin>
         </plugins>
     </build>
+
 </project>
