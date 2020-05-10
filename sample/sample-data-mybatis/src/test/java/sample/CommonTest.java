@@ -33,7 +33,7 @@ public class CommonTest {
         User queryUser = new User();
         queryUser.setId(1L);
 
-        User user = queryUser.getById();
+        User user = queryUser.findById();
         Assert.assertNotNull(user);
         Assert.assertEquals(1L, (long) user.getId());
         Assert.assertEquals("张三", user.getName());
@@ -47,7 +47,7 @@ public class CommonTest {
         User queryUser = new User();
         queryUser.setId(1L);
 
-        User user = this.userMapper.getById(queryUser.getId());
+        User user = this.userMapper.findById(queryUser.getId());
         Assert.assertNotNull(user);
         Assert.assertEquals(1L, (long) user.getId());
         Assert.assertEquals("张三", user.getName());
@@ -59,7 +59,7 @@ public class CommonTest {
     @Test
     public void testInsertWithEntity() {
         User user = new User(1L);
-        Assert.assertNotNull(user.getById());
+        Assert.assertNotNull(user.findById());
         try {
             user.insert();
             Assert.fail();
@@ -68,22 +68,22 @@ public class CommonTest {
         }
 
         user = new User(5L);
-        Assert.assertNull(user.getById());
+        Assert.assertNull(user.findById());
         Assert.assertTrue(user.insert());
-        Assert.assertEquals(5L, (long) user.getById().getId());
+        Assert.assertEquals(5L, (long) user.findById().getId());
 
         user = new User();
         Assert.assertNull(user.getId());
         Assert.assertTrue(user.insert());
         Assert.assertNotNull(user.getId());
-        Assert.assertNull(user.getById().getAge());
+        Assert.assertNull(user.findById().getAge());
 
         user = new User();
         user.setAge(1);
         Assert.assertNull(user.getId());
         Assert.assertTrue(user.insert());
         Assert.assertNotNull(user.getId());
-        Assert.assertNotNull(user.getById().getAge());
+        Assert.assertNotNull(user.findById().getAge());
 
         int batchNum = new Random().nextInt(100);
         String batchName = UUID.randomUUID().toString().substring(0, 30);
@@ -103,7 +103,7 @@ public class CommonTest {
     @Test
     public void testInsertWithMapper() {
         User user = new User(1L);
-        Assert.assertNotNull(user.getById());
+        Assert.assertNotNull(user.findById());
         try {
             this.userMapper.insert(user);
             Assert.fail();
@@ -112,22 +112,22 @@ public class CommonTest {
         }
 
         user = new User(5L);
-        Assert.assertNull(this.userMapper.getById(user.getId()));
+        Assert.assertNull(this.userMapper.findById(user.getId()));
         Assert.assertEquals(1, this.userMapper.insert(user));
-        Assert.assertEquals(5L, (long) this.userMapper.getById(user.getId()).getId());
+        Assert.assertEquals(5L, (long) this.userMapper.findById(user.getId()).getId());
 
         user = new User();
         Assert.assertNull(user.getId());
         Assert.assertEquals(1, this.userMapper.insert(user));
         Assert.assertNotNull(user.getId());
-        Assert.assertNull(this.userMapper.getById(user.getId()).getAge());
+        Assert.assertNull(this.userMapper.findById(user.getId()).getAge());
 
         user = new User();
         user.setAge(1);
         Assert.assertNull(user.getId());
         Assert.assertEquals(1, this.userMapper.insert(user));
         Assert.assertNotNull(user.getId());
-        Assert.assertNotNull(this.userMapper.getById(user.getId()).getAge());
+        Assert.assertNotNull(this.userMapper.findById(user.getId()).getAge());
 
         int batchNum = new Random().nextInt(100);
         String batchName = UUID.randomUUID().toString().substring(0, 30);
@@ -147,13 +147,13 @@ public class CommonTest {
     @Test
     public void testUpdateWithEntity() {
         User user = new User(1L);
-        Assert.assertEquals(1, (int) user.getById().getAge());
+        Assert.assertEquals(1, (int) user.findById().getAge());
         user.setAge(5);
         Assert.assertTrue(user.updateById());
-        Assert.assertEquals(5, (int) user.getById().getAge());
+        Assert.assertEquals(5, (int) user.findById().getAge());
 
         user = new User(5L);
-        Assert.assertNull(user.getById());
+        Assert.assertNull(user.findById());
         user.setAge(5);
         Assert.assertFalse(user.updateById());
     }
@@ -161,13 +161,13 @@ public class CommonTest {
     @Test
     public void testUpdateWithMapper() {
         User user = new User(1L);
-        Assert.assertEquals(1, (int) this.userMapper.getById(user.getId()).getAge());
+        Assert.assertEquals(1, (int) this.userMapper.findById(user.getId()).getAge());
         user.setAge(5);
         Assert.assertEquals(1, this.userMapper.updateById(user));
-        Assert.assertEquals(5, (int) this.userMapper.getById(user.getId()).getAge());
+        Assert.assertEquals(5, (int) this.userMapper.findById(user.getId()).getAge());
 
         user = new User(5L);
-        Assert.assertNull(this.userMapper.getById(user.getId()));
+        Assert.assertNull(this.userMapper.findById(user.getId()));
         user.setAge(5);
         Assert.assertEquals(0, this.userMapper.updateById(user));
     }
@@ -175,18 +175,18 @@ public class CommonTest {
     @Test
     public void testDeleteWithEntity() {
         User user = new User(1L);
-        Assert.assertNotNull(user.getById());
+        Assert.assertNotNull(user.findById());
         Assert.assertTrue(user.deleteById());
-        Assert.assertNull(user.getById());
+        Assert.assertNull(user.findById());
         Assert.assertFalse(user.deleteById());
     }
 
     @Test
     public void testDeleteWithMapper() {
         User user = new User(1L);
-        Assert.assertNotNull(this.userMapper.getById(user.getId()));
+        Assert.assertNotNull(this.userMapper.findById(user.getId()));
         Assert.assertEquals(1, this.userMapper.deleteById(user.getId()));
-        Assert.assertNull(this.userMapper.getById(user.getId()));
+        Assert.assertNull(this.userMapper.findById(user.getId()));
         Assert.assertEquals(0, this.userMapper.deleteById(user.getId()));
     }
 

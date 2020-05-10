@@ -11,7 +11,7 @@ import org.apache.ibatis.scripting.defaults.RawSqlSource;
  * @author loyayz (loyayz@foxmail.com)
  * @see com.baomidou.mybatisplus.core.injector.methods.SelectById
  */
-public class GetById extends AbstractMethod {
+public class FindById extends AbstractMethod {
 
     @Override
     public MappedStatement injectMappedStatement(Class<?> mapperClass, Class<?> modelClass, TableInfo tableInfo) {
@@ -20,7 +20,7 @@ public class GetById extends AbstractMethod {
                 sqlSelectColumns(tableInfo, false),
                 tableInfo.getTableName(), tableInfo.getKeyColumn(), tableInfo.getKeyProperty(),
                 tableInfo.getLogicDeleteSql(true, true)), Object.class);
-        return this.addSelectMappedStatementForTable(mapperClass, MybatisConstants.METHOD_GET_BY_ID, sqlSource, tableInfo);
+        return this.addSelectMappedStatementForTable(mapperClass, MybatisConstants.METHOD_FIND_BY_ID, sqlSource, tableInfo);
     }
 
 }

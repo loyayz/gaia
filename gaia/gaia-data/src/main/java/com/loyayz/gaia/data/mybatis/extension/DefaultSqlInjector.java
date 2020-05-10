@@ -53,7 +53,7 @@ public class DefaultSqlInjector extends AbstractSqlInjector {
                         return METHOD_UPDATE_BY_ID;
                     }
                 },
-                new GetById(),
+                new FindById(),
                 new ListByIds(),
                 new ListByCondition(),
                 new CountByCondition()

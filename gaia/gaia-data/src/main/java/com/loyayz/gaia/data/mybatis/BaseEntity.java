@@ -74,13 +74,13 @@ public abstract class BaseEntity<T extends BaseEntity> implements Serializable {
     /**
      * 根据主键查询
      */
-    public T getById() {
-        return getById(pkVal());
+    public T findById() {
+        return findById(pkVal());
     }
 
-    public T getById(Serializable id) {
-        Assert.isFalse(StringUtils.checkValNull(id), "getById primaryKey is null.");
-        return MybatisUtils.executeSelectOne(getClass(), MybatisConstants.METHOD_GET_BY_ID, id);
+    public T findById(Serializable id) {
+        Assert.isFalse(StringUtils.checkValNull(id), "findById primaryKey is null.");
+        return MybatisUtils.executeSelectOne(getClass(), MybatisConstants.METHOD_FIND_BY_ID, id);
     }
 
     /**

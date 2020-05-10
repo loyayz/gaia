@@ -31,9 +31,9 @@ public interface MybatisConstants {
      */
     String METHOD_UPDATE_BY_ID = "updateById";
     /**
-     * {@link BaseEntityMapper#getById}
+     * {@link BaseEntityMapper#findById}
      */
-    String METHOD_GET_BY_ID = "getById";
+    String METHOD_FIND_BY_ID = "findById";
     /**
      * {@link BaseEntityMapper#listByIds}
      */

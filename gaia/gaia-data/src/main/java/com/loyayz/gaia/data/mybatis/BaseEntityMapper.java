@@ -55,7 +55,7 @@ public interface BaseEntityMapper<T> extends Mapper<T> {
      *
      * @param id 主键ID
      */
-    T getById(Serializable id);
+    T findById(Serializable id);
 
     /**
      * 查询（根据ID 批量查询）
