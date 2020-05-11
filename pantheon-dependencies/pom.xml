@@ -46,6 +46,7 @@
 
         <!-- gaia -->
         <gaia.version>0.3.1-SNAPSHOT</gaia.version>
+        <zeus.version>0.1.0-SNAPSHOT</zeus.version>
 
         <!-- 3rd lib dependency -->
         <guava.version>29.0-jre</guava.version>
@@ -92,6 +93,18 @@
                 <artifactId>gaia-exception</artifactId>
                 <version>${gaia.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>com.loyayz</groupId>
+                <artifactId>uaa-api</artifactId>
+                <version>${zeus.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.loyayz</groupId>
+                <artifactId>uaa-domain</artifactId>
+                <version>${zeus.version}</version>
+            </dependency>
+
 
             <dependency>
                 <groupId>com.google.guava</groupId>

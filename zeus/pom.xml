@@ -5,21 +5,20 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.loyayz</groupId>
-    <artifactId>pantheon-root</artifactId>
+    <artifactId>zeus-build</artifactId>
     <version>0.1.0</version>
     <packaging>pom</packaging>
 
-    <properties>
-        <main.user.dir>${basedir}</main.user.dir>
+    <modules>
+        <module>zeus-parent</module>
+        <module>uaa-api</module>
+        <module>uaa-domain</module>
+    </modules>
 
+    <properties>
+        <main.user.dir>${basedir}/..</main.user.dir>
         <maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
     </properties>
-
-    <modules>
-        <module>pantheon-dependencies</module>
-        <module>gaia</module>
-        <module>zeus</module>
-    </modules>
 
     <build>
         <plugins>
@@ -33,4 +32,6 @@
             </plugin>
         </plugins>
     </build>
+
+
 </project>
