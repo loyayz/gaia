@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -38,7 +39,7 @@ public class JsonUtils {
     @SneakyThrows
     public static Map<String, Object> read(String json) {
         if (json == null) {
-            return Collections.emptyMap();
+            return new HashMap<>(2);
         }
         return (Map<String, Object>) OBJECT_MAPPER.readValue(json, Map.class);
     }
