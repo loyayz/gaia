@@ -2,11 +2,11 @@ package com.loyayz.uaa;
 
 import com.loyayz.gaia.data.Sorter;
 import com.loyayz.uaa.api.User;
-import com.loyayz.uaa.data.UserRepository;
+import com.loyayz.uaa.domain.UserRepository;
 import com.loyayz.uaa.data.entity.UaaUser;
 import com.loyayz.uaa.data.entity.UaaUserAccount;
 import com.loyayz.uaa.data.entity.UaaUserRole;
-import com.loyayz.uaa.domain.UserCommand;
+import com.loyayz.uaa.domain.command.UserCommand;
 import com.loyayz.uaa.dto.SimpleAccount;
 import com.loyayz.uaa.dto.SimpleUser;
 import com.loyayz.uaa.exception.AccountExistException;

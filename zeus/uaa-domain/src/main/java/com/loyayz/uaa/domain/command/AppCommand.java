@@ -1,12 +1,12 @@
-package com.loyayz.uaa.domain;
+package com.loyayz.uaa.domain.command;
 
 import com.loyayz.gaia.data.mybatis.extension.MybatisUtils;
 import com.loyayz.uaa.api.App;
-import com.loyayz.uaa.data.AppRepository;
 import com.loyayz.uaa.data.converter.AppConverter;
 import com.loyayz.uaa.data.entity.UaaApp;
 import com.loyayz.uaa.data.entity.UaaAppMenu;
 import com.loyayz.uaa.data.entity.UaaAppMenuAction;
+import com.loyayz.uaa.domain.AppRepository;
 import com.loyayz.uaa.dto.MenuDirectory;
 import com.loyayz.uaa.dto.SimpleApp;
 import com.loyayz.uaa.dto.SimpleMenu;

@@ -1,10 +1,10 @@
 package com.loyayz.uaa;
 
 import com.loyayz.uaa.api.Role;
-import com.loyayz.uaa.data.RoleRepository;
+import com.loyayz.uaa.domain.RoleRepository;
 import com.loyayz.uaa.data.entity.UaaRole;
 import com.loyayz.uaa.data.entity.UaaUserRole;
-import com.loyayz.uaa.domain.RoleCommand;
+import com.loyayz.uaa.domain.command.RoleCommand;
 import com.loyayz.uaa.dto.SimpleRole;
 import com.loyayz.uaa.exception.RoleExistException;
 import org.junit.Assert;

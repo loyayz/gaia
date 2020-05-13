@@ -1,11 +1,11 @@
-package com.loyayz.uaa.domain;
+package com.loyayz.uaa.domain.query;
 
 import com.loyayz.uaa.api.UserProvider;
-import com.loyayz.uaa.data.UserRepository;
 import com.loyayz.uaa.data.converter.RoleConverter;
 import com.loyayz.uaa.data.converter.UserConverter;
 import com.loyayz.uaa.data.entity.UaaUser;
 import com.loyayz.uaa.data.entity.UaaUserAccount;
+import com.loyayz.uaa.domain.UserRepository;
 import com.loyayz.uaa.dto.SimpleAccount;
 import com.loyayz.uaa.dto.SimpleRole;
 import com.loyayz.uaa.dto.SimpleUser;

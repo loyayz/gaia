@@ -1,8 +1,8 @@
-package com.loyayz.uaa.domain;
+package com.loyayz.uaa.domain.query;
 
 import com.loyayz.uaa.api.RoleProvider;
-import com.loyayz.uaa.data.RoleRepository;
 import com.loyayz.uaa.data.converter.RoleConverter;
+import com.loyayz.uaa.domain.RoleRepository;
 import com.loyayz.uaa.dto.RoleQueryParam;
 import com.loyayz.uaa.dto.SimpleRole;
 

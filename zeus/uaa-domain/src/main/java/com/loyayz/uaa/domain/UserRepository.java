@@ -1,4 +1,4 @@
-package com.loyayz.uaa.data;
+package com.loyayz.uaa.domain;
 
 import com.loyayz.gaia.data.mybatis.extension.MybatisUtils;
 import com.loyayz.uaa.data.converter.UserConverter;

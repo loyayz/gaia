@@ -1,10 +1,9 @@
-package com.loyayz.uaa.domain;
+package com.loyayz.uaa.domain.command;
 
 import com.loyayz.gaia.data.mybatis.extension.MybatisUtils;
 import com.loyayz.gaia.util.JsonUtils;
 import com.loyayz.uaa.api.User;
 import com.loyayz.uaa.constant.UserOperationType;
-import com.loyayz.uaa.data.UserRepository;
 import com.loyayz.uaa.data.converter.UserConverter;
 import com.loyayz.uaa.data.entity.UaaUser;
 import com.loyayz.uaa.data.entity.UaaUserAccount;
@@ -12,6 +11,7 @@ import com.loyayz.uaa.data.entity.UaaUserOperation;
 import com.loyayz.uaa.data.entity.UaaUserRole;
 import com.loyayz.uaa.data.mapper.UaaUserAccountMapper;
 import com.loyayz.uaa.data.mapper.UaaUserRoleMapper;
+import com.loyayz.uaa.domain.UserRepository;
 import com.loyayz.uaa.dto.SimpleAccount;
 import com.loyayz.uaa.dto.SimpleUser;
 import com.loyayz.uaa.exception.AccountExistException;
