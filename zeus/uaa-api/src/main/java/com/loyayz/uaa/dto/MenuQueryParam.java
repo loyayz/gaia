@@ -11,7 +11,8 @@ public class MenuQueryParam {
     private Long appId;
     private String parentCode;
     /**
-     * 编码
+     * 菜单编码
+     * 模糊查询
      */
     private String code;
     /**

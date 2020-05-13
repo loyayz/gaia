@@ -23,7 +23,7 @@ public interface UaaRoleMapper extends BaseEntityMapper<UaaRole> {
     @Select("<script>SELECT * FROM uaa_role " +
             "   <where> " +
             "   <if test=\"code != null and code != ''\">" +
-            "       code = #{code} " +
+            "       code LIKE CONCAT('%',#{code},'%') " +
             "   </if>" +
             "   <if test=\"name != null and name != ''\">" +
             "       AND name LIKE CONCAT('%',#{name},'%') " +

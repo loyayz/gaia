@@ -27,10 +27,10 @@ public interface UaaAppMenuMapper extends BaseEntityMapper<UaaAppMenu> {
             "       app_id = #{appId} " +
             "   </if>" +
             "   <if test=\"parentCode != null and parentCode != ''\">" +
-            "       parent_code = #{parentCode} " +
+            "       AND parent_code = #{parentCode} " +
             "   </if>" +
             "   <if test=\"code != null and code != ''\">" +
-            "       code = #{code} " +
+            "       AND code LIKE CONCAT('%',#{code},'%') " +
             "   </if>" +
             "   <if test=\"name != null and name != ''\">" +
             "       AND name LIKE CONCAT('%',#{name},'%') " +
