@@ -22,6 +22,19 @@ public abstract class BaseEntity<T extends BaseEntity> implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
+     * 新增或修改
+     */
+    public void save() {
+        boolean updated = false;
+        if (pkVal() != null) {
+            updated = this.updateById();
+        }
+        if (!updated) {
+            this.insert();
+        }
+    }
+
+    /**
      * 插入（字段选择插入）
      */
     public boolean insert() {
