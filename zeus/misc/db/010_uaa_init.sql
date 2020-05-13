@@ -17,7 +17,7 @@ CREATE TABLE `uaa_user`
 CREATE TABLE `uaa_user_account`
 (
     `id`           bigint(20) unsigned NOT NULL,
-    `user_id`      bigint(20)          NOT NULL COMMENT '用户',
+    `user_id`      bigint(20) unsigned NOT NULL COMMENT '用户',
     `type`         varchar(20)         NOT NULL COMMENT '账号类型',
     `name`         varchar(50)         NOT NULL COMMENT '账号名',
     `password`     varchar(255)        NOT NULL COMMENT '密码',
@@ -45,11 +45,11 @@ CREATE TABLE `uaa_user_role`
 CREATE TABLE `uaa_user_operation`
 (
     `id`           bigint(20) unsigned NOT NULL,
-    `user_id`      bigint(20) unsigned DEFAULT NULL COMMENT '用户',
-    `type`         varchar(20)         DEFAULT NULL COMMENT '操作类型',
+    `user_id`      bigint(20) unsigned NOT NULL COMMENT '用户',
+    `type`         varchar(20)         NOT NULL COMMENT '操作类型',
     `content`      text COMMENT '内容',
-    `gmt_create`   datetime            DEFAULT NULL,
-    `gmt_modified` datetime            DEFAULT NULL,
+    `gmt_create`   datetime DEFAULT NULL,
+    `gmt_modified` datetime DEFAULT NULL,
     PRIMARY KEY (`id`),
     KEY `idx_uuo_uid` (`user_id`),
     KEY `idx_uuo_type` (`type`)
@@ -68,3 +68,53 @@ CREATE TABLE `uaa_role`
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='角色';
 
+CREATE TABLE `uaa_app`
+(
+    `id`           bigint(20) unsigned NOT NULL,
+    `name`         varchar(50)         NOT NULL COMMENT '名称',
+    `remote`       tinyint(4)          NOT NULL DEFAULT '0' COMMENT '远程组件',
+    `url`          varchar(100)        NOT NULL COMMENT '地址',
+    `remark`       varchar(200)                 DEFAULT NULL COMMENT '备注',
+    `sort`         int(11)             NOT NULL COMMENT '序号',
+    `gmt_create`   datetime                     DEFAULT NULL,
+    `gmt_modified` datetime                     DEFAULT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4 COMMENT ='应用';
+
+CREATE TABLE `uaa_app_menu`
+(
+    `id`           bigint(20) unsigned NOT NULL,
+    `app_id`       bigint(20) unsigned NOT NULL COMMENT '应用',
+    `parent_code`  varchar(20)         NOT NULL COMMENT '上级编码',
+    `dir`          tinyint(4)          NOT NULL DEFAULT '0' COMMENT '是否目录',
+    `code`         varchar(20)         NOT NULL COMMENT '编码',
+    `name`         varchar(50)         NOT NULL COMMENT '名称',
+    `url`          varchar(100)        NOT NULL COMMENT '链接',
+    `icon`         varchar(50)         NOT NULL COMMENT '图标',
+    `remark`       varchar(200)                 DEFAULT NULL COMMENT '备注',
+    `sort`         int(11)             NOT NULL COMMENT '序号',
+    `gmt_create`   datetime                     DEFAULT NULL,
+    `gmt_modified` datetime                     DEFAULT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uk_uam_code` (`code`),
+    KEY `idx_uam_app` (`app_id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4 COMMENT ='应用菜单';
+
+CREATE TABLE `uaa_app_menu_action`
+(
+    `id`           bigint(20) unsigned NOT NULL,
+    `app_id`       bigint(20) unsigned NOT NULL COMMENT '应用',
+    `menu_code`    varchar(20)         NOT NULL COMMENT '菜单',
+    `code`         varchar(20)         NOT NULL COMMENT '编码',
+    `name`         varchar(50)         NOT NULL COMMENT '名称',
+    `remark`       varchar(200) DEFAULT NULL COMMENT '备注',
+    `sort`         int(11)             NOT NULL COMMENT '序号',
+    `gmt_create`   datetime     DEFAULT NULL,
+    `gmt_modified` datetime     DEFAULT NULL,
+    PRIMARY KEY (`id`),
+    KEY `idx_uama_menu` (`menu_code`, `app_id`),
+    KEY `idx_uama_code` (`code`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4 COMMENT ='应用菜单功能';
