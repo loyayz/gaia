@@ -1,4 +1,4 @@
-package com.loyayz.uaa.converter;
+package com.loyayz.uaa.data.converter;
 
 import com.loyayz.uaa.data.entity.UaaApp;
 import com.loyayz.uaa.data.entity.UaaAppMenu;

@@ -1,8 +1,8 @@
 package com.loyayz.uaa.domain;
 
 import com.loyayz.uaa.api.RoleProvider;
-import com.loyayz.uaa.converter.UserConverter;
 import com.loyayz.uaa.data.RoleRepository;
+import com.loyayz.uaa.data.converter.RoleConverter;
 import com.loyayz.uaa.dto.RoleQueryParam;
 import com.loyayz.uaa.dto.SimpleRole;
 
@@ -25,7 +25,7 @@ public class RoleQuery implements RoleProvider {
     @Override
     public SimpleRole getRole(String code) {
         return Optional.ofNullable(RoleRepository.getByCode(code))
-                .map(UserConverter::toSimple)
+                .map(RoleConverter::toSimple)
                 .orElse(null);
     }
 
@@ -33,7 +33,7 @@ public class RoleQuery implements RoleProvider {
     public List<SimpleRole> listRole(RoleQueryParam queryParam) {
         return RoleRepository.listByParam(queryParam)
                 .stream()
-                .map(UserConverter::toSimple)
+                .map(RoleConverter::toSimple)
                 .collect(Collectors.toList());
     }
 }

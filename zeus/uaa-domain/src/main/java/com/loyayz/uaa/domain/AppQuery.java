@@ -1,8 +1,8 @@
 package com.loyayz.uaa.domain;
 
 import com.loyayz.uaa.api.AppProvider;
-import com.loyayz.uaa.converter.AppConverter;
 import com.loyayz.uaa.data.AppRepository;
+import com.loyayz.uaa.data.converter.AppConverter;
 import com.loyayz.uaa.data.entity.UaaApp;
 import com.loyayz.uaa.dto.*;
 

@@ -1,7 +1,7 @@
 package com.loyayz.uaa.data;
 
 import com.loyayz.gaia.data.mybatis.extension.MybatisUtils;
-import com.loyayz.uaa.converter.UserConverter;
+import com.loyayz.uaa.data.converter.RoleConverter;
 import com.loyayz.uaa.data.entity.UaaRole;
 import com.loyayz.uaa.dto.RoleQueryParam;
 import com.loyayz.uaa.dto.SimpleRole;
@@ -15,7 +15,7 @@ import java.util.List;
 public final class RoleRepository {
 
     public static Long insertRole(SimpleRole role) {
-        UaaRole entity = UserConverter.toEntity(role);
+        UaaRole entity = RoleConverter.toEntity(role);
         MybatisUtils.saveThrowDuplicate(
                 entity::insert,
                 () -> {

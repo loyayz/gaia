@@ -2,7 +2,7 @@ package com.loyayz.uaa.data;
 
 import com.loyayz.gaia.data.Sorter;
 import com.loyayz.gaia.data.mybatis.extension.MybatisUtils;
-import com.loyayz.uaa.converter.AppConverter;
+import com.loyayz.uaa.data.converter.AppConverter;
 import com.loyayz.uaa.data.entity.UaaApp;
 import com.loyayz.uaa.data.entity.UaaAppMenu;
 import com.loyayz.uaa.data.entity.UaaAppMenuAction;

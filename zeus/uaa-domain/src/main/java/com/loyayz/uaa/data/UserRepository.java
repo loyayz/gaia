@@ -1,7 +1,7 @@
 package com.loyayz.uaa.data;
 
 import com.loyayz.gaia.data.mybatis.extension.MybatisUtils;
-import com.loyayz.uaa.converter.UserConverter;
+import com.loyayz.uaa.data.converter.UserConverter;
 import com.loyayz.uaa.data.entity.UaaRole;
 import com.loyayz.uaa.data.entity.UaaUser;
 import com.loyayz.uaa.data.entity.UaaUserAccount;

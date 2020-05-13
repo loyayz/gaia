@@ -1,20 +1,15 @@
-package com.loyayz.uaa.converter;
+package com.loyayz.uaa.data.converter;
 
 import com.loyayz.gaia.util.JsonUtils;
-import com.loyayz.uaa.data.entity.UaaRole;
 import com.loyayz.uaa.data.entity.UaaUser;
 import com.loyayz.uaa.data.entity.UaaUserAccount;
 import com.loyayz.uaa.dto.SimpleAccount;
-import com.loyayz.uaa.dto.SimpleRole;
 import com.loyayz.uaa.dto.SimpleUser;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 
 /**
  * @author loyayz (loyayz@foxmail.com)
  */
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class UserConverter {
+public final class UserConverter {
 
     public static UaaUser toEntity(SimpleUser user) {
         UaaUser result = new UaaUser();
@@ -25,13 +20,6 @@ public class UserConverter {
         result.setInfo(JsonUtils.write(user.getInfos()));
         result.setLocked(user.getLocked() ? 1 : 0);
         result.setDeleted(0);
-        return result;
-    }
-
-    public static UaaRole toEntity(SimpleRole role) {
-        UaaRole result = new UaaRole();
-        result.setCode(role.getCode());
-        result.setName(role.getName());
         return result;
     }
 
@@ -62,14 +50,6 @@ public class UserConverter {
         result.setName(account.getName());
         result.setPassword(account.getPassword());
         result.setCreateTime(account.getGmtCreate().getTime());
-        return result;
-    }
-
-    public static SimpleRole toSimple(UaaRole role) {
-        SimpleRole result = new SimpleRole();
-        result.setCode(role.getCode());
-        result.setName(role.getName());
-        result.setCreateTime(role.getGmtCreate().getTime());
         return result;
     }
 

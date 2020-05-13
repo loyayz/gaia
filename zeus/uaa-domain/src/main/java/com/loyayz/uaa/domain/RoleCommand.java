@@ -2,8 +2,8 @@ package com.loyayz.uaa.domain;
 
 import com.loyayz.gaia.data.mybatis.extension.MybatisUtils;
 import com.loyayz.uaa.api.Role;
-import com.loyayz.uaa.converter.UserConverter;
 import com.loyayz.uaa.data.UserRepository;
+import com.loyayz.uaa.data.converter.RoleConverter;
 import com.loyayz.uaa.data.entity.UaaRole;
 import com.loyayz.uaa.data.entity.UaaUserRole;
 import com.loyayz.uaa.dto.SimpleRole;
@@ -46,7 +46,7 @@ public class RoleCommand implements Role {
      */
     @Override
     public void update(SimpleRole role) {
-        UaaRole entity = UserConverter.toEntity(role);
+        UaaRole entity = RoleConverter.toEntity(role);
         MybatisUtils.executeUpdate(UaaRole.class, "updateByCode", entity);
     }
 

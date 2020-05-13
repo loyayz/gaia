@@ -1,8 +1,9 @@
 package com.loyayz.uaa.domain;
 
 import com.loyayz.uaa.api.UserProvider;
-import com.loyayz.uaa.converter.UserConverter;
 import com.loyayz.uaa.data.UserRepository;
+import com.loyayz.uaa.data.converter.RoleConverter;
+import com.loyayz.uaa.data.converter.UserConverter;
 import com.loyayz.uaa.data.entity.UaaUser;
 import com.loyayz.uaa.data.entity.UaaUserAccount;
 import com.loyayz.uaa.dto.SimpleAccount;
@@ -48,7 +49,7 @@ public class UserQuery implements UserProvider {
     public List<SimpleRole> listUserRole(Long userId) {
         return UserRepository.listRoleByUser(userId)
                 .stream()
-                .map(UserConverter::toSimple)
+                .map(RoleConverter::toSimple)
                 .collect(Collectors.toList());
     }
 
