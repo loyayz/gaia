@@ -1,4 +1,4 @@
-package com.loyayz.uaa.data.entity;
+package com.loyayz.uaa.data;
 
 import com.loyayz.gaia.data.mybatis.AbstractEntity;
 import lombok.AllArgsConstructor;

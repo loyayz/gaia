@@ -1,6 +1,6 @@
 package com.loyayz.uaa.data.converter;
 
-import com.loyayz.uaa.data.entity.UaaRole;
+import com.loyayz.uaa.data.UaaRole;
 import com.loyayz.uaa.dto.SimpleRole;
 
 /**

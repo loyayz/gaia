@@ -1,8 +1,8 @@
 package com.loyayz.uaa.data.converter;
 
-import com.loyayz.uaa.data.entity.UaaApp;
-import com.loyayz.uaa.data.entity.UaaAppMenu;
-import com.loyayz.uaa.data.entity.UaaAppMenuAction;
+import com.loyayz.uaa.data.UaaApp;
+import com.loyayz.uaa.data.UaaAppMenu;
+import com.loyayz.uaa.data.UaaAppMenuAction;
 import com.loyayz.uaa.dto.MenuDirectory;
 import com.loyayz.uaa.dto.SimpleApp;
 import com.loyayz.uaa.dto.SimpleMenu;

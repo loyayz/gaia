@@ -1,7 +1,7 @@
 package com.loyayz.uaa.data.mapper;
 
 import com.loyayz.gaia.data.mybatis.BaseEntityMapper;
-import com.loyayz.uaa.data.entity.UaaUserAccount;
+import com.loyayz.uaa.data.UaaUserAccount;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;

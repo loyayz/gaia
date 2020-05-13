@@ -1,8 +1,8 @@
 package com.loyayz.uaa.data.converter;
 
 import com.loyayz.gaia.util.JsonUtils;
-import com.loyayz.uaa.data.entity.UaaUser;
-import com.loyayz.uaa.data.entity.UaaUserAccount;
+import com.loyayz.uaa.data.UaaUser;
+import com.loyayz.uaa.data.UaaUserAccount;
 import com.loyayz.uaa.dto.SimpleAccount;
 import com.loyayz.uaa.dto.SimpleUser;
 

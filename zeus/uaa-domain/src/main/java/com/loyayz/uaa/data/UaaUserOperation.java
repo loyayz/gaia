@@ -1,4 +1,4 @@
-package com.loyayz.uaa.data.entity;
+package com.loyayz.uaa.data;
 
 import com.loyayz.gaia.data.mybatis.AbstractEntity;
 import lombok.AllArgsConstructor;
@@ -9,20 +9,22 @@ import lombok.NoArgsConstructor;
 /**
  * @author loyayz (loyayz@foxmail.com)
  */
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UaaRole extends AbstractEntity<UaaRole> {
-
+public class UaaUserOperation extends AbstractEntity<UaaUserOperation> {
     /**
-     * 角色编码
+     * 用户
      */
-    private String code;
+    private Long userId;
     /**
-     * 角色名
+     * 操作类型
      */
-    private String name;
+    private String type;
+    /**
+     * 内容
+     */
+    private String content;
 
 }

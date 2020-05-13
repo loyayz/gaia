@@ -2,7 +2,7 @@ package com.loyayz.uaa.domain;
 
 import com.loyayz.gaia.data.mybatis.extension.MybatisUtils;
 import com.loyayz.uaa.data.converter.RoleConverter;
-import com.loyayz.uaa.data.entity.UaaRole;
+import com.loyayz.uaa.data.UaaRole;
 import com.loyayz.uaa.dto.RoleQueryParam;
 import com.loyayz.uaa.dto.SimpleRole;
 import com.loyayz.uaa.exception.RoleExistException;

@@ -3,8 +3,8 @@ package com.loyayz.uaa.domain.command;
 import com.loyayz.gaia.data.mybatis.extension.MybatisUtils;
 import com.loyayz.uaa.api.Role;
 import com.loyayz.uaa.data.converter.RoleConverter;
-import com.loyayz.uaa.data.entity.UaaRole;
-import com.loyayz.uaa.data.entity.UaaUserRole;
+import com.loyayz.uaa.data.UaaRole;
+import com.loyayz.uaa.data.UaaUserRole;
 import com.loyayz.uaa.domain.UserRepository;
 import com.loyayz.uaa.dto.SimpleRole;
 

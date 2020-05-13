@@ -1,7 +1,7 @@
 package com.loyayz.uaa.data.mapper;
 
 import com.loyayz.gaia.data.mybatis.BaseEntityMapper;
-import com.loyayz.uaa.data.entity.UaaAppMenuAction;
+import com.loyayz.uaa.data.UaaAppMenuAction;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Param;
 

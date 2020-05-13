@@ -1,4 +1,4 @@
-package com.loyayz.uaa.data.entity;
+package com.loyayz.uaa.data;
 
 import com.loyayz.gaia.data.mybatis.AbstractEntity;
 import lombok.AllArgsConstructor;
@@ -13,31 +13,31 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UaaAppMenuAction extends AbstractEntity<UaaAppMenuAction> {
+public class UaaUser extends AbstractEntity<UaaUser> {
 
     /**
-     * 应用
-     */
-    private Long appId;
-    /**
-     * 菜单
-     */
-    private String menuCode;
-    /**
-     * 编码
-     */
-    private String code;
-    /**
-     * 名称
+     * 用户名
      */
     private String name;
     /**
-     * 备注
+     * 电话
      */
-    private String remark;
+    private String mobile;
     /**
-     * 序号
+     * 邮箱
      */
-    private Integer sort;
+    private String email;
+    /**
+     * 详情
+     */
+    private String info;
+    /**
+     * 是否锁定
+     */
+    private Integer locked;
+    /**
+     * 是否删除
+     */
+    private Integer deleted;
 
 }

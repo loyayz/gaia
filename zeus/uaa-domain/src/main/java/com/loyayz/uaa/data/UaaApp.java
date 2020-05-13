@@ -1,4 +1,4 @@
-package com.loyayz.uaa.data.entity;
+package com.loyayz.uaa.data;
 
 import com.loyayz.gaia.data.mybatis.AbstractEntity;
 import lombok.AllArgsConstructor;
@@ -13,31 +13,27 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UaaUser extends AbstractEntity<UaaUser> {
+public class UaaApp extends AbstractEntity<UaaApp> {
 
     /**
-     * 用户名
+     * 名称
      */
     private String name;
     /**
-     * 电话
+     * 远程组件
      */
-    private String mobile;
+    private Integer remote;
     /**
-     * 邮箱
+     * 地址
      */
-    private String email;
+    private String url;
     /**
-     * 详情
+     * 备注
      */
-    private String info;
+    private String remark;
     /**
-     * 是否锁定
+     * 序号
      */
-    private Integer locked;
-    /**
-     * 是否删除
-     */
-    private Integer deleted;
+    private Integer sort;
 
 }

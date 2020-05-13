@@ -2,7 +2,7 @@ package com.loyayz.uaa.domain.query;
 
 import com.loyayz.uaa.api.AppProvider;
 import com.loyayz.uaa.data.converter.AppConverter;
-import com.loyayz.uaa.data.entity.UaaApp;
+import com.loyayz.uaa.data.UaaApp;
 import com.loyayz.uaa.domain.AppRepository;
 import com.loyayz.uaa.dto.*;
 
