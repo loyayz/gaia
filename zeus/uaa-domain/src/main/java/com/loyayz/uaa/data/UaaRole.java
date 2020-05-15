@@ -1,6 +1,6 @@
 package com.loyayz.uaa.data;
 
-import com.loyayz.gaia.data.mybatis.AbstractEntity;
+import com.loyayz.gaia.data.mybatis.AbstractTable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UaaRole extends AbstractEntity<UaaRole> {
+public class UaaRole extends AbstractTable<UaaRole> {
 
     /**
      * 角色编码

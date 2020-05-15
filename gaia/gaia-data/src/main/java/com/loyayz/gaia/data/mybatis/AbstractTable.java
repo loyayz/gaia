@@ -11,7 +11,7 @@ import java.util.Date;
 /**
  * @author loyayz (loyayz@foxmail.com)
  */
-public abstract class AbstractEntity<T extends BaseEntity> extends BaseEntity<T> {
+public abstract class AbstractTable<T extends BaseTable> extends BaseTable<T> {
 
     @TableId(type = IdType.ASSIGN_ID)
     private Long id;

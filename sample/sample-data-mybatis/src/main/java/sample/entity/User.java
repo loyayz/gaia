@@ -1,6 +1,6 @@
 package sample.entity;
 
-import com.loyayz.gaia.data.mybatis.BaseEntity;
+import com.loyayz.gaia.data.mybatis.BaseTable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class User extends BaseEntity<User> {
+public class User extends BaseTable<User> {
 
     private Long id;
     private String name;

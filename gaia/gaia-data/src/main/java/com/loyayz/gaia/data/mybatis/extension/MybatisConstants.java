@@ -1,6 +1,6 @@
 package com.loyayz.gaia.data.mybatis.extension;
 
-import com.loyayz.gaia.data.mybatis.BaseEntityMapper;
+import com.loyayz.gaia.data.mybatis.BaseMapper;
 
 /**
  * @author loyayz (loyayz@foxmail.com)
@@ -11,39 +11,39 @@ public interface MybatisConstants {
     String CONDITION_SORTER_ITEM = "sci";
 
     /**
-     * {@link BaseEntityMapper#insert}
+     * {@link BaseMapper#insert}
      */
     String METHOD_INSERT = "insert";
     /**
-     * {@link BaseEntityMapper#batchInsert}
+     * {@link BaseMapper#batchInsert}
      */
     String METHOD_BATCH_INSERT = "batchInsert";
     /**
-     * {@link BaseEntityMapper#deleteById}
+     * {@link BaseMapper#deleteById}
      */
     String METHOD_DELETE_BY_ID = "deleteById";
     /**
-     * {@link BaseEntityMapper#deleteByIds}
+     * {@link BaseMapper#deleteByIds}
      */
     String METHOD_DELETE_BY_IDS = "deleteByIds";
     /**
-     * {@link BaseEntityMapper#updateById}
+     * {@link BaseMapper#updateById}
      */
     String METHOD_UPDATE_BY_ID = "updateById";
     /**
-     * {@link BaseEntityMapper#findById}
+     * {@link BaseMapper#findById}
      */
     String METHOD_FIND_BY_ID = "findById";
     /**
-     * {@link BaseEntityMapper#listByIds}
+     * {@link BaseMapper#listByIds}
      */
     String METHOD_LIST_BY_IDS = "listByIds";
     /**
-     * {@link BaseEntityMapper#listByCondition}
+     * {@link BaseMapper#listByCondition}
      */
     String METHOD_LIST_BY_CONDITION = "listByCondition";
     /**
-     * {@link BaseEntityMapper#countByCondition}
+     * {@link BaseMapper#countByCondition}
      */
     String METHOD_COUNT_BY_CONDITION = "countByCondition";
 

@@ -1,6 +1,6 @@
 package com.loyayz.uaa.data.mapper;
 
-import com.loyayz.gaia.data.mybatis.BaseEntityMapper;
+import com.loyayz.gaia.data.mybatis.BaseMapper;
 import com.loyayz.uaa.data.UaaApp;
 import com.loyayz.uaa.dto.AppQueryParam;
 import org.apache.ibatis.annotations.Select;
@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * @author loyayz (loyayz@foxmail.com)
  */
-public interface UaaAppMapper extends BaseEntityMapper<UaaApp> {
+public interface UaaAppMapper extends BaseMapper<UaaApp> {
 
     @Select("<script>SELECT * FROM uaa_app " +
             "   <where> " +

@@ -1,6 +1,6 @@
 package com.loyayz.uaa.data.mapper;
 
-import com.loyayz.gaia.data.mybatis.BaseEntityMapper;
+import com.loyayz.gaia.data.mybatis.BaseMapper;
 import com.loyayz.uaa.data.UaaUser;
 import com.loyayz.uaa.dto.UserQueryParam;
 import org.apache.ibatis.annotations.Select;
@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * @author loyayz (loyayz@foxmail.com)
  */
-public interface UaaUserMapper extends BaseEntityMapper<UaaUser> {
+public interface UaaUserMapper extends BaseMapper<UaaUser> {
 
     @Select("<script>SELECT * FROM uaa_user " +
             "   WHERE deleted = 0 " +

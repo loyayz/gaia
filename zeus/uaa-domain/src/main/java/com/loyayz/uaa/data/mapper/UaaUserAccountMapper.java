@@ -1,6 +1,6 @@
 package com.loyayz.uaa.data.mapper;
 
-import com.loyayz.gaia.data.mybatis.BaseEntityMapper;
+import com.loyayz.gaia.data.mybatis.BaseMapper;
 import com.loyayz.uaa.data.UaaUserAccount;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Param;
@@ -10,7 +10,7 @@ import org.apache.ibatis.annotations.Update;
 /**
  * @author loyayz (loyayz@foxmail.com)
  */
-public interface UaaUserAccountMapper extends BaseEntityMapper<UaaUserAccount> {
+public interface UaaUserAccountMapper extends BaseMapper<UaaUserAccount> {
 
     @Delete("DELETE FROM uaa_user_account " +
             "WHERE user_id = #{userId} AND type = #{type} AND name = #{name}")

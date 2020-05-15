@@ -18,7 +18,7 @@ import java.util.Map;
 /**
  * @author loyayz (loyayz@foxmail.com)
  */
-public abstract class BaseEntity<T extends BaseEntity> implements Serializable {
+public abstract class BaseTable<T extends BaseTable> implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**

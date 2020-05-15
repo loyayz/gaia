@@ -1,6 +1,6 @@
 package sample.entity;
 
-import com.loyayz.gaia.data.mybatis.AbstractEntity;
+import com.loyayz.gaia.data.mybatis.AbstractTable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Person extends AbstractEntity<Person> {
+public class Person extends AbstractTable<Person> {
 
     private String name;
 

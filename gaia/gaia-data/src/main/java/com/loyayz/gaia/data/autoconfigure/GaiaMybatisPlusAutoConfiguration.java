@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.autoconfigure.MybatisPlusAutoConfiguration;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.baomidou.mybatisplus.core.incrementer.IdentifierGenerator;
 import com.baomidou.mybatisplus.core.injector.ISqlInjector;
-import com.loyayz.gaia.data.mybatis.AbstractEntity;
+import com.loyayz.gaia.data.mybatis.AbstractTable;
 import com.loyayz.gaia.data.mybatis.extension.DefaultSqlInjector;
 import com.loyayz.gaia.util.Sequence;
 import org.apache.ibatis.reflection.MetaObject;
@@ -60,8 +60,8 @@ public class GaiaMybatisPlusAutoConfiguration {
             @Override
             public void insertFill(MetaObject metaObject) {
                 Object originalObject = metaObject.getOriginalObject();
-                if (originalObject instanceof AbstractEntity) {
-                    AbstractEntity entity = (AbstractEntity) originalObject;
+                if (originalObject instanceof AbstractTable) {
+                    AbstractTable entity = (AbstractTable) originalObject;
                     Date current = new Date();
                     entity.setGmtCreate(current);
                     entity.setGmtModified(current);
@@ -71,8 +71,8 @@ public class GaiaMybatisPlusAutoConfiguration {
             @Override
             public void updateFill(MetaObject metaObject) {
                 Object originalObject = metaObject.getOriginalObject();
-                if (originalObject instanceof AbstractEntity) {
-                    ((AbstractEntity) originalObject).setGmtModified(new Date());
+                if (originalObject instanceof AbstractTable) {
+                    ((AbstractTable) originalObject).setGmtModified(new Date());
                 }
             }
         };

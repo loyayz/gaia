@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * @author loyayz (loyayz@foxmail.com)
  */
-public interface BaseEntityMapper<T> extends Mapper<T> {
+public interface BaseMapper<T> extends Mapper<T> {
 
     /**
      * 插入一条记录

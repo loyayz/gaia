@@ -1,6 +1,6 @@
 package com.loyayz.uaa.data.mapper;
 
-import com.loyayz.gaia.data.mybatis.BaseEntityMapper;
+import com.loyayz.gaia.data.mybatis.BaseMapper;
 import com.loyayz.uaa.data.UaaApp;
 import com.loyayz.uaa.data.UaaAppMenu;
 import com.loyayz.uaa.dto.MenuQueryParam;
@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * @author loyayz (loyayz@foxmail.com)
  */
-public interface UaaAppMenuMapper extends BaseEntityMapper<UaaAppMenu> {
+public interface UaaAppMenuMapper extends BaseMapper<UaaAppMenu> {
 
     @Delete("DELETE FROM uaa_app_menu WHERE app_id = #{appId}")
     int deleteByApp(@Param("appId") Long appId);
