@@ -96,6 +96,11 @@
 
             <dependency>
                 <groupId>com.loyayz</groupId>
+                <artifactId>zeus-core</artifactId>
+                <version>${zeus.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.loyayz</groupId>
                 <artifactId>uaa-api</artifactId>
                 <version>${zeus.version}</version>
             </dependency>
