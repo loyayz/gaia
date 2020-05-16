@@ -6,24 +6,36 @@ import com.loyayz.gaia.data.mybatis.BaseTable;
  * @author loyayz (loyayz@foxmail.com)
  */
 public abstract class AbstractEntity<T extends BaseTable<T>> implements Entity {
-
+    private T entity;
     private boolean updated = false;
 
     /**
-     * 数据库表实体
+     * 构建实体
+     * 从数据库表查询或根据 dto 创建
      */
-    protected abstract T table();
+    protected abstract T buildEntity();
+
+    protected void entity(T e) {
+        this.entity = e;
+    }
+
+    protected T entity() {
+        if (this.entity == null) {
+            this.entity = this.buildEntity();
+        }
+        return this.entity;
+    }
 
     @Override
     public void save() {
         if (this.updated()) {
-            this.table().save();
+            this.entity().save();
         }
     }
 
     @Override
     public void delete() {
-        this.table().deleteById();
+        this.entity().deleteById();
     }
 
     protected void markUpdated() {
