@@ -42,20 +42,6 @@ CREATE TABLE `uaa_user_role`
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='用户角色';
 
-CREATE TABLE `uaa_user_operation`
-(
-    `id`           bigint(20) unsigned NOT NULL,
-    `user_id`      bigint(20) unsigned NOT NULL COMMENT '用户',
-    `type`         varchar(20)         NOT NULL COMMENT '操作类型',
-    `content`      text COMMENT '内容',
-    `gmt_create`   datetime DEFAULT NULL,
-    `gmt_modified` datetime DEFAULT NULL,
-    PRIMARY KEY (`id`),
-    KEY `idx_uuo_uid` (`user_id`),
-    KEY `idx_uuo_type` (`type`)
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4 COMMENT ='用户操作记录';
-
 CREATE TABLE `uaa_role`
 (
     `id`           bigint(20) unsigned NOT NULL,
