@@ -14,9 +14,6 @@ import java.util.List;
  */
 public interface UaaRoleMapper extends BaseMapper<UaaRole> {
 
-    @Delete("UPDATE uaa_role SET name = #{name} WHERE code = #{code}")
-    int updateByCode(UaaRole entity);
-
     @Delete("DELETE FROM uaa_role WHERE code = #{roleCode}")
     int deleteByCode(@Param("roleCode") String code);
 

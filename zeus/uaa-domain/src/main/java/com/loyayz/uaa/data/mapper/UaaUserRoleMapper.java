@@ -22,7 +22,7 @@ public interface UaaUserRoleMapper extends BaseMapper<UaaUserRole> {
             "   </foreach>" +
             "   )" +
             "</script>")
-    int deleteRolesByUser(@Param("userId") Long userId, @Param("roleCodes") List<String> roleCodes);
+    int deleteByUserRoles(@Param("userId") Long userId, @Param("roleCodes") List<String> roleCodes);
 
     @Delete("<script>" +
             "DELETE FROM uaa_user_role WHERE role_code = #{roleCode}" +
@@ -32,7 +32,7 @@ public interface UaaUserRoleMapper extends BaseMapper<UaaUserRole> {
             "   </foreach>" +
             "   )" +
             "</script>")
-    int deleteRoleByUsers(@Param("userIds") List<Long> userIds, @Param("roleCode") String roleCode);
+    int deleteByUsersRole(@Param("userIds") List<Long> userIds, @Param("roleCode") String roleCode);
 
     @Delete("DELETE FROM uaa_user_role WHERE user_id = #{userId}")
     int deleteByUser(@Param("userId") Long userId);

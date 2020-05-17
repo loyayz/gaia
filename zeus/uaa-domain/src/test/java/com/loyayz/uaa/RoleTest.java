@@ -1,12 +1,9 @@
 package com.loyayz.uaa;
 
-import com.loyayz.uaa.api.Role;
-import com.loyayz.uaa.domain.RoleRepository;
 import com.loyayz.uaa.data.UaaRole;
 import com.loyayz.uaa.data.UaaUserRole;
-import com.loyayz.uaa.domain.command.RoleCommand;
+import com.loyayz.uaa.domain.role.Role;
 import com.loyayz.uaa.dto.SimpleRole;
-import com.loyayz.uaa.exception.RoleExistException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,7 +39,7 @@ public class RoleTest {
             role.setName("loyayz_" + i);
             roles.add(role);
 
-            RoleRepository.insertRole(role);
+            Role.of(role.getCode()).name(role.getName()).save();
         }
         initRoles.set(roles);
     }
@@ -53,54 +50,50 @@ public class RoleTest {
             UaaRole query = UaaRole.builder().code(role.getCode()).build();
             Assert.assertNotNull(query.listByCondition().get(0));
 
-            try {
-                RoleRepository.insertRole(role);
-                Assert.fail();
-            } catch (RoleExistException e) {
-                Assert.assertTrue(true);
-            }
+            Role.of(role.getCode()).name(role.getName()).save();
         }
     }
 
     @Test
     public void testDelete() {
         for (SimpleRole role : initRoles.get()) {
-            UaaRole query = UaaRole.builder().code(role.getCode()).build();
-            Assert.assertNotNull(query.listByCondition().get(0));
-            RoleCommand.getInstance(role.getCode()).delete();
-            Assert.assertTrue(query.listByCondition().isEmpty());
+            UaaRole queryObject = UaaRole.builder().code(role.getCode()).build();
+            Assert.assertNotNull(queryObject.listByCondition().get(0));
+            Role.of(role.getCode()).delete();
+            Assert.assertTrue(queryObject.listByCondition().isEmpty());
         }
     }
 
     @Test
     public void testUpdate() {
         for (SimpleRole role : initRoles.get()) {
-            UaaRole query = UaaRole.builder().code(role.getCode()).build();
+            UaaRole queryObject = UaaRole.builder().code(role.getCode()).build();
+            String newName = UUID.randomUUID().toString();
 
-            SimpleRole updateRole = new SimpleRole();
-            updateRole.setCode(role.getCode());
-            updateRole.setName(UUID.randomUUID().toString());
-
-            Assert.assertNotEquals(updateRole.getName(), query.listByCondition().get(0).getName());
-            RoleCommand.getInstance(role.getCode()).update(updateRole);
-            Assert.assertEquals(updateRole.getName(), query.listByCondition().get(0).getName());
+            Assert.assertNotEquals(newName, queryObject.listByCondition().get(0).getName());
+            Role.of(role.getCode()).name(newName).save();
+            Assert.assertEquals(newName, queryObject.listByCondition().get(0).getName());
         }
     }
 
     @Test
     public void testUser() {
         Assert.assertTrue(new UaaUserRole().listByCondition().isEmpty());
-        for (SimpleRole role : initRoles.get()) {
-            Role roleDomain = RoleCommand.getInstance(role.getCode());
-            UaaUserRole queryObject = UaaUserRole.builder().roleCode(role.getCode()).build();
+        for (SimpleRole r : initRoles.get()) {
+            Role role = Role.of(r.getCode());
+            UaaUserRole queryObject = UaaUserRole.builder().roleCode(r.getCode()).build();
 
-            Long userId = (long) new Random().nextInt(1000000);
-            roleDomain.addUser(userId);
-            Assert.assertEquals(userId, queryObject.listByCondition().get(0).getUserId());
+            List<Long> userIds = new ArrayList<>();
+            for (int j = 0; j < 5; j++) {
+                Long userId = (long) new Random().nextInt(1000000);
+                role.addUser(userId);
+                userIds.add(userId);
+            }
+            role.save();
+            Assert.assertEquals(userIds.size(), queryObject.listByCondition().size());
 
-            roleDomain.deleteUser(userId);
+            role.removeUser(userIds.toArray(new Long[]{})).save();
             Assert.assertTrue(queryObject.listByCondition().isEmpty());
-
         }
     }
 

@@ -1,14 +1,12 @@
 package com.loyayz.uaa.domain;
 
 import com.loyayz.gaia.data.mybatis.extension.MybatisUtils;
-import com.loyayz.uaa.data.converter.UserConverter;
 import com.loyayz.uaa.data.UaaRole;
 import com.loyayz.uaa.data.UaaUser;
 import com.loyayz.uaa.data.UaaUserAccount;
 import com.loyayz.uaa.data.UaaUserRole;
 import com.loyayz.uaa.data.mapper.UaaUserAccountMapper;
 import com.loyayz.uaa.data.mapper.UaaUserRoleMapper;
-import com.loyayz.uaa.dto.SimpleUser;
 import com.loyayz.uaa.dto.UserQueryParam;
 
 import java.util.HashMap;
@@ -20,12 +18,6 @@ import java.util.stream.Collectors;
  * @author loyayz (loyayz@foxmail.com)
  */
 public final class UserRepository {
-
-    public static Long insertUser(SimpleUser user) {
-        UaaUser entity = UserConverter.toEntity(user);
-        entity.insert();
-        return entity.getId();
-    }
 
     public static UaaUser findById(Long userId) {
         return new UaaUser().findById(userId);
@@ -46,7 +38,7 @@ public final class UserRepository {
                 .collect(Collectors.toList());
     }
 
-    public static List<Long> listUserByRole(String roleCode) {
+    public static List<Long> listUserIdByRole(String roleCode) {
         return UaaUserRole.builder().roleCode(roleCode).build()
                 .listByCondition()
                 .stream()
