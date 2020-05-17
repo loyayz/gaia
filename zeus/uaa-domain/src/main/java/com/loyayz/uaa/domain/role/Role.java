@@ -15,12 +15,16 @@ import java.util.Map;
  * @author loyayz (loyayz@foxmail.com)
  */
 public class Role extends AbstractEntity<UaaRole> {
-    private final String roleCode;
+    private final RoleId roleCode;
     private String name;
     private RoleUsers roleUsers;
 
     public static Role of(String roleCode) {
         return new Role(roleCode);
+    }
+
+    public String id() {
+        return this.roleCode.get();
     }
 
     public Role name(String name) {
@@ -68,10 +72,10 @@ public class Role extends AbstractEntity<UaaRole> {
 
     @Override
     protected UaaRole buildEntity() {
-        UaaRole entity = RoleRepository.getByCode(this.roleCode);
+        UaaRole entity = RoleRepository.getByCode(this.roleCode.get());
         if (entity == null) {
             entity = new UaaRole();
-            entity.setCode(this.roleCode);
+            entity.setCode(this.roleCode.get());
             entity.setName(this.name);
         }
         this.name = entity.getName();
@@ -93,7 +97,7 @@ public class Role extends AbstractEntity<UaaRole> {
     @Override
     public void delete() {
         Map<String, Object> param = new HashMap<>(2);
-        param.put("roleCode", this.roleCode);
+        param.put("roleCode", this.roleCode.get());
 
         // delete role
         MybatisUtils.executeDelete(UaaRole.class, "deleteByCode", param);
@@ -102,7 +106,7 @@ public class Role extends AbstractEntity<UaaRole> {
     }
 
     private Role(String roleCode) {
-        this.roleCode = roleCode;
+        this.roleCode = RoleId.of(roleCode);
     }
 
 }

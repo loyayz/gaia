@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
  * @author loyayz (loyayz@foxmail.com)
  */
 public class User extends AbstractEntity<UaaUser> {
-    private Long userId;
+    private final UserId userId;
     private List<UserAccount> updatedAccounts = new ArrayList<>();
     private List<UserAccount> deletedAccounts = new ArrayList<>();
     private UserRoles userRoles;
@@ -31,8 +31,8 @@ public class User extends AbstractEntity<UaaUser> {
         return new User(userId);
     }
 
-    public Long userId() {
-        return super.entity().getId();
+    public Long id() {
+        return this.userId.get();
     }
 
     /**
@@ -122,7 +122,7 @@ public class User extends AbstractEntity<UaaUser> {
      * 添加账号
      */
     public User addAccount(String accountType, String accountName, String password) {
-        UserAccount account = UserAccount.of(this.userId(), accountType, accountName, password);
+        UserAccount account = UserAccount.of(this.userId, accountType, accountName, password);
         this.updatedAccounts = this.updatedAccounts.stream()
                 .filter(a -> !a.same(accountType, accountName))
                 .collect(Collectors.toList());
@@ -134,7 +134,7 @@ public class User extends AbstractEntity<UaaUser> {
      * 删除账号
      */
     public User removeAccount(String accountType, String accountName) {
-        UserAccount account = UserAccount.of(this.userId(), accountType, accountName);
+        UserAccount account = UserAccount.of(this.userId, accountType, accountName);
         this.updatedAccounts = this.updatedAccounts.stream()
                 .filter(a -> !a.same(accountType, accountName))
                 .collect(Collectors.toList());
@@ -146,12 +146,12 @@ public class User extends AbstractEntity<UaaUser> {
      * 修改账号密码
      */
     public User changeAccountPassword(String accountType, String accountName, String password) {
-        UserAccount account = UserAccount.of(this.userId(), accountType, accountName, password);
+        UserAccount account = UserAccount.of(this.userId, accountType, accountName, password);
         Optional<UserAccount> accountOptional = this.updatedAccounts.stream()
                 .filter(a -> a.same(accountType, accountName))
                 .findFirst();
         if (accountOptional.isPresent()) {
-            accountOptional.get().changePassword(password);
+            accountOptional.get().password(password);
         } else {
             this.updatedAccounts.add(account);
         }
@@ -168,7 +168,7 @@ public class User extends AbstractEntity<UaaUser> {
 
     public User addRole(List<String> roleCodes) {
         if (userRoles == null) {
-            userRoles = UserRoles.of(this.userId());
+            userRoles = UserRoles.of(this.userId);
         }
         userRoles.addCodes(roleCodes);
         return this;
@@ -184,7 +184,7 @@ public class User extends AbstractEntity<UaaUser> {
 
     public User removeRole(List<String> roleCodes) {
         if (userRoles == null) {
-            userRoles = UserRoles.of(this.userId());
+            userRoles = UserRoles.of(this.userId);
         }
         userRoles.removeCodes(roleCodes);
         return this;
@@ -192,17 +192,17 @@ public class User extends AbstractEntity<UaaUser> {
 
     @Override
     protected UaaUser buildEntity() {
-        if (this.userId == null) {
+        if (this.userId.isEmpty()) {
             return UserConverter.toEntity(this.user);
         } else {
-            return UserRepository.findById(this.userId);
+            return UserRepository.findById(this.userId.get());
         }
     }
 
     @Override
     public void save() {
         super.save();
-        this.userId = super.entity().getId();
+        this.userId.set(super.entity().getId());
 
         for (UserAccount account : updatedAccounts) {
             account.save();
@@ -225,12 +225,12 @@ public class User extends AbstractEntity<UaaUser> {
     public void delete() {
         // delete user
         UaaUser user = new UaaUser();
-        user.setId(this.userId());
+        user.setId(this.userId.get());
         user.setDeleted(1);
         user.updateById();
 
         Map<String, Object> param = new HashMap<>(2);
-        param.put("userId", this.userId());
+        param.put("userId", this.userId.get());
         // delete account
         MybatisUtils.executeDelete(UaaUserAccount.class, "deleteByUser", param);
         // delete userRole
@@ -238,10 +238,11 @@ public class User extends AbstractEntity<UaaUser> {
     }
 
     private User() {
+        this.userId = UserId.of();
     }
 
     private User(Long userId) {
-        this.userId = userId;
+        this.userId = UserId.of(userId);
     }
 
 }

@@ -16,22 +16,22 @@ import java.util.Map;
  */
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 class UserAccount extends AbstractEntity<UaaUserAccount> {
-    private final Long userId;
+    private final UserId userId;
     private final String type;
     private final String name;
     private String password;
 
-    static UserAccount of(Long userId, String type, String name) {
+    static UserAccount of(UserId userId, String type, String name) {
         return of(userId, type, name, null);
     }
 
-    static UserAccount of(Long userId, String type, String name, String password) {
+    static UserAccount of(UserId userId, String type, String name, String password) {
         UserAccount account = new UserAccount(userId, type, name, password);
         account.markUpdated();
         return account;
     }
 
-    void changePassword(String password) {
+    void password(String password) {
         this.password = password;
         this.entity().setPassword(password);
     }
@@ -45,12 +45,18 @@ class UserAccount extends AbstractEntity<UaaUserAccount> {
         UaaUserAccount entity = UserRepository.getAccount(type, name);
         if (entity == null) {
             entity = new UaaUserAccount();
-            entity.setUserId(userId);
+            entity.setUserId(userId.get());
             entity.setType(type);
             entity.setName(name);
         }
         entity.setPassword(password);
         return entity;
+    }
+
+    @Override
+    public void save() {
+        this.entity().setUserId(userId.get());
+        super.save();
     }
 
     /**
@@ -59,7 +65,7 @@ class UserAccount extends AbstractEntity<UaaUserAccount> {
     @Override
     public void delete() {
         Map<String, Object> param = new HashMap<>(4);
-        param.put("userId", userId);
+        param.put("userId", userId.get());
         param.put("type", type);
         param.put("name", name);
         MybatisUtils.executeDelete(UaaUserAccount.class, "deleteAccount", param);
