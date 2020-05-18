@@ -27,17 +27,9 @@ public class UserTest {
 
     @Test
     public void testCreate() {
-        SimpleUser userParam = new SimpleUser();
-        userParam.setName("loyayz");
-        userParam.setEmail("loyayz@foxmail.com");
-
-        Map<String, Object> info = new HashMap<>();
-        info.put("index", 1);
-        userParam.setInfos(info);
-
         User user = create(false);
         Assert.assertNull(user.id());
-        user.fill(userParam).save();
+        user.name("loyayz").save();
         Assert.assertNotNull(user.id());
         Assert.assertNotNull(new UaaUser().findById(user.id()));
     }

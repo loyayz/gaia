@@ -6,7 +6,6 @@ import com.loyayz.uaa.data.UaaUserAccount;
 import com.loyayz.uaa.data.UaaUserRole;
 import com.loyayz.uaa.data.converter.UserConverter;
 import com.loyayz.uaa.domain.UserRepository;
-import com.loyayz.uaa.dto.SimpleUser;
 import com.loyayz.zeus.AbstractEntity;
 
 import java.util.*;
@@ -20,8 +19,6 @@ public class User extends AbstractEntity<UaaUser> {
     private List<UserAccount> updatedAccounts = new ArrayList<>();
     private List<UserAccount> deletedAccounts = new ArrayList<>();
     private UserRoles userRoles;
-
-    private SimpleUser user;
 
     public static User of() {
         return new User();
@@ -39,9 +36,8 @@ public class User extends AbstractEntity<UaaUser> {
      * 修改用户名
      */
     public User name(String name) {
-        SimpleUser user = new SimpleUser();
-        user.setName(name);
-        this.fill(user);
+        super.entity().setName(name);
+        super.markUpdated();
         return this;
     }
 
@@ -49,9 +45,8 @@ public class User extends AbstractEntity<UaaUser> {
      * 修改手机号
      */
     public User mobile(String mobile) {
-        SimpleUser user = new SimpleUser();
-        user.setMobile(mobile);
-        this.fill(user);
+        super.entity().setMobile(mobile);
+        super.markUpdated();
         return this;
     }
 
@@ -59,9 +54,8 @@ public class User extends AbstractEntity<UaaUser> {
      * 修改邮箱
      */
     public User email(String email) {
-        SimpleUser user = new SimpleUser();
-        user.setEmail(email);
-        this.fill(user);
+        super.entity().setEmail(email);
+        super.markUpdated();
         return this;
     }
 
@@ -70,9 +64,8 @@ public class User extends AbstractEntity<UaaUser> {
      * 有则修改，无则新增
      */
     public User info(Map<String, Object> infos) {
-        SimpleUser user = new SimpleUser();
-        user.setInfos(infos);
-        this.fill(user);
+        super.entity().setInfo(UserConverter.infoStr(infos));
+        super.markUpdated();
         return this;
     }
 
@@ -84,19 +77,6 @@ public class User extends AbstractEntity<UaaUser> {
         Map<String, Object> infos = UserConverter.infoMap(super.entity().getInfo());
         infos.put(key, value);
         this.info(infos);
-        return this;
-    }
-
-    /**
-     * 修改用户信息
-     */
-    public User fill(SimpleUser user) {
-        if (this.user == null) {
-            this.user = new SimpleUser();
-        }
-        this.user.fill(user);
-        UserConverter.setEntity(super.entity(), this.user);
-        super.markUpdated();
         return this;
     }
 
@@ -193,7 +173,10 @@ public class User extends AbstractEntity<UaaUser> {
     @Override
     protected UaaUser buildEntity() {
         if (this.userId.isEmpty()) {
-            return UserConverter.toEntity(this.user);
+            UaaUser user = new UaaUser();
+            user.setLocked(0);
+            user.setDeleted(0);
+            return user;
         } else {
             return UserRepository.findById(this.userId.get());
         }

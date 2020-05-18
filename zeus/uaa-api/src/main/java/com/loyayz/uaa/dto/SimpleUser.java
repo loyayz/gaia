@@ -41,31 +41,4 @@ public class SimpleUser implements Serializable {
      */
     private Long createTime;
 
-    public Boolean getLocked() {
-        if (locked == null) {
-            return false;
-        }
-        return locked;
-    }
-
-    public void fill(SimpleUser other) {
-        if (other.getId() != null) {
-            this.setId(other.getId());
-        }
-        if (other.getName() != null) {
-            this.setName(other.getName());
-        }
-        if (other.getMobile() != null) {
-            this.setMobile(other.getMobile());
-        }
-        if (other.getEmail() != null) {
-            this.setEmail(other.getEmail());
-        }
-        if (other.getInfos() != null) {
-            this.setInfos(other.getInfos());
-        }
-        if (other.getLocked() != null) {
-            this.setLocked(other.getLocked());
-        }
-    }
 }
