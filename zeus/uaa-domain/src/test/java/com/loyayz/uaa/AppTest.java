@@ -1,6 +1,7 @@
 package com.loyayz.uaa;
 
 import com.loyayz.uaa.data.UaaApp;
+import com.loyayz.uaa.data.UaaAppAdmin;
 import com.loyayz.uaa.domain.app.App;
 import com.loyayz.uaa.dto.SimpleApp;
 import org.junit.Assert;
@@ -11,6 +12,9 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 
 /**
@@ -79,6 +83,32 @@ public class AppTest {
         Assert.assertEquals(appParam.getUrl(), storeApp.getUrl());
         Assert.assertEquals(appParam.getRemark(), storeApp.getRemark());
         Assert.assertEquals(appParam.getSort(), storeApp.getSort());
+    }
+
+    @Test
+    public void testAdmin() {
+        Assert.assertTrue(new UaaAppAdmin().listByCondition().isEmpty());
+
+        App app = create(true);
+        List<Long> userIds = new ArrayList<>();
+        for (int j = 0; j < 5; j++) {
+            Long userId = (long) new Random().nextInt(1000000);
+            app.addAdmin(userId);
+            userIds.add(userId);
+        }
+        app.save();
+
+        UaaAppAdmin queryObject = UaaAppAdmin.builder().appId(app.id()).build();
+        Assert.assertEquals(userIds.size(), queryObject.listByCondition().size());
+        for (Long userId : userIds) {
+            Assert.assertTrue(App.of(app.id()).isAdmin(userId));
+        }
+
+        App.of(app.id()).removeAdmin(userIds.toArray(new Long[]{})).save();
+        Assert.assertTrue(queryObject.listByCondition().isEmpty());
+        for (Long userId : userIds) {
+            Assert.assertFalse(App.of(app.id()).isAdmin(userId));
+        }
     }
 
     private App create(boolean save) {

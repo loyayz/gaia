@@ -2,13 +2,12 @@ package com.loyayz.uaa.domain;
 
 import com.loyayz.gaia.data.Sorter;
 import com.loyayz.gaia.data.mybatis.extension.MybatisUtils;
-import com.loyayz.uaa.data.UaaApp;
-import com.loyayz.uaa.data.UaaAppMenu;
-import com.loyayz.uaa.data.UaaAppMenuAction;
+import com.loyayz.uaa.data.*;
 import com.loyayz.uaa.dto.AppQueryParam;
 import com.loyayz.uaa.dto.MenuQueryParam;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author loyayz (loyayz@foxmail.com)
@@ -32,6 +31,14 @@ public final class AppRepository {
      */
     public static List<UaaApp> listAppByParam(AppQueryParam queryParam) {
         return MybatisUtils.executeSelectList(UaaApp.class, "listByParam", queryParam);
+    }
+
+    public static List<Long> listUserIdByApp(Long appId) {
+        return UaaAppAdmin.builder().appId(appId).build()
+                .listByCondition()
+                .stream()
+                .map(UaaAppAdmin::getUserId)
+                .collect(Collectors.toList());
     }
 
     public static UaaAppMenu getAppMenuByCode(String code) {
