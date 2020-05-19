@@ -12,6 +12,9 @@ import java.util.List;
  */
 public interface UaaAppMapper extends BaseMapper<UaaApp> {
 
+    @Select("SELECT MAX(sort) FROM uaa_app")
+    Integer getMaxSort();
+
     @Select("<script>SELECT * FROM uaa_app " +
             "   <where> " +
             "   <if test=\"name != null and name != ''\">" +

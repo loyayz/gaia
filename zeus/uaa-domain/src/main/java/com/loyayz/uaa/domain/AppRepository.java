@@ -2,13 +2,11 @@ package com.loyayz.uaa.domain;
 
 import com.loyayz.gaia.data.Sorter;
 import com.loyayz.gaia.data.mybatis.extension.MybatisUtils;
-import com.loyayz.uaa.data.converter.AppConverter;
 import com.loyayz.uaa.data.UaaApp;
 import com.loyayz.uaa.data.UaaAppMenu;
 import com.loyayz.uaa.data.UaaAppMenuAction;
 import com.loyayz.uaa.dto.AppQueryParam;
 import com.loyayz.uaa.dto.MenuQueryParam;
-import com.loyayz.uaa.dto.SimpleApp;
 
 import java.util.List;
 
@@ -17,10 +15,16 @@ import java.util.List;
  */
 public final class AppRepository {
 
-    public static Long insertApp(SimpleApp app) {
-        UaaApp entity = AppConverter.toEntity(app);
-        entity.insert();
-        return entity.getId();
+    public static UaaApp findById(Long appId) {
+        return new UaaApp().findById(appId);
+    }
+
+    /**
+     * {@link com.loyayz.uaa.data.mapper.UaaAppMapper#getMaxSort}
+     */
+    public static Integer getAppNextSort() {
+        Integer sort = MybatisUtils.executeSelectOne(UaaApp.class, "getMaxSort", new Object());
+        return sort == null ? 0 : sort + 1;
     }
 
     /**
