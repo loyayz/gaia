@@ -86,15 +86,15 @@ public class AppQuery implements AppProvider {
                 .collect(Collectors.toList());
     }
 
-    private void addMenu(SimpleMenu menu, Map<String, List<SimpleMenu>> parentMenus) {
-        if (!(menu instanceof MenuDirectory)) {
+    private void addMenu(SimpleMenu dir, Map<String, List<SimpleMenu>> parentMenus) {
+        if (!dir.getDir()) {
             return;
         }
-        MenuDirectory dir = (MenuDirectory) menu;
-        List<SimpleMenu> subMenus = parentMenus.getOrDefault(menu.getCode(), Collections.emptyList());
+        List<SimpleMenu> subMenus = parentMenus.getOrDefault(dir.getCode(), Collections.emptyList());
         for (SimpleMenu subMenu : subMenus) {
             this.addMenu(subMenu, parentMenus);
-            dir.addMenu(subMenu);
+
+            dir.addItem(subMenu);
         }
     }
 

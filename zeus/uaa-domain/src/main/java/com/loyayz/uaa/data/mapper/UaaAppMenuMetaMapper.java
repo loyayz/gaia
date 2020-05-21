@@ -1,8 +1,7 @@
 package com.loyayz.uaa.data.mapper;
 
 import com.loyayz.gaia.data.mybatis.BaseMapper;
-import com.loyayz.uaa.data.UaaApp;
-import com.loyayz.uaa.data.UaaAppMenu;
+import com.loyayz.uaa.data.UaaAppMenuMeta;
 import com.loyayz.uaa.dto.MenuQueryParam;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Param;
@@ -13,15 +12,24 @@ import java.util.List;
 /**
  * @author loyayz (loyayz@foxmail.com)
  */
-public interface UaaAppMenuMapper extends BaseMapper<UaaAppMenu> {
+public interface UaaAppMenuMetaMapper extends BaseMapper<UaaAppMenuMeta> {
 
-    @Delete("DELETE FROM uaa_app_menu WHERE app_id = #{appId}")
+    @Delete("DELETE FROM uaa_app_menu_meta WHERE app_id = #{appId}")
     int deleteByApp(@Param("appId") Long appId);
 
-    @Delete("DELETE FROM uaa_app_menu WHERE app_id = #{appId} AND code = #{menuCode}")
+    @Delete("DELETE FROM uaa_app_menu_meta WHERE app_id = #{appId} AND code = #{menuCode}")
     int deleteByCode(@Param("appId") Long appId, @Param("menuCode") String code);
 
-    @Select("<script>SELECT * FROM uaa_app_menu " +
+    @Delete("<script>" +
+            "DELETE FROM uaa_app_menu_meta WHERE code IN (" +
+            "   <foreach collection=\"codes\" item=\"code\" separator=\",\">" +
+            "       #{code}" +
+            "   </foreach>" +
+            "   )" +
+            "</script>")
+    int deleteByCodes(@Param("codes") List<String> codes);
+
+    @Select("<script>SELECT * FROM uaa_app_menu_meta " +
             "   <where> " +
             "   <if test=\"appId != null\">" +
             "       app_id = #{appId} " +
@@ -39,6 +47,6 @@ public interface UaaAppMenuMapper extends BaseMapper<UaaAppMenu> {
             "       AND url LIKE CONCAT('%',#{url},'%') " +
             "   </if>" +
             "</where> ORDER BY sort </script>")
-    List<UaaApp> listByParam(MenuQueryParam queryParam);
+    List<UaaAppMenuMeta> listByParam(MenuQueryParam queryParam);
 
 }

@@ -81,7 +81,7 @@ CREATE TABLE `uaa_app_admin`
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='应用管理员';
 
-CREATE TABLE `uaa_app_menu`
+CREATE TABLE `uaa_app_menu_meta`
 (
     `id`           bigint(20) unsigned NOT NULL,
     `app_id`       bigint(20) unsigned NOT NULL COMMENT '应用',
@@ -91,15 +91,14 @@ CREATE TABLE `uaa_app_menu`
     `name`         varchar(50)         NOT NULL COMMENT '名称',
     `url`          varchar(100)        NOT NULL COMMENT '链接',
     `icon`         varchar(50)         NOT NULL COMMENT '图标',
-    `remark`       varchar(200)                 DEFAULT NULL COMMENT '备注',
     `sort`         int(11)             NOT NULL COMMENT '序号',
     `gmt_create`   datetime                     DEFAULT NULL,
     `gmt_modified` datetime                     DEFAULT NULL,
     PRIMARY KEY (`id`),
-    UNIQUE KEY `uk_uam_code` (`code`),
-    KEY `idx_uam_app` (`app_id`)
+    UNIQUE KEY `uk_uamm_code` (`code`),
+    KEY `idx_uamm_app` (`app_id`)
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4 COMMENT ='应用菜单';
+  DEFAULT CHARSET = utf8mb4 COMMENT ='应用菜单元数据';
 
 CREATE TABLE `uaa_app_menu_action`
 (

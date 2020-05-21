@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UaaAppMenu extends AbstractTable<UaaAppMenu> {
+public class UaaAppMenuMeta extends AbstractTable<UaaAppMenuMeta> {
 
     /**
      * 应用
@@ -43,10 +43,6 @@ public class UaaAppMenu extends AbstractTable<UaaAppMenu> {
      * 图标
      */
     private String icon;
-    /**
-     * 备注
-     */
-    private String remark;
     /**
      * 序号a
      */

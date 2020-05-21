@@ -1,9 +1,8 @@
 package com.loyayz.uaa.data.converter;
 
 import com.loyayz.uaa.data.UaaApp;
-import com.loyayz.uaa.data.UaaAppMenu;
 import com.loyayz.uaa.data.UaaAppMenuAction;
-import com.loyayz.uaa.dto.MenuDirectory;
+import com.loyayz.uaa.data.UaaAppMenuMeta;
 import com.loyayz.uaa.dto.SimpleApp;
 import com.loyayz.uaa.dto.SimpleMenu;
 import com.loyayz.uaa.dto.SimpleMenuAction;
@@ -12,16 +11,6 @@ import com.loyayz.uaa.dto.SimpleMenuAction;
  * @author loyayz (loyayz@foxmail.com)
  */
 public final class AppConverter {
-
-    public static UaaApp toEntity(SimpleApp app) {
-        return UaaApp.builder()
-                .name(app.getName())
-                .remote(app.getRemote() != null && app.getRemote() ? 1 : 0)
-                .url(app.getUrl() == null ? "" : app.getUrl())
-                .remark(app.getRemark())
-                .sort(app.getSort())
-                .build();
-    }
 
     public static SimpleApp toSimple(UaaApp app) {
         SimpleApp result = new SimpleApp();
@@ -34,80 +23,42 @@ public final class AppConverter {
         return result;
     }
 
-    public static void setEntity(UaaApp entity, SimpleApp app) {
-        entity.setName(app.getName());
-        entity.setRemote(app.getRemote() != null && app.getRemote() ? 1 : 0);
-        entity.setUrl(app.getUrl());
-        entity.setRemark(app.getRemark());
-        entity.setSort(app.getSort());
-    }
-
-    public static SimpleMenu toSimple(UaaAppMenu menu) {
-        SimpleMenu result;
-        if (menu.getDir() == 1) {
-            result = new MenuDirectory();
-        } else {
-            result = new SimpleMenu();
-        }
+    public static SimpleMenu toSimple(UaaAppMenuMeta menu) {
+        SimpleMenu result = new SimpleMenu();
         result.setParentCode(menu.getParentCode());
         result.setCode(menu.getCode());
         result.setName(menu.getName());
         result.setUrl(menu.getUrl());
         result.setIcon(menu.getIcon());
-        result.setRemark(menu.getRemark());
         result.setSort(menu.getSort());
+        result.setDir(menu.getDir() == 1);
         return result;
     }
 
-    public static UaaAppMenu toEntity(Long appId, MenuDirectory dir) {
-        return UaaAppMenu.builder()
-                .appId(appId)
-                .parentCode(dir.getParentCode())
-                .dir(1)
-                .code(dir.getCode())
-                .name(dir.getName())
-                .url("")
-                .icon(dir.getIcon() == null ? "" : dir.getIcon())
-                .remark(dir.getRemark() == null ? "" : dir.getRemark())
-                .sort(dir.getSort())
-                .build();
-    }
-
-    public static void setEntity(UaaAppMenu menu, Long appId, MenuDirectory dir) {
-        menu.setAppId(appId);
-        menu.setParentCode(dir.getParentCode());
-        menu.setDir(1);
-        menu.setCode(dir.getCode());
-        menu.setName(dir.getName());
-        menu.setIcon(dir.getIcon());
-        menu.setRemark(dir.getRemark());
-        menu.setSort(dir.getSort());
-    }
-
-    public static UaaAppMenu toEntity(Long appId, SimpleMenu menu) {
-        return UaaAppMenu.builder()
+    public static UaaAppMenuMeta toEntity(Long appId, SimpleMenu menu) {
+        return UaaAppMenuMeta.builder()
                 .appId(appId)
                 .parentCode(menu.getParentCode())
-                .dir(0)
+                .dir(menu.getDir() ? 1 : 0)
                 .code(menu.getCode())
                 .name(menu.getName())
-                .url(menu.getUrl())
+                .url(menu.getUrl() == null ? "" : menu.getUrl())
                 .icon(menu.getIcon() == null ? "" : menu.getIcon())
-                .remark(menu.getRemark() == null ? "" : menu.getRemark())
                 .sort(menu.getSort())
                 .build();
     }
 
-    public static void setEntity(UaaAppMenu entity, Long appId, SimpleMenu menu) {
+    public static void setEntity(UaaAppMenuMeta entity, Long appId, SimpleMenu menu) {
         entity.setAppId(appId);
         entity.setParentCode(menu.getParentCode());
-        entity.setDir(0);
-        entity.setCode(menu.getCode());
         entity.setName(menu.getName());
         entity.setUrl(menu.getUrl());
         entity.setIcon(menu.getIcon());
-        entity.setRemark(menu.getRemark());
         entity.setSort(menu.getSort());
+        // 菜单可修改为目录，目录无法修改为菜单
+        if (menu.getDir()) {
+            entity.setDir(1);
+        }
     }
 
     public static UaaAppMenuAction toEntity(Long appId, SimpleMenuAction action) {

@@ -2,10 +2,13 @@ package com.loyayz.uaa.domain.app;
 
 import com.loyayz.uaa.data.UaaApp;
 import com.loyayz.uaa.domain.AppRepository;
+import com.loyayz.uaa.dto.SimpleMenu;
 import com.loyayz.zeus.AbstractEntity;
 
 import java.util.Arrays;
 import java.util.List;
+
+import static com.loyayz.uaa.constant.UaaConstant.ROOT_MENU_CODE;
 
 /**
  * @author loyayz (loyayz@foxmail.com)
@@ -13,6 +16,7 @@ import java.util.List;
 public class App extends AbstractEntity<UaaApp> {
     private final AppId appId;
     private AppAdmins appAdmins;
+    private AppMenuHelper menuHelper;
 
     public static App of() {
         return new App();
@@ -102,6 +106,45 @@ public class App extends AbstractEntity<UaaApp> {
         return this;
     }
 
+    /**
+     * 添加菜单元数据
+     * 根据菜单编码查询元数据，存在则修改，否则新增
+     *
+     * @param parentCode 上级菜单编码
+     * @param menus      菜单目录
+     */
+    public App addMenuMeta(String parentCode, SimpleMenu... menus) {
+        return this.addMenuMeta(parentCode, Arrays.asList(menus));
+    }
+
+    public App addMenuMeta(String parentCode, List<SimpleMenu> menus) {
+        if (this.menuHelper == null) {
+            this.menuHelper = AppMenuHelper.of(this.appId);
+        }
+        if (parentCode == null || parentCode.trim().isEmpty()) {
+            parentCode = ROOT_MENU_CODE;
+        }
+        this.menuHelper.addMeta(parentCode, menus);
+        return this;
+    }
+
+    /**
+     * 删除菜单
+     *
+     * @param menuCodes 菜单编码
+     */
+    public App removeMenuMeta(String... menuCodes) {
+        return this.removeMenuMeta(Arrays.asList(menuCodes));
+    }
+
+    public App removeMenuMeta(List<String> menuCodes) {
+        if (this.menuHelper == null) {
+            this.menuHelper = AppMenuHelper.of(this.appId);
+        }
+        this.menuHelper.removeCodes(menuCodes);
+        return this;
+    }
+
     @Override
     protected UaaApp buildEntity() {
         if (this.appId.isEmpty()) {
@@ -122,6 +165,9 @@ public class App extends AbstractEntity<UaaApp> {
 
         if (this.appAdmins != null) {
             this.appAdmins.save();
+        }
+        if (this.menuHelper != null) {
+            this.menuHelper.save();
         }
     }
 

@@ -3,6 +3,7 @@ package com.loyayz.uaa.domain;
 import com.loyayz.gaia.data.Sorter;
 import com.loyayz.gaia.data.mybatis.extension.MybatisUtils;
 import com.loyayz.uaa.data.*;
+import com.loyayz.uaa.data.mapper.UaaAppMenuMetaMapper;
 import com.loyayz.uaa.dto.AppQueryParam;
 import com.loyayz.uaa.dto.MenuQueryParam;
 
@@ -41,8 +42,8 @@ public final class AppRepository {
                 .collect(Collectors.toList());
     }
 
-    public static UaaAppMenu getAppMenuByCode(String code) {
-        return UaaAppMenu.builder().code(code).build()
+    public static UaaAppMenuMeta getAppMenuByCode(String code) {
+        return UaaAppMenuMeta.builder().code(code).build()
                 .listByCondition()
                 .stream()
                 .findFirst()
@@ -50,14 +51,14 @@ public final class AppRepository {
     }
 
     /**
-     * {@link com.loyayz.uaa.data.mapper.UaaAppMenuMapper#listByParam}
+     * {@link UaaAppMenuMetaMapper#listByParam}
      */
-    public static List<UaaAppMenu> listAppMenuByParam(MenuQueryParam queryParam) {
-        return MybatisUtils.executeSelectList(UaaAppMenu.class, "listByParam", queryParam);
+    public static List<UaaAppMenuMeta> listAppMenuByParam(MenuQueryParam queryParam) {
+        return MybatisUtils.executeSelectList(UaaAppMenuMeta.class, "listByParam", queryParam);
     }
 
     public static Integer countAppMenuByParent(String parentCode) {
-        return UaaAppMenu.builder().parentCode(parentCode).build()
+        return UaaAppMenuMeta.builder().parentCode(parentCode).build()
                 .countByCondition();
     }
 
