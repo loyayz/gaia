@@ -2,7 +2,10 @@ package com.loyayz.uaa.domain;
 
 import com.loyayz.gaia.data.Sorter;
 import com.loyayz.gaia.data.mybatis.extension.MybatisUtils;
-import com.loyayz.uaa.data.*;
+import com.loyayz.uaa.data.UaaApp;
+import com.loyayz.uaa.data.UaaAppAdmin;
+import com.loyayz.uaa.data.UaaAppMenuAction;
+import com.loyayz.uaa.data.UaaAppMenuMeta;
 import com.loyayz.uaa.data.mapper.UaaAppMenuMetaMapper;
 import com.loyayz.uaa.dto.AppQueryParam;
 import com.loyayz.uaa.dto.MenuQueryParam;
@@ -60,6 +63,14 @@ public final class AppRepository {
     public static Integer countAppMenuByParent(String parentCode) {
         return UaaAppMenuMeta.builder().parentCode(parentCode).build()
                 .countByCondition();
+    }
+
+    public static UaaAppMenuAction getAppMenuActionByCode(String menuCode, String code) {
+        return UaaAppMenuAction.builder().menuCode(menuCode).code(code).build()
+                .listByCondition()
+                .stream()
+                .findFirst()
+                .orElse(null);
     }
 
     public static List<UaaAppMenuAction> listAppMenuActionByApp(Long appId) {

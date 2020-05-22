@@ -1,12 +1,18 @@
 package com.loyayz.uaa.domain.app;
 
+import com.loyayz.gaia.data.mybatis.extension.MybatisUtils;
 import com.loyayz.uaa.data.UaaApp;
+import com.loyayz.uaa.data.UaaAppMenuAction;
+import com.loyayz.uaa.data.UaaAppMenuMeta;
 import com.loyayz.uaa.domain.AppRepository;
 import com.loyayz.uaa.dto.SimpleMenu;
+import com.loyayz.uaa.dto.SimpleMenuAction;
 import com.loyayz.zeus.AbstractEntity;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.loyayz.uaa.constant.UaaConstant.ROOT_MENU_CODE;
 
@@ -141,7 +147,31 @@ public class App extends AbstractEntity<UaaApp> {
         if (this.menuHelper == null) {
             this.menuHelper = AppMenuHelper.of(this.appId);
         }
-        this.menuHelper.removeCodes(menuCodes);
+        this.menuHelper.removeMeta(menuCodes);
+        return this;
+    }
+
+    public App addMenuAction(String menuCode, SimpleMenuAction... menuActions) {
+        return this.addMenuAction(menuCode, Arrays.asList(menuActions));
+    }
+
+    public App addMenuAction(String menuCode, List<SimpleMenuAction> menuActions) {
+        if (this.menuHelper == null) {
+            this.menuHelper = AppMenuHelper.of(this.appId);
+        }
+        this.menuHelper.addAction(menuCode, menuActions);
+        return this;
+    }
+
+    public App removeMenuAction(String menuCode, String... actionCodes) {
+        return this.removeMenuAction(menuCode, Arrays.asList(actionCodes));
+    }
+
+    public App removeMenuAction(String menuCode, List<String> actionCodes) {
+        if (this.menuHelper == null) {
+            this.menuHelper = AppMenuHelper.of(this.appId);
+        }
+        this.menuHelper.removeAction(menuCode, actionCodes);
         return this;
     }
 
@@ -169,6 +199,21 @@ public class App extends AbstractEntity<UaaApp> {
         if (this.menuHelper != null) {
             this.menuHelper.save();
         }
+    }
+
+    /**
+     * {@link com.loyayz.uaa.data.mapper.UaaAppMenuMetaMapper#deleteByApp}
+     * {@link com.loyayz.uaa.data.mapper.UaaAppMenuActionMapper#deleteByApp}
+     */
+    @Override
+    public void delete() {
+        super.delete();
+
+        Map<String, Object> param = new HashMap<>(2);
+        param.put("appId", this.appId.get());
+
+        MybatisUtils.executeDelete(UaaAppMenuMeta.class, "deleteByApp", param);
+        MybatisUtils.executeDelete(UaaAppMenuAction.class, "deleteByApp", param);
     }
 
     private App() {

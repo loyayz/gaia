@@ -15,17 +15,23 @@ public interface UaaAppMenuActionMapper extends BaseMapper<UaaAppMenuAction> {
     @Delete("DELETE FROM uaa_app_menu_action WHERE app_id = #{appId}")
     int deleteByApp(@Param("appId") Long appId);
 
-    @Delete("DELETE FROM uaa_app_menu_action WHERE app_id = #{appId} AND menu_code = #{menuCode}")
-    int deleteByMenu(@Param("appId") Long appId, @Param("menuCode") String menuCode);
+    @Delete("<script>DELETE FROM uaa_app_menu_action WHERE " +
+            " menu_code IN (" +
+            "   <foreach collection=\"menuCodes\" item=\"menuCode\" separator=\",\">" +
+            "       #{menuCode}" +
+            "   </foreach>" +
+            "   )" +
+            "</script>")
+    int deleteByMenus(@Param("menuCodes") List<String> menuCodes);
 
     @Delete("<script>DELETE FROM uaa_app_menu_action " +
-            " WHERE app_id = #{appId} AND menu_code = #{menuCode}" +
+            " WHERE menu_code = #{menuCode}" +
             " AND code IN (" +
             "   <foreach collection=\"actionCodes\" item=\"actionCode\" separator=\",\">" +
             "       #{actionCode}" +
             "   </foreach>" +
             "   )" +
             "</script>")
-    int deleteByCode(@Param("appId") Long appId, @Param("menuCode") String menuCode, @Param("actionCodes") List<String> actionCodes);
+    int deleteByMenuAndCodes(@Param("menuCode") String menuCode, @Param("actionCodes") List<String> actionCodes);
 
 }

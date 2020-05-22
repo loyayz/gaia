@@ -61,24 +61,19 @@ public final class AppConverter {
         }
     }
 
-    public static UaaAppMenuAction toEntity(Long appId, SimpleMenuAction action) {
+    public static UaaAppMenuAction toEntity(Long appId, String menuCode, SimpleMenuAction action) {
         return UaaAppMenuAction.builder()
                 .appId(appId)
-                .menuCode(action.getMenuCode())
+                .menuCode(menuCode)
                 .code(action.getCode())
                 .name(action.getName())
-                .remark(action.getRemark())
-                .sort(action.getSort())
                 .build();
     }
 
     public static SimpleMenuAction toSimple(UaaAppMenuAction action) {
         SimpleMenuAction result = new SimpleMenuAction();
-        result.setMenuCode(action.getMenuCode());
         result.setCode(action.getCode());
         result.setName(action.getName());
-        result.setRemark(action.getRemark());
-        result.setSort(action.getSort());
         return result;
     }
 

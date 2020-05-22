@@ -31,13 +31,5 @@ public class UaaAppMenuAction extends AbstractTable<UaaAppMenuAction> {
      * 名称
      */
     private String name;
-    /**
-     * 备注
-     */
-    private String remark;
-    /**
-     * 序号
-     */
-    private Integer sort;
 
 }

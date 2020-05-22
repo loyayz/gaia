@@ -107,8 +107,6 @@ CREATE TABLE `uaa_app_menu_action`
     `menu_code`    varchar(20)         NOT NULL COMMENT '菜单',
     `code`         varchar(20)         NOT NULL COMMENT '编码',
     `name`         varchar(50)         NOT NULL COMMENT '名称',
-    `remark`       varchar(200) DEFAULT NULL COMMENT '备注',
-    `sort`         int(11)             NOT NULL COMMENT '序号',
     `gmt_create`   datetime     DEFAULT NULL,
     `gmt_modified` datetime     DEFAULT NULL,
     PRIMARY KEY (`id`),
