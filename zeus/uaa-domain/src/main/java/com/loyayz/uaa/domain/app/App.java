@@ -4,6 +4,7 @@ import com.loyayz.gaia.data.mybatis.extension.MybatisUtils;
 import com.loyayz.uaa.data.UaaApp;
 import com.loyayz.uaa.data.UaaAppMenuAction;
 import com.loyayz.uaa.data.UaaAppMenuMeta;
+import com.loyayz.uaa.data.UaaMenu;
 import com.loyayz.uaa.domain.AppRepository;
 import com.loyayz.uaa.dto.SimpleMenu;
 import com.loyayz.uaa.dto.SimpleMenuAction;
@@ -22,7 +23,7 @@ import static com.loyayz.uaa.constant.UaaConstant.ROOT_MENU_CODE;
 public class App extends AbstractEntity<UaaApp> {
     private final AppId appId;
     private AppAdmins appAdmins;
-    private AppMenuHelper menuHelper;
+    private AppMenus appMenus;
 
     public static App of() {
         return new App();
@@ -72,10 +73,10 @@ public class App extends AbstractEntity<UaaApp> {
      * @param userId 用户id
      */
     public boolean isAdmin(Long userId) {
-        if (appAdmins == null) {
-            appAdmins = AppAdmins.of(this.appId);
+        if (this.appAdmins == null) {
+            this.appAdmins = AppAdmins.of(this.appId);
         }
-        return appAdmins.containsUser(userId);
+        return this.appAdmins.containsUser(userId);
     }
 
     /**
@@ -88,10 +89,10 @@ public class App extends AbstractEntity<UaaApp> {
     }
 
     public App addAdmin(List<Long> userIds) {
-        if (appAdmins == null) {
-            appAdmins = AppAdmins.of(this.appId);
+        if (this.appAdmins == null) {
+            this.appAdmins = AppAdmins.of(this.appId);
         }
-        appAdmins.addUsers(userIds);
+        this.appAdmins.addUsers(userIds);
         return this;
     }
 
@@ -105,10 +106,10 @@ public class App extends AbstractEntity<UaaApp> {
     }
 
     public App removeAdmin(List<Long> userIds) {
-        if (appAdmins == null) {
-            appAdmins = AppAdmins.of(this.appId);
+        if (this.appAdmins == null) {
+            this.appAdmins = AppAdmins.of(this.appId);
         }
-        appAdmins.removeUsers(userIds);
+        this.appAdmins.removeUsers(userIds);
         return this;
     }
 
@@ -124,13 +125,13 @@ public class App extends AbstractEntity<UaaApp> {
     }
 
     public App addMenuMeta(String parentCode, List<SimpleMenu> menus) {
-        if (this.menuHelper == null) {
-            this.menuHelper = AppMenuHelper.of(this.appId);
+        if (this.appMenus == null) {
+            this.appMenus = AppMenus.of(this.appId);
         }
         if (parentCode == null || parentCode.trim().isEmpty()) {
             parentCode = ROOT_MENU_CODE;
         }
-        this.menuHelper.addMeta(parentCode, menus);
+        this.appMenus.addMeta(parentCode, menus);
         return this;
     }
 
@@ -144,10 +145,10 @@ public class App extends AbstractEntity<UaaApp> {
     }
 
     public App removeMenuMeta(List<String> menuCodes) {
-        if (this.menuHelper == null) {
-            this.menuHelper = AppMenuHelper.of(this.appId);
+        if (this.appMenus == null) {
+            this.appMenus = AppMenus.of(this.appId);
         }
-        this.menuHelper.removeMeta(menuCodes);
+        this.appMenus.removeMeta(menuCodes);
         return this;
     }
 
@@ -156,10 +157,10 @@ public class App extends AbstractEntity<UaaApp> {
     }
 
     public App addMenuAction(String menuCode, List<SimpleMenuAction> menuActions) {
-        if (this.menuHelper == null) {
-            this.menuHelper = AppMenuHelper.of(this.appId);
+        if (this.appMenus == null) {
+            this.appMenus = AppMenus.of(this.appId);
         }
-        this.menuHelper.addAction(menuCode, menuActions);
+        this.appMenus.addAction(menuCode, menuActions);
         return this;
     }
 
@@ -168,10 +169,10 @@ public class App extends AbstractEntity<UaaApp> {
     }
 
     public App removeMenuAction(String menuCode, List<String> actionCodes) {
-        if (this.menuHelper == null) {
-            this.menuHelper = AppMenuHelper.of(this.appId);
+        if (this.appMenus == null) {
+            this.appMenus = AppMenus.of(this.appId);
         }
-        this.menuHelper.removeAction(menuCode, actionCodes);
+        this.appMenus.removeAction(menuCode, actionCodes);
         return this;
     }
 
@@ -196,14 +197,15 @@ public class App extends AbstractEntity<UaaApp> {
         if (this.appAdmins != null) {
             this.appAdmins.save();
         }
-        if (this.menuHelper != null) {
-            this.menuHelper.save();
+        if (this.appMenus != null) {
+            this.appMenus.save();
         }
     }
 
     /**
      * {@link com.loyayz.uaa.data.mapper.UaaAppMenuMetaMapper#deleteByApp}
      * {@link com.loyayz.uaa.data.mapper.UaaAppMenuActionMapper#deleteByApp}
+     * {@link com.loyayz.uaa.data.mapper.UaaMenuMapper#deleteByApp}
      */
     @Override
     public void delete() {
@@ -214,6 +216,7 @@ public class App extends AbstractEntity<UaaApp> {
 
         MybatisUtils.executeDelete(UaaAppMenuMeta.class, "deleteByApp", param);
         MybatisUtils.executeDelete(UaaAppMenuAction.class, "deleteByApp", param);
+        MybatisUtils.executeDelete(UaaMenu.class, "deleteByApp", param);
     }
 
     private App() {

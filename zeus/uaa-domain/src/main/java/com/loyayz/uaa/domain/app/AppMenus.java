@@ -3,6 +3,7 @@ package com.loyayz.uaa.domain.app;
 import com.loyayz.gaia.data.mybatis.extension.MybatisUtils;
 import com.loyayz.uaa.data.UaaAppMenuAction;
 import com.loyayz.uaa.data.UaaAppMenuMeta;
+import com.loyayz.uaa.data.UaaMenu;
 import com.loyayz.uaa.dto.SimpleMenu;
 import com.loyayz.uaa.dto.SimpleMenuAction;
 import com.loyayz.zeus.AbstractEntity;
@@ -13,7 +14,7 @@ import java.util.stream.Collectors;
 /**
  * @author loyayz (loyayz@foxmail.com)
  */
-class AppMenuHelper {
+class AppMenus {
     private final AppId appId;
 
     private final Map<String, AppMenuMeta> menuMetas = new HashMap<>(16);
@@ -22,8 +23,8 @@ class AppMenuHelper {
     private List<AppMenuAction> menuActions = new ArrayList<>();
     private final Map<String, List<String>> deletedMenuActions = new HashMap<>();
 
-    static AppMenuHelper of(AppId appId) {
-        return new AppMenuHelper(appId);
+    static AppMenus of(AppId appId) {
+        return new AppMenus(appId);
     }
 
     void addMeta(String parentCode, List<SimpleMenu> menus) {
@@ -72,6 +73,7 @@ class AppMenuHelper {
     /**
      * {@link com.loyayz.uaa.data.mapper.UaaAppMenuMetaMapper#deleteByCodes}
      * {@link com.loyayz.uaa.data.mapper.UaaAppMenuActionMapper#deleteByMenus}
+     * {@link com.loyayz.uaa.data.mapper.UaaMenuMapper#deleteByCodes}
      * {@link com.loyayz.uaa.data.mapper.UaaAppMenuActionMapper#deleteByMenuAndCodes}
      */
     private void delete() {
@@ -80,6 +82,7 @@ class AppMenuHelper {
             param.put("menuCodes", this.deletedMenuCodes);
             MybatisUtils.executeDelete(UaaAppMenuMeta.class, "deleteByCodes", param);
             MybatisUtils.executeDelete(UaaAppMenuAction.class, "deleteByMenus", param);
+            MybatisUtils.executeDelete(UaaMenu.class, "deleteByCodes", param);
         }
         this.deletedMenuActions.forEach((menuCode, actionCodes) -> {
             Map<String, Object> param = new HashMap<>(3);
@@ -97,7 +100,7 @@ class AppMenuHelper {
         return Optional.of(AppMenuMeta.of(this.appId, menu));
     }
 
-    private AppMenuHelper(AppId appId) {
+    private AppMenus(AppId appId) {
         this.appId = appId;
     }
 }

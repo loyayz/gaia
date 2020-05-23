@@ -107,10 +107,28 @@ CREATE TABLE `uaa_app_menu_action`
     `menu_code`    varchar(20)         NOT NULL COMMENT '菜单',
     `code`         varchar(20)         NOT NULL COMMENT '编码',
     `name`         varchar(50)         NOT NULL COMMENT '名称',
-    `gmt_create`   datetime     DEFAULT NULL,
-    `gmt_modified` datetime     DEFAULT NULL,
+    `gmt_create`   datetime DEFAULT NULL,
+    `gmt_modified` datetime DEFAULT NULL,
     PRIMARY KEY (`id`),
     KEY `idx_uama_menu` (`menu_code`, `app_id`),
     KEY `idx_uama_code` (`code`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='应用菜单功能';
+
+CREATE TABLE `uaa_menu`
+(
+    `id`           BIGINT(20) UNSIGNED NOT NULL,
+    `app_id`       BIGINT(20) UNSIGNED NOT NULL COMMENT '应用',
+    `parent_id`    BIGINT(20) UNSIGNED NOT NULL COMMENT '上级id',
+    `code`         VARCHAR(20)         NOT NULL COMMENT '编码',
+    `name`         VARCHAR(50)         NOT NULL COMMENT '名称',
+    `icon`         VARCHAR(50)         NOT NULL COMMENT '图标',
+    `sort`         INT(11)             NOT NULL COMMENT '序号',
+    `gmt_create`   DATETIME DEFAULT NULL,
+    `gmt_modified` DATETIME DEFAULT NULL,
+    PRIMARY KEY (`id`),
+    KEY `idx_um_code` (`code`),
+    KEY `idx_um_app` (`app_id`),
+    KEY `idx_um_pid` (`parent_id`)
+) ENGINE = INNODB
+  DEFAULT CHARSET = utf8mb4 COMMENT ='菜单';
