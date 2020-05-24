@@ -1,4 +1,4 @@
-package com.loyayz.uaa.dto;
+package com.loyayz.uaa.common.dto;
 
 import lombok.Data;
 
@@ -8,16 +8,20 @@ import java.io.Serializable;
  * @author loyayz (loyayz@foxmail.com)
  */
 @Data
-public class SimpleMenuAction implements Serializable {
+public class SimpleRole implements Serializable {
     private static final long serialVersionUID = -1L;
 
     /**
-     * 编码
+     * 角色编码
      */
     private String code;
     /**
-     * 名称
+     * 角色名
      */
     private String name;
+    /**
+     * 创建日期
+     */
+    private Long createTime;
 
 }

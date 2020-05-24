@@ -1,10 +1,9 @@
-package com.loyayz.uaa.domain.query;
+package com.loyayz.uaa.query;
 
-import com.loyayz.uaa.api.RoleProvider;
+import com.loyayz.uaa.common.dto.RoleQueryParam;
+import com.loyayz.uaa.common.dto.SimpleRole;
 import com.loyayz.uaa.data.converter.RoleConverter;
 import com.loyayz.uaa.domain.RoleRepository;
-import com.loyayz.uaa.dto.RoleQueryParam;
-import com.loyayz.uaa.dto.SimpleRole;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,27 +12,19 @@ import java.util.stream.Collectors;
 /**
  * @author loyayz (loyayz@foxmail.com)
  */
-public class RoleQuery implements RoleProvider {
+public final class RoleQuery {
 
-    private RoleQuery() {
-    }
-
-    public static RoleProvider getInstance() {
-        return new RoleQuery();
-    }
-
-    @Override
-    public SimpleRole getRole(String code) {
+    public static SimpleRole getRole(String code) {
         return Optional.ofNullable(RoleRepository.getByCode(code))
                 .map(RoleConverter::toSimple)
                 .orElse(null);
     }
 
-    @Override
-    public List<SimpleRole> listRole(RoleQueryParam queryParam) {
+    public static List<SimpleRole> listRole(RoleQueryParam queryParam) {
         return RoleRepository.listByParam(queryParam)
                 .stream()
                 .map(RoleConverter::toSimple)
                 .collect(Collectors.toList());
     }
+
 }

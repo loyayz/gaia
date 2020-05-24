@@ -1,9 +1,9 @@
 package com.loyayz.uaa.domain.app;
 
+import com.loyayz.uaa.common.dto.SimpleMenuAction;
 import com.loyayz.uaa.data.UaaAppMenuAction;
 import com.loyayz.uaa.data.converter.AppConverter;
 import com.loyayz.uaa.domain.AppRepository;
-import com.loyayz.uaa.dto.SimpleMenuAction;
 import com.loyayz.zeus.AbstractEntity;
 
 /**

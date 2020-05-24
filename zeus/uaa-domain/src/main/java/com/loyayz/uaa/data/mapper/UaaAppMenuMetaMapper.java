@@ -1,8 +1,8 @@
 package com.loyayz.uaa.data.mapper;
 
 import com.loyayz.gaia.data.mybatis.BaseMapper;
+import com.loyayz.uaa.common.dto.MenuQueryParam;
 import com.loyayz.uaa.data.UaaAppMenuMeta;
-import com.loyayz.uaa.dto.MenuQueryParam;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;

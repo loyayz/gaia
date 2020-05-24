@@ -1,11 +1,11 @@
 package com.loyayz.uaa.domain.app;
 
 import com.loyayz.gaia.data.mybatis.extension.MybatisUtils;
+import com.loyayz.uaa.common.dto.SimpleMenu;
+import com.loyayz.uaa.common.dto.SimpleMenuAction;
 import com.loyayz.uaa.data.UaaAppMenuAction;
 import com.loyayz.uaa.data.UaaAppMenuMeta;
 import com.loyayz.uaa.data.UaaMenu;
-import com.loyayz.uaa.dto.SimpleMenu;
-import com.loyayz.uaa.dto.SimpleMenuAction;
 import com.loyayz.zeus.AbstractEntity;
 
 import java.util.*;

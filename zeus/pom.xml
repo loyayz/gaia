@@ -12,7 +12,6 @@
     <modules>
         <module>zeus-parent</module>
         <module>zeus-core</module>
-        <module>uaa-api</module>
         <module>uaa-domain</module>
     </modules>
 

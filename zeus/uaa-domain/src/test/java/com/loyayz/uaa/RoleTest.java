@@ -3,7 +3,7 @@ package com.loyayz.uaa;
 import com.loyayz.uaa.data.UaaRole;
 import com.loyayz.uaa.data.UaaUserRole;
 import com.loyayz.uaa.domain.role.Role;
-import com.loyayz.uaa.dto.SimpleRole;
+import com.loyayz.uaa.common.dto.SimpleRole;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

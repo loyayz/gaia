@@ -1,38 +1,41 @@
-package com.loyayz.uaa.dto;
+package com.loyayz.uaa.common.dto;
 
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.Map;
 
 /**
  * @author loyayz (loyayz@foxmail.com)
  */
 @Data
-public class SimpleApp implements Serializable {
+public class SimpleUser implements Serializable {
     private static final long serialVersionUID = -1L;
 
-
+    /**
+     * 用户id
+     */
     private Long id;
     /**
-     * 名称
+     * 用户名
      */
     private String name;
     /**
-     * 远程组件
+     * 电话
      */
-    private Boolean remote;
+    private String mobile;
     /**
-     * 地址
+     * 邮箱
      */
-    private String url;
+    private String email;
     /**
-     * 备注
+     * 详情
      */
-    private String remark;
+    private Map<String, Object> infos;
     /**
-     * 序号
+     * 是否锁定
      */
-    private Integer sort;
+    private Boolean locked;
     /**
      * 创建日期
      */

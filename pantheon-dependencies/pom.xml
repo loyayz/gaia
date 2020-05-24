@@ -101,11 +101,6 @@
             </dependency>
             <dependency>
                 <groupId>com.loyayz</groupId>
-                <artifactId>uaa-api</artifactId>
-                <version>${zeus.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.loyayz</groupId>
                 <artifactId>uaa-domain</artifactId>
                 <version>${zeus.version}</version>
             </dependency>

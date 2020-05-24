@@ -1,11 +1,11 @@
 package com.loyayz.uaa.data.converter;
 
+import com.loyayz.uaa.common.dto.SimpleApp;
+import com.loyayz.uaa.common.dto.SimpleMenu;
+import com.loyayz.uaa.common.dto.SimpleMenuAction;
 import com.loyayz.uaa.data.UaaApp;
 import com.loyayz.uaa.data.UaaAppMenuAction;
 import com.loyayz.uaa.data.UaaAppMenuMeta;
-import com.loyayz.uaa.dto.SimpleApp;
-import com.loyayz.uaa.dto.SimpleMenu;
-import com.loyayz.uaa.dto.SimpleMenuAction;
 
 /**
  * @author loyayz (loyayz@foxmail.com)

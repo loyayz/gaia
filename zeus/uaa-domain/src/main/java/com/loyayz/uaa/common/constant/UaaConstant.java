@@ -1,4 +1,4 @@
-package com.loyayz.uaa.constant;
+package com.loyayz.uaa.common.constant;
 
 /**
  * @author loyayz (loyayz@foxmail.com)

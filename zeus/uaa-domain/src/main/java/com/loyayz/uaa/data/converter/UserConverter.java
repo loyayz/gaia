@@ -1,11 +1,10 @@
 package com.loyayz.uaa.data.converter;
 
-import com.loyayz.gaia.util.Functions;
 import com.loyayz.gaia.util.JsonUtils;
+import com.loyayz.uaa.common.dto.SimpleAccount;
+import com.loyayz.uaa.common.dto.SimpleUser;
 import com.loyayz.uaa.data.UaaUser;
 import com.loyayz.uaa.data.UaaUserAccount;
-import com.loyayz.uaa.dto.SimpleAccount;
-import com.loyayz.uaa.dto.SimpleUser;
 
 import java.util.Map;
 

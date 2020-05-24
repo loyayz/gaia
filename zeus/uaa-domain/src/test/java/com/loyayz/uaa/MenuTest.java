@@ -2,7 +2,7 @@ package com.loyayz.uaa;
 
 import com.loyayz.uaa.data.UaaMenu;
 import com.loyayz.uaa.domain.menu.Menu;
-import com.loyayz.uaa.dto.SimpleMenu;
+import com.loyayz.uaa.common.dto.SimpleMenu;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

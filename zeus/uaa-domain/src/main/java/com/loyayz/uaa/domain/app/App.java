@@ -1,13 +1,13 @@
 package com.loyayz.uaa.domain.app;
 
 import com.loyayz.gaia.data.mybatis.extension.MybatisUtils;
+import com.loyayz.uaa.common.dto.SimpleMenu;
+import com.loyayz.uaa.common.dto.SimpleMenuAction;
 import com.loyayz.uaa.data.UaaApp;
 import com.loyayz.uaa.data.UaaAppMenuAction;
 import com.loyayz.uaa.data.UaaAppMenuMeta;
 import com.loyayz.uaa.data.UaaMenu;
 import com.loyayz.uaa.domain.AppRepository;
-import com.loyayz.uaa.dto.SimpleMenu;
-import com.loyayz.uaa.dto.SimpleMenuAction;
 import com.loyayz.zeus.AbstractEntity;
 
 import java.util.Arrays;
@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.loyayz.uaa.constant.UaaConstant.ROOT_MENU_CODE;
+import static com.loyayz.uaa.common.constant.UaaConstant.ROOT_MENU_CODE;
 
 /**
  * @author loyayz (loyayz@foxmail.com)

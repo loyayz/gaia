@@ -1,13 +1,13 @@
 package com.loyayz.uaa.domain;
 
 import com.loyayz.gaia.data.mybatis.extension.MybatisUtils;
+import com.loyayz.uaa.common.dto.UserQueryParam;
 import com.loyayz.uaa.data.UaaRole;
 import com.loyayz.uaa.data.UaaUser;
 import com.loyayz.uaa.data.UaaUserAccount;
 import com.loyayz.uaa.data.UaaUserRole;
 import com.loyayz.uaa.data.mapper.UaaUserAccountMapper;
 import com.loyayz.uaa.data.mapper.UaaUserRoleMapper;
-import com.loyayz.uaa.dto.UserQueryParam;
 
 import java.util.HashMap;
 import java.util.List;
