@@ -132,3 +132,14 @@ CREATE TABLE `uaa_menu`
     KEY `idx_um_pid` (`parent_id`)
 ) ENGINE = INNODB
   DEFAULT CHARSET = utf8mb4 COMMENT ='菜单';
+
+CREATE TABLE `uaa_role_app`
+(
+    `id`           BIGINT UNSIGNED NOT NULL,
+    `role_code`    VARCHAR(20)     NOT NULL COMMENT '角色编码',
+    `app_id`       BIGINT UNSIGNED NOT NULL COMMENT '应用',
+    `gmt_create`   DATETIME,
+    `gmt_modified` DATETIME,
+    PRIMARY KEY (`id`)
+) ENGINE = INNODB
+  CHARSET = utf8mb4 COMMENT ='角色应用权限';

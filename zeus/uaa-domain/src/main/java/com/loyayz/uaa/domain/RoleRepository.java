@@ -3,8 +3,10 @@ package com.loyayz.uaa.domain;
 import com.loyayz.gaia.data.mybatis.extension.MybatisUtils;
 import com.loyayz.uaa.common.dto.RoleQueryParam;
 import com.loyayz.uaa.data.UaaRole;
+import com.loyayz.uaa.data.UaaRoleApp;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author loyayz (loyayz@foxmail.com)
@@ -18,6 +20,14 @@ public final class RoleRepository {
                 .stream()
                 .findFirst()
                 .orElse(null);
+    }
+
+    public static List<Long> listAppIdByRole(String roleCode) {
+        return UaaRoleApp.builder().roleCode(roleCode).build()
+                .listByCondition()
+                .stream()
+                .map(UaaRoleApp::getAppId)
+                .collect(Collectors.toList());
     }
 
     /**

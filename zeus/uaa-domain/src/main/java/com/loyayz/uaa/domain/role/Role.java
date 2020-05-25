@@ -2,6 +2,7 @@ package com.loyayz.uaa.domain.role;
 
 import com.loyayz.gaia.data.mybatis.extension.MybatisUtils;
 import com.loyayz.uaa.data.UaaRole;
+import com.loyayz.uaa.data.UaaRoleApp;
 import com.loyayz.uaa.data.UaaUserRole;
 import com.loyayz.uaa.domain.RoleRepository;
 import com.loyayz.zeus.AbstractEntity;
@@ -18,6 +19,7 @@ public class Role extends AbstractEntity<UaaRole> {
     private final RoleId roleCode;
     private String name;
     private RoleUsers roleUsers;
+    private RolePermissions rolePermissions;
 
     public static Role of(String roleCode) {
         return new Role(roleCode);
@@ -45,10 +47,10 @@ public class Role extends AbstractEntity<UaaRole> {
     }
 
     public Role addUser(List<Long> userIds) {
-        if (roleUsers == null) {
-            roleUsers = RoleUsers.of(this.roleCode);
+        if (this.roleUsers == null) {
+            this.roleUsers = RoleUsers.of(this.roleCode);
         }
-        roleUsers.addUsers(userIds);
+        this.roleUsers.addUsers(userIds);
         return this;
     }
 
@@ -63,10 +65,46 @@ public class Role extends AbstractEntity<UaaRole> {
     }
 
     public Role removeUser(List<Long> userIds) {
-        if (roleUsers == null) {
-            roleUsers = RoleUsers.of(this.roleCode);
+        if (this.roleUsers == null) {
+            this.roleUsers = RoleUsers.of(this.roleCode);
         }
-        roleUsers.removeUsers(userIds);
+        this.roleUsers.removeUsers(userIds);
+        return this;
+    }
+
+    /**
+     * 添加应用权限
+     *
+     * @param appIds 应用id
+     */
+    public Role addApp(Long... appIds) {
+        this.addApp(Arrays.asList(appIds));
+        return this;
+    }
+
+    public Role addApp(List<Long> appIds) {
+        if (this.rolePermissions == null) {
+            this.rolePermissions = RolePermissions.of(this.roleCode);
+        }
+        this.rolePermissions.addApps(appIds);
+        return this;
+    }
+
+    /**
+     * 删除应用权限
+     *
+     * @param appIds 应用id
+     */
+    public Role removeApp(Long... appIds) {
+        this.removeApp(Arrays.asList(appIds));
+        return this;
+    }
+
+    public Role removeApp(List<Long> appIds) {
+        if (this.rolePermissions == null) {
+            this.rolePermissions = RolePermissions.of(this.roleCode);
+        }
+        this.rolePermissions.removeApps(appIds);
         return this;
     }
 
@@ -85,14 +123,18 @@ public class Role extends AbstractEntity<UaaRole> {
     @Override
     public void save() {
         super.save();
-        if (roleUsers != null) {
-            roleUsers.save();
+        if (this.roleUsers != null) {
+            this.roleUsers.save();
+        }
+        if (this.rolePermissions != null) {
+            this.rolePermissions.save();
         }
     }
 
     /**
      * {@link com.loyayz.uaa.data.mapper.UaaRoleMapper#deleteByCode}
      * {@link com.loyayz.uaa.data.mapper.UaaUserRoleMapper#deleteByRole}
+     * {@link com.loyayz.uaa.data.mapper.UaaRoleAppMapper#deleteByRole}
      */
     @Override
     public void delete() {
@@ -103,6 +145,8 @@ public class Role extends AbstractEntity<UaaRole> {
         MybatisUtils.executeDelete(UaaRole.class, "deleteByCode", param);
         // delete userRole
         MybatisUtils.executeDelete(UaaUserRole.class, "deleteByRole", param);
+        // delete roleApp
+        MybatisUtils.executeDelete(UaaRoleApp.class, "deleteByRole", param);
     }
 
     private Role(String roleCode) {
