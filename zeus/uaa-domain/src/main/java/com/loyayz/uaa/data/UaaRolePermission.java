@@ -13,16 +13,19 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UaaRoleMenu extends AbstractTable<UaaRoleMenu> {
+public class UaaRolePermission extends AbstractTable<UaaRolePermission> {
 
     /**
      * 角色编码
      */
     private String roleCode;
     /**
-     * 菜单
+     * 权限类型
      */
-    private Long menuId;
-
+    private String type;
+    /**
+     * 关联对象
+     */
+    private Long refId;
 
 }

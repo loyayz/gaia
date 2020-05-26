@@ -3,9 +3,7 @@ package com.loyayz.uaa.domain;
 import com.loyayz.gaia.data.mybatis.extension.MybatisUtils;
 import com.loyayz.uaa.common.dto.RoleQueryParam;
 import com.loyayz.uaa.data.UaaRole;
-import com.loyayz.uaa.data.UaaRoleAction;
-import com.loyayz.uaa.data.UaaRoleApp;
-import com.loyayz.uaa.data.UaaRoleMenu;
+import com.loyayz.uaa.data.UaaRolePermission;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,27 +22,11 @@ public final class RoleRepository {
                 .orElse(null);
     }
 
-    public static List<Long> listAppIdByRole(String roleCode) {
-        return UaaRoleApp.builder().roleCode(roleCode).build()
+    public static List<Long> listRefIdByRole(String roleCode, String type) {
+        return UaaRolePermission.builder().roleCode(roleCode).type(type).build()
                 .listByCondition()
                 .stream()
-                .map(UaaRoleApp::getAppId)
-                .collect(Collectors.toList());
-    }
-
-    public static List<Long> listMenuIdByRole(String roleCode) {
-        return UaaRoleMenu.builder().roleCode(roleCode).build()
-                .listByCondition()
-                .stream()
-                .map(UaaRoleMenu::getMenuId)
-                .collect(Collectors.toList());
-    }
-
-    public static List<Long> listActionIdByRole(String roleCode) {
-        return UaaRoleAction.builder().roleCode(roleCode).build()
-                .listByCondition()
-                .stream()
-                .map(UaaRoleAction::getActionId)
+                .map(UaaRolePermission::getRefId)
                 .collect(Collectors.toList());
     }
 

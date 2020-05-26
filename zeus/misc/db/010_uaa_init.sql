@@ -54,6 +54,19 @@ CREATE TABLE `uaa_role`
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='角色';
 
+CREATE TABLE `uaa_role_permission`
+(
+    `id`           bigint(20) unsigned NOT NULL,
+    `role_code`    varchar(20)         NOT NULL COMMENT '角色编码',
+    `type`         varchar(20)         NOT NULL COMMENT '权限类型',
+    `ref_id`       bigint(20) unsigned NOT NULL COMMENT '关联对象',
+    `gmt_create`   datetime DEFAULT NULL,
+    `gmt_modified` datetime DEFAULT NULL,
+    PRIMARY KEY (`id`),
+    KEY `idx_urp_role` (`role_code`, `type`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4 COMMENT ='角色权限';
+
 CREATE TABLE `uaa_app`
 (
     `id`           bigint(20) unsigned NOT NULL,
@@ -133,35 +146,3 @@ CREATE TABLE `uaa_menu`
 ) ENGINE = INNODB
   DEFAULT CHARSET = utf8mb4 COMMENT ='菜单';
 
-CREATE TABLE `uaa_role_app`
-(
-    `id`           BIGINT UNSIGNED NOT NULL,
-    `role_code`    VARCHAR(20)     NOT NULL COMMENT '角色编码',
-    `app_id`       BIGINT UNSIGNED NOT NULL COMMENT '应用',
-    `gmt_create`   DATETIME,
-    `gmt_modified` DATETIME,
-    PRIMARY KEY (`id`)
-) ENGINE = INNODB
-  CHARSET = utf8mb4 COMMENT ='角色应用权限';
-
-CREATE TABLE `uaa_role_menu`
-(
-    `id`           BIGINT(20) UNSIGNED NOT NULL,
-    `role_code`    VARCHAR(20)         NOT NULL COMMENT '角色编码',
-    `menu_id`      BIGINT(20) UNSIGNED NOT NULL COMMENT '应用',
-    `gmt_create`   DATETIME DEFAULT NULL,
-    `gmt_modified` DATETIME DEFAULT NULL,
-    PRIMARY KEY (`id`)
-) ENGINE = INNODB
-  DEFAULT CHARSET = utf8mb4 COMMENT ='角色菜单权限';
-
-CREATE TABLE `uaa_role_action`
-(
-    `id`           BIGINT(20) UNSIGNED NOT NULL,
-    `role_code`    VARCHAR(20)         NOT NULL COMMENT '角色编码',
-    `action_id`    BIGINT(20) UNSIGNED NOT NULL COMMENT '功能',
-    `gmt_create`   DATETIME DEFAULT NULL,
-    `gmt_modified` DATETIME DEFAULT NULL,
-    PRIMARY KEY (`id`)
-) ENGINE = INNODB
-  DEFAULT CHARSET = utf8mb4 COMMENT ='角色功能权限';

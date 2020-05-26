@@ -1,7 +1,10 @@
 package com.loyayz.uaa.domain.role;
 
 import com.loyayz.gaia.data.mybatis.extension.MybatisUtils;
-import com.loyayz.uaa.data.*;
+import com.loyayz.uaa.common.constant.RolePermissionType;
+import com.loyayz.uaa.data.UaaRole;
+import com.loyayz.uaa.data.UaaRolePermission;
+import com.loyayz.uaa.data.UaaUserRole;
 import com.loyayz.uaa.domain.RoleRepository;
 import com.loyayz.zeus.AbstractEntity;
 
@@ -15,7 +18,6 @@ import java.util.Map;
  */
 public class Role extends AbstractEntity<UaaRole> {
     private final RoleId roleCode;
-    private String name;
     private RoleUsers roleUsers;
     private RolePermissions rolePermissions;
 
@@ -29,7 +31,6 @@ public class Role extends AbstractEntity<UaaRole> {
 
     public Role name(String name) {
         super.entity().setName(name);
-        this.name = name;
         super.markUpdated();
         return this;
     }
@@ -75,17 +76,12 @@ public class Role extends AbstractEntity<UaaRole> {
      *
      * @param appIds 应用id
      */
-    public Role addApp(Long... appIds) {
-        this.addApp(Arrays.asList(appIds));
-        return this;
+    public Role addAppPermission(Long... appIds) {
+        return this.addAppPermission(Arrays.asList(appIds));
     }
 
-    public Role addApp(List<Long> appIds) {
-        if (this.rolePermissions == null) {
-            this.rolePermissions = RolePermissions.of(this.roleCode);
-        }
-        this.rolePermissions.addApps(appIds);
-        return this;
+    public Role addAppPermission(List<Long> appIds) {
+        return this.addPermission(RolePermissionType.APP, appIds);
     }
 
     /**
@@ -93,17 +89,12 @@ public class Role extends AbstractEntity<UaaRole> {
      *
      * @param appIds 应用id
      */
-    public Role removeApp(Long... appIds) {
-        this.removeApp(Arrays.asList(appIds));
-        return this;
+    public Role removeAppPermission(Long... appIds) {
+        return this.removeAppPermission(Arrays.asList(appIds));
     }
 
-    public Role removeApp(List<Long> appIds) {
-        if (this.rolePermissions == null) {
-            this.rolePermissions = RolePermissions.of(this.roleCode);
-        }
-        this.rolePermissions.removeApps(appIds);
-        return this;
+    public Role removeAppPermission(List<Long> appIds) {
+        return this.removePermission(RolePermissionType.APP, appIds);
     }
 
     /**
@@ -111,17 +102,12 @@ public class Role extends AbstractEntity<UaaRole> {
      *
      * @param menuIds 菜单id
      */
-    public Role addMenu(Long... menuIds) {
-        this.addMenu(Arrays.asList(menuIds));
-        return this;
+    public Role addMenuPermission(Long... menuIds) {
+        return this.addMenuPermission(Arrays.asList(menuIds));
     }
 
-    public Role addMenu(List<Long> menuIds) {
-        if (this.rolePermissions == null) {
-            this.rolePermissions = RolePermissions.of(this.roleCode);
-        }
-        this.rolePermissions.addMenus(menuIds);
-        return this;
+    public Role addMenuPermission(List<Long> menuIds) {
+        return this.addPermission(RolePermissionType.MENU, menuIds);
     }
 
     /**
@@ -129,17 +115,12 @@ public class Role extends AbstractEntity<UaaRole> {
      *
      * @param menuIds 菜单id
      */
-    public Role removeMenu(Long... menuIds) {
-        this.removeMenu(Arrays.asList(menuIds));
-        return this;
+    public Role removeMenuPermission(Long... menuIds) {
+        return this.removeMenuPermission(Arrays.asList(menuIds));
     }
 
-    public Role removeMenu(List<Long> menuIds) {
-        if (this.rolePermissions == null) {
-            this.rolePermissions = RolePermissions.of(this.roleCode);
-        }
-        this.rolePermissions.removeMenus(menuIds);
-        return this;
+    public Role removeMenuPermission(List<Long> menuIds) {
+        return this.removePermission(RolePermissionType.MENU, menuIds);
     }
 
     /**
@@ -147,17 +128,12 @@ public class Role extends AbstractEntity<UaaRole> {
      *
      * @param actionIds 应用id
      */
-    public Role addAction(Long... actionIds) {
-        this.addAction(Arrays.asList(actionIds));
-        return this;
+    public Role addActionPermission(Long... actionIds) {
+        return this.addActionPermission(Arrays.asList(actionIds));
     }
 
-    public Role addAction(List<Long> actionIds) {
-        if (this.rolePermissions == null) {
-            this.rolePermissions = RolePermissions.of(this.roleCode);
-        }
-        this.rolePermissions.addActions(actionIds);
-        return this;
+    public Role addActionPermission(List<Long> actionIds) {
+        return this.addPermission(RolePermissionType.ACTION, actionIds);
     }
 
     /**
@@ -165,16 +141,27 @@ public class Role extends AbstractEntity<UaaRole> {
      *
      * @param actionIds 应用id
      */
-    public Role removeAction(Long... actionIds) {
-        this.removeAction(Arrays.asList(actionIds));
-        return this;
+    public Role removeActionPermission(Long... actionIds) {
+        return this.removeActionPermission(Arrays.asList(actionIds));
     }
 
-    public Role removeAction(List<Long> actionIds) {
+    public Role removeActionPermission(List<Long> actionIds) {
+        return this.removePermission(RolePermissionType.ACTION, actionIds);
+    }
+
+    private Role addPermission(RolePermissionType type, List<Long> refIds) {
         if (this.rolePermissions == null) {
             this.rolePermissions = RolePermissions.of(this.roleCode);
         }
-        this.rolePermissions.removeActions(actionIds);
+        this.rolePermissions.addPermission(type, refIds);
+        return this;
+    }
+
+    private Role removePermission(RolePermissionType type, List<Long> refIds) {
+        if (this.rolePermissions == null) {
+            this.rolePermissions = RolePermissions.of(this.roleCode);
+        }
+        this.rolePermissions.removePermission(type, refIds);
         return this;
     }
 
@@ -184,9 +171,7 @@ public class Role extends AbstractEntity<UaaRole> {
         if (entity == null) {
             entity = new UaaRole();
             entity.setCode(this.roleCode.get());
-            entity.setName(this.name);
         }
-        this.name = entity.getName();
         return entity;
     }
 
@@ -204,9 +189,7 @@ public class Role extends AbstractEntity<UaaRole> {
     /**
      * {@link com.loyayz.uaa.data.mapper.UaaRoleMapper#deleteByCode}
      * {@link com.loyayz.uaa.data.mapper.UaaUserRoleMapper#deleteByRole}
-     * {@link com.loyayz.uaa.data.mapper.UaaRoleAppMapper#deleteByRole}
-     * {@link com.loyayz.uaa.data.mapper.UaaRoleMenuMapper#deleteByRole}
-     * {@link com.loyayz.uaa.data.mapper.UaaRoleActionMapper#deleteByRole}
+     * {@link com.loyayz.uaa.data.mapper.UaaRolePermissionMapper#deleteByRole}
      */
     @Override
     public void delete() {
@@ -217,10 +200,8 @@ public class Role extends AbstractEntity<UaaRole> {
         MybatisUtils.executeDelete(UaaRole.class, "deleteByCode", param);
         // delete userRole
         MybatisUtils.executeDelete(UaaUserRole.class, "deleteByRole", param);
-        // delete roleApp
-        MybatisUtils.executeDelete(UaaRoleApp.class, "deleteByRole", param);
-        MybatisUtils.executeDelete(UaaRoleMenu.class, "deleteByRole", param);
-        MybatisUtils.executeDelete(UaaRoleAction.class, "deleteByRole", param);
+        // delete rolePermission
+        MybatisUtils.executeDelete(UaaRolePermission.class, "deleteByRole", param);
     }
 
     private Role(String roleCode) {

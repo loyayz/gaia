@@ -1,9 +1,11 @@
 package com.loyayz.uaa;
 
+import com.loyayz.uaa.common.constant.RolePermissionType;
+import com.loyayz.uaa.common.dto.SimpleRole;
 import com.loyayz.uaa.data.UaaRole;
+import com.loyayz.uaa.data.UaaRolePermission;
 import com.loyayz.uaa.data.UaaUserRole;
 import com.loyayz.uaa.domain.role.Role;
-import com.loyayz.uaa.common.dto.SimpleRole;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -84,6 +86,44 @@ public class RoleTest {
         Assert.assertEquals(userIds.size(), queryObject.listByCondition().size());
 
         Role.of(role.id()).removeUser(userIds.toArray(new Long[]{})).save();
+        Assert.assertTrue(queryObject.listByCondition().isEmpty());
+    }
+
+    @Test
+    public void testPermission() {
+        Assert.assertTrue(new UaaRolePermission().listByCondition().isEmpty());
+
+        Role role = Role.of(initRole.get().getCode());
+        List<Long> appIds = new ArrayList<>();
+        List<Long> menuIds = new ArrayList<>();
+        List<Long> actionIds = new ArrayList<>();
+        for (int j = 0; j < 5; j++) {
+            Long appId = (long) new Random().nextInt(1000000);
+            Long menuId = (long) new Random().nextInt(1000000);
+            Long actionId = (long) new Random().nextInt(1000000);
+            role.addAppPermission(appId);
+            role.addMenuPermission(menuId);
+            role.addActionPermission(actionId);
+            appIds.add(appId);
+            menuIds.add(menuId);
+            actionIds.add(actionId);
+        }
+        role.save();
+
+        UaaRolePermission queryObject = UaaRolePermission.builder().roleCode(initRole.get().getCode()).build();
+        Assert.assertEquals(appIds.size() + menuIds.size() + actionIds.size(),
+                queryObject.listByCondition().size());
+
+        Role.of(role.id()).removeAppPermission(appIds.toArray(new Long[]{})).save();
+        queryObject.setType(RolePermissionType.APP.getVal());
+        Assert.assertTrue(queryObject.listByCondition().isEmpty());
+
+        Role.of(role.id()).removeMenuPermission(menuIds.toArray(new Long[]{})).save();
+        queryObject.setType(RolePermissionType.MENU.getVal());
+        Assert.assertTrue(queryObject.listByCondition().isEmpty());
+
+        Role.of(role.id()).removeActionPermission(actionIds.toArray(new Long[]{})).save();
+        queryObject.setType(RolePermissionType.ACTION.getVal());
         Assert.assertTrue(queryObject.listByCondition().isEmpty());
     }
 

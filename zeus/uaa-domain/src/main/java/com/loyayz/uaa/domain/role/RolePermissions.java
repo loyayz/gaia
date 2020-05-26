@@ -1,70 +1,38 @@
 package com.loyayz.uaa.domain.role;
 
 import com.loyayz.gaia.data.mybatis.extension.MybatisUtils;
-import com.loyayz.uaa.data.UaaRoleAction;
-import com.loyayz.uaa.data.UaaRoleApp;
-import com.loyayz.uaa.data.UaaRoleMenu;
+import com.loyayz.uaa.common.constant.RolePermissionType;
+import com.loyayz.uaa.data.UaaRolePermission;
 import com.loyayz.uaa.domain.RoleRepository;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * @author loyayz (loyayz@foxmail.com)
  */
 class RolePermissions {
     private final RoleId roleCode;
-    private final Set<Long> newApps = new HashSet<>();
-    private final Set<Long> deletedApps = new HashSet<>();
-    private final Set<Long> newMenus = new HashSet<>();
-    private final Set<Long> deletedMenus = new HashSet<>();
-    private final Set<Long> newActions = new HashSet<>();
-    private final Set<Long> deletedActions = new HashSet<>();
+    private final Map<RolePermissionType, Set<Long>> newPermissions = new HashMap<>();
+    private final Map<RolePermissionType, Set<Long>> deletedPermissions = new HashMap<>();
 
     static RolePermissions of(RoleId roleCode) {
         return new RolePermissions(roleCode);
     }
 
-    void addApps(List<Long> appIds) {
-        List<Long> existApps = this.roleCode.isEmpty() ? Collections.emptyList() : RoleRepository.listAppIdByRole(this.roleCode.get());
-        for (Long appId : appIds) {
-            if (!existApps.contains(appId)) {
-                this.newApps.add(appId);
-            }
-        }
+    public void addPermission(RolePermissionType type, List<Long> refIds) {
+        Set<Long> newRefIds = this.newPermissions.getOrDefault(type, new HashSet<>());
+        newRefIds.addAll(refIds);
+        this.newPermissions.put(type, newRefIds);
     }
 
-    void removeApps(List<Long> appIds) {
-        this.newApps.removeAll(appIds);
-        this.deletedApps.addAll(appIds);
-    }
+    public void removePermission(RolePermissionType type, List<Long> refIds) {
+        Set<Long> newRefIds = this.newPermissions.getOrDefault(type, new HashSet<>());
+        newRefIds.removeAll(refIds);
+        this.newPermissions.put(type, newRefIds);
 
-    void addMenus(List<Long> menuIds) {
-        List<Long> existMenus = this.roleCode.isEmpty() ? Collections.emptyList() : RoleRepository.listMenuIdByRole(this.roleCode.get());
-        for (Long menuId : menuIds) {
-            if (!existMenus.contains(menuId)) {
-                this.newMenus.add(menuId);
-            }
-        }
-    }
-
-    void removeMenus(List<Long> menuIds) {
-        this.newMenus.removeAll(menuIds);
-        this.deletedMenus.addAll(menuIds);
-    }
-
-    void addActions(List<Long> actionIds) {
-        List<Long> existActions = this.roleCode.isEmpty() ? Collections.emptyList() : RoleRepository.listActionIdByRole(this.roleCode.get());
-        for (Long actionId : actionIds) {
-            if (!existActions.contains(actionId)) {
-                this.newActions.add(actionId);
-            }
-        }
-    }
-
-    void removeActions(List<Long> actionIds) {
-        this.newActions.removeAll(actionIds);
-        this.deletedActions.addAll(actionIds);
+        Set<Long> deletedRefIds = this.deletedPermissions.getOrDefault(type, new HashSet<>());
+        deletedRefIds.addAll(refIds);
+        this.deletedPermissions.put(type, deletedRefIds);
     }
 
     void save() {
@@ -73,48 +41,32 @@ class RolePermissions {
     }
 
     private void insert() {
-        List<UaaRoleApp> roleApps = this.newApps.stream()
-                .map(appId -> new UaaRoleApp(this.roleCode.get(), appId))
-                .collect(Collectors.toList());
-        List<UaaRoleMenu> roleMenus = this.newMenus.stream()
-                .map(menuId -> new UaaRoleMenu(this.roleCode.get(), menuId))
-                .collect(Collectors.toList());
-        List<UaaRoleAction> roleActions = this.newActions.stream()
-                .map(actionId -> new UaaRoleAction(this.roleCode.get(), actionId))
-                .collect(Collectors.toList());
-
-        if (!roleApps.isEmpty()) {
-            new UaaRoleApp().insert(roleApps);
-        }
-        if (!roleMenus.isEmpty()) {
-            new UaaRoleMenu().insert(roleMenus);
-        }
-        if (!roleActions.isEmpty()) {
-            new UaaRoleAction().insert(roleActions);
+        List<UaaRolePermission> permissions = new ArrayList<>();
+        String role = this.roleCode.get();
+        this.newPermissions.forEach((type, refIds) -> {
+            List<Long> existRefs = this.roleCode.isEmpty() ? Collections.emptyList() : RoleRepository.listRefIdByRole(role, type.getVal());
+            refIds.forEach(refId -> {
+                if (!existRefs.contains(refId)) {
+                    permissions.add(new UaaRolePermission(role, type.getVal(), refId));
+                }
+            });
+        });
+        if (!permissions.isEmpty()) {
+            new UaaRolePermission().insert(permissions);
         }
     }
 
     /**
-     * {@link com.loyayz.uaa.data.mapper.UaaRoleAppMapper#deleteByRoleApps}
-     * {@link com.loyayz.uaa.data.mapper.UaaRoleMenuMapper#deleteByRoleMenus}
-     * {@link com.loyayz.uaa.data.mapper.UaaRoleActionMapper#deleteByRoleActions}
+     * {@link com.loyayz.uaa.data.mapper.UaaRolePermissionMapper#deleteByRoleTypeRefs}
      */
     private void delete() {
-        Map<String, Object> param = new HashMap<>(3);
-
-        if (!this.deletedApps.isEmpty()) {
+        this.deletedPermissions.forEach((type, refIds) -> {
+            Map<String, Object> param = new HashMap<>(3);
             param.put("roleCode", this.roleCode.get());
-            param.put("appIds", this.deletedApps);
-            MybatisUtils.executeDelete(UaaRoleApp.class, "deleteByRoleApps", param);
-        }
-        if (!this.deletedMenus.isEmpty()) {
-            param.put("menuIds", this.deletedMenus);
-            MybatisUtils.executeDelete(UaaRoleMenu.class, "deleteByRoleMenus", param);
-        }
-        if (!this.deletedActions.isEmpty()) {
-            param.put("actionIds", this.deletedActions);
-            MybatisUtils.executeDelete(UaaRoleAction.class, "deleteByRoleActions", param);
-        }
+            param.put("type", type.getVal());
+            param.put("refIds", new ArrayList<>(refIds));
+            MybatisUtils.executeDelete(UaaRolePermission.class, "deleteByRoleTypeRefs", param);
+        });
     }
 
     private RolePermissions(RoleId roleCode) {
