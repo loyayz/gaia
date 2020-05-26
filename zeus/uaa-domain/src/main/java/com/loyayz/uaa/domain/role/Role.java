@@ -1,9 +1,7 @@
 package com.loyayz.uaa.domain.role;
 
 import com.loyayz.gaia.data.mybatis.extension.MybatisUtils;
-import com.loyayz.uaa.data.UaaRole;
-import com.loyayz.uaa.data.UaaRoleApp;
-import com.loyayz.uaa.data.UaaUserRole;
+import com.loyayz.uaa.data.*;
 import com.loyayz.uaa.domain.RoleRepository;
 import com.loyayz.zeus.AbstractEntity;
 
@@ -108,6 +106,78 @@ public class Role extends AbstractEntity<UaaRole> {
         return this;
     }
 
+    /**
+     * 添加菜单权限
+     *
+     * @param menuIds 菜单id
+     */
+    public Role addMenu(Long... menuIds) {
+        this.addMenu(Arrays.asList(menuIds));
+        return this;
+    }
+
+    public Role addMenu(List<Long> menuIds) {
+        if (this.rolePermissions == null) {
+            this.rolePermissions = RolePermissions.of(this.roleCode);
+        }
+        this.rolePermissions.addMenus(menuIds);
+        return this;
+    }
+
+    /**
+     * 删除菜单权限
+     *
+     * @param menuIds 菜单id
+     */
+    public Role removeMenu(Long... menuIds) {
+        this.removeMenu(Arrays.asList(menuIds));
+        return this;
+    }
+
+    public Role removeMenu(List<Long> menuIds) {
+        if (this.rolePermissions == null) {
+            this.rolePermissions = RolePermissions.of(this.roleCode);
+        }
+        this.rolePermissions.removeMenus(menuIds);
+        return this;
+    }
+
+    /**
+     * 添加功能权限
+     *
+     * @param actionIds 应用id
+     */
+    public Role addAction(Long... actionIds) {
+        this.addAction(Arrays.asList(actionIds));
+        return this;
+    }
+
+    public Role addAction(List<Long> actionIds) {
+        if (this.rolePermissions == null) {
+            this.rolePermissions = RolePermissions.of(this.roleCode);
+        }
+        this.rolePermissions.addActions(actionIds);
+        return this;
+    }
+
+    /**
+     * 删除功能权限
+     *
+     * @param actionIds 应用id
+     */
+    public Role removeAction(Long... actionIds) {
+        this.removeAction(Arrays.asList(actionIds));
+        return this;
+    }
+
+    public Role removeAction(List<Long> actionIds) {
+        if (this.rolePermissions == null) {
+            this.rolePermissions = RolePermissions.of(this.roleCode);
+        }
+        this.rolePermissions.removeActions(actionIds);
+        return this;
+    }
+
     @Override
     protected UaaRole buildEntity() {
         UaaRole entity = RoleRepository.getByCode(this.roleCode.get());
@@ -135,6 +205,8 @@ public class Role extends AbstractEntity<UaaRole> {
      * {@link com.loyayz.uaa.data.mapper.UaaRoleMapper#deleteByCode}
      * {@link com.loyayz.uaa.data.mapper.UaaUserRoleMapper#deleteByRole}
      * {@link com.loyayz.uaa.data.mapper.UaaRoleAppMapper#deleteByRole}
+     * {@link com.loyayz.uaa.data.mapper.UaaRoleMenuMapper#deleteByRole}
+     * {@link com.loyayz.uaa.data.mapper.UaaRoleActionMapper#deleteByRole}
      */
     @Override
     public void delete() {
@@ -147,6 +219,8 @@ public class Role extends AbstractEntity<UaaRole> {
         MybatisUtils.executeDelete(UaaUserRole.class, "deleteByRole", param);
         // delete roleApp
         MybatisUtils.executeDelete(UaaRoleApp.class, "deleteByRole", param);
+        MybatisUtils.executeDelete(UaaRoleMenu.class, "deleteByRole", param);
+        MybatisUtils.executeDelete(UaaRoleAction.class, "deleteByRole", param);
     }
 
     private Role(String roleCode) {

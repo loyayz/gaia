@@ -143,3 +143,25 @@ CREATE TABLE `uaa_role_app`
     PRIMARY KEY (`id`)
 ) ENGINE = INNODB
   CHARSET = utf8mb4 COMMENT ='角色应用权限';
+
+CREATE TABLE `uaa_role_menu`
+(
+    `id`           BIGINT(20) UNSIGNED NOT NULL,
+    `role_code`    VARCHAR(20)         NOT NULL COMMENT '角色编码',
+    `menu_id`      BIGINT(20) UNSIGNED NOT NULL COMMENT '应用',
+    `gmt_create`   DATETIME DEFAULT NULL,
+    `gmt_modified` DATETIME DEFAULT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE = INNODB
+  DEFAULT CHARSET = utf8mb4 COMMENT ='角色菜单权限';
+
+CREATE TABLE `uaa_role_action`
+(
+    `id`           BIGINT(20) UNSIGNED NOT NULL,
+    `role_code`    VARCHAR(20)         NOT NULL COMMENT '角色编码',
+    `action_id`    BIGINT(20) UNSIGNED NOT NULL COMMENT '功能',
+    `gmt_create`   DATETIME DEFAULT NULL,
+    `gmt_modified` DATETIME DEFAULT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE = INNODB
+  DEFAULT CHARSET = utf8mb4 COMMENT ='角色功能权限';
