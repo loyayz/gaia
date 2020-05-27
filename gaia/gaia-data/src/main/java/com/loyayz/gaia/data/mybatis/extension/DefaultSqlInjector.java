@@ -3,10 +3,7 @@ package com.loyayz.gaia.data.mybatis.extension;
 import com.baomidou.mybatisplus.core.enums.SqlMethod;
 import com.baomidou.mybatisplus.core.injector.AbstractMethod;
 import com.baomidou.mybatisplus.core.injector.AbstractSqlInjector;
-import com.baomidou.mybatisplus.core.injector.methods.DeleteBatchByIds;
-import com.baomidou.mybatisplus.core.injector.methods.DeleteById;
-import com.baomidou.mybatisplus.core.injector.methods.Insert;
-import com.baomidou.mybatisplus.core.injector.methods.UpdateById;
+import com.baomidou.mybatisplus.core.injector.methods.*;
 import com.baomidou.mybatisplus.extension.injector.methods.InsertBatchSomeColumn;
 
 import java.util.List;
@@ -53,7 +50,12 @@ public class DefaultSqlInjector extends AbstractSqlInjector {
                         return METHOD_UPDATE_BY_ID;
                     }
                 },
-                new FindById(),
+                new SelectById(){
+                    @Override
+                    public String getMethod(SqlMethod sqlMethod) {
+                        return METHOD_FIND_BY_ID;
+                    }
+                },
                 new ListByIds(),
                 new ListByCondition(),
                 new CountByCondition()
