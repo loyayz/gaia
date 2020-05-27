@@ -17,7 +17,6 @@ import org.springframework.boot.autoconfigure.security.reactive.ReactiveSecurity
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ReactiveAuthenticationManagerAdapter;
 import org.springframework.security.authentication.ReactiveAuthenticationManagerResolver;
@@ -50,7 +49,7 @@ public class GaiaAuthWebFluxAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(ReactiveAuthenticationManagerResolver.class)
-    public ReactiveAuthenticationManagerResolver<ServerHttpRequest> reactiveAuthenticationManager(AuthIdentityService identityService) {
+    public ReactiveAuthenticationManagerResolver<ServerWebExchange> reactiveAuthenticationManager(AuthIdentityService identityService) {
         AuthenticationManager manager = new DefaultAuthenticationManager(identityService);
         ReactiveAuthenticationManagerAdapter authenticationManager = new ReactiveAuthenticationManagerAdapter(manager);
         return context -> Mono.just(authenticationManager);
@@ -80,7 +79,7 @@ public class GaiaAuthWebFluxAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean({AuthenticationWebFilter.class})
     public AuthenticationWebFilter authenticationWebFilter(ServerAuthenticationPermissionHandler permissionHandler,
-                                                           ReactiveAuthenticationManagerResolver<ServerHttpRequest> managerResolver,
+                                                           ReactiveAuthenticationManagerResolver<ServerWebExchange> managerResolver,
                                                            ServerAuthenticationConverter converter) {
         ServerAuthenticationFailureHandler failureHandler = new HttpStatusServerAuthFailureHandler(HttpStatus.UNAUTHORIZED);
 
