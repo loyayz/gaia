@@ -17,16 +17,20 @@ import java.util.Map;
  * @author loyayz (loyayz@foxmail.com)
  */
 public class Role extends AbstractEntity<UaaRole> {
-    private final RoleId roleCode;
+    private final RoleId roleId;
     private RoleUsers roleUsers;
     private RolePermissions rolePermissions;
 
-    public static Role of(String roleCode) {
-        return new Role(roleCode);
+    public static Role of() {
+        return of(null);
     }
 
-    public String id() {
-        return this.roleCode.get();
+    public static Role of(Long id) {
+        return new Role(id);
+    }
+
+    public Long id() {
+        return this.roleId.get();
     }
 
     public Role name(String name) {
@@ -41,13 +45,12 @@ public class Role extends AbstractEntity<UaaRole> {
      * @param userIds 用户id
      */
     public Role addUser(Long... userIds) {
-        this.addUser(Arrays.asList(userIds));
-        return this;
+        return this.addUser(Arrays.asList(userIds));
     }
 
     public Role addUser(List<Long> userIds) {
         if (this.roleUsers == null) {
-            this.roleUsers = RoleUsers.of(this.roleCode);
+            this.roleUsers = RoleUsers.of(this.roleId);
         }
         this.roleUsers.addUsers(userIds);
         return this;
@@ -59,13 +62,12 @@ public class Role extends AbstractEntity<UaaRole> {
      * @param userIds 用户id
      */
     public Role removeUser(Long... userIds) {
-        this.removeUser(Arrays.asList(userIds));
-        return this;
+        return this.removeUser(Arrays.asList(userIds));
     }
 
     public Role removeUser(List<Long> userIds) {
         if (this.roleUsers == null) {
-            this.roleUsers = RoleUsers.of(this.roleCode);
+            this.roleUsers = RoleUsers.of(this.roleId);
         }
         this.roleUsers.removeUsers(userIds);
         return this;
@@ -151,7 +153,7 @@ public class Role extends AbstractEntity<UaaRole> {
 
     private Role addPermission(RolePermissionType type, List<Long> refIds) {
         if (this.rolePermissions == null) {
-            this.rolePermissions = RolePermissions.of(this.roleCode);
+            this.rolePermissions = RolePermissions.of(this.roleId);
         }
         this.rolePermissions.addPermission(type, refIds);
         return this;
@@ -159,7 +161,7 @@ public class Role extends AbstractEntity<UaaRole> {
 
     private Role removePermission(RolePermissionType type, List<Long> refIds) {
         if (this.rolePermissions == null) {
-            this.rolePermissions = RolePermissions.of(this.roleCode);
+            this.rolePermissions = RolePermissions.of(this.roleId);
         }
         this.rolePermissions.removePermission(type, refIds);
         return this;
@@ -167,10 +169,12 @@ public class Role extends AbstractEntity<UaaRole> {
 
     @Override
     protected UaaRole buildEntity() {
-        UaaRole entity = RoleRepository.getByCode(this.roleCode.get());
+        if (this.roleId.isEmpty()) {
+            return new UaaRole();
+        }
+        UaaRole entity = RoleRepository.getRole(this.roleId.get());
         if (entity == null) {
             entity = new UaaRole();
-            entity.setCode(this.roleCode.get());
         }
         return entity;
     }
@@ -178,6 +182,8 @@ public class Role extends AbstractEntity<UaaRole> {
     @Override
     public void save() {
         super.save();
+        this.roleId.set(super.entity().getId());
+
         if (this.roleUsers != null) {
             this.roleUsers.save();
         }
@@ -187,25 +193,23 @@ public class Role extends AbstractEntity<UaaRole> {
     }
 
     /**
-     * {@link com.loyayz.uaa.data.mapper.UaaRoleMapper#deleteByCode}
      * {@link com.loyayz.uaa.data.mapper.UaaUserRoleMapper#deleteByRole}
      * {@link com.loyayz.uaa.data.mapper.UaaRolePermissionMapper#deleteByRole}
      */
     @Override
     public void delete() {
-        Map<String, Object> param = new HashMap<>(2);
-        param.put("roleCode", this.roleCode.get());
+        super.delete();
 
-        // delete role
-        MybatisUtils.executeDelete(UaaRole.class, "deleteByCode", param);
+        Map<String, Object> param = new HashMap<>(2);
+        param.put("roleId", this.roleId.get());
         // delete userRole
         MybatisUtils.executeDelete(UaaUserRole.class, "deleteByRole", param);
         // delete rolePermission
         MybatisUtils.executeDelete(UaaRolePermission.class, "deleteByRole", param);
     }
 
-    private Role(String roleCode) {
-        this.roleCode = RoleId.of(roleCode);
+    private Role(Long id) {
+        this.roleId = RoleId.of(id);
     }
 
 }

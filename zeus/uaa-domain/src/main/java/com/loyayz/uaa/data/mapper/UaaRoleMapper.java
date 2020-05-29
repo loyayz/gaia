@@ -14,9 +14,6 @@ import java.util.List;
  */
 public interface UaaRoleMapper extends BaseMapper<UaaRole> {
 
-    @Delete("DELETE FROM uaa_role WHERE code = #{roleCode}")
-    int deleteByCode(@Param("roleCode") String code);
-
     @Select("<script>SELECT * FROM uaa_role " +
             "   <where> " +
             "   <if test=\"code != null and code != ''\">" +

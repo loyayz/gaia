@@ -10,7 +10,6 @@ public final class RoleConverter {
 
     public static SimpleRole toSimple(UaaRole role) {
         SimpleRole result = new SimpleRole();
-        result.setCode(role.getCode());
         result.setName(role.getName());
         result.setCreateTime(role.getGmtCreate().getTime());
         return result;

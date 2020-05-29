@@ -5,13 +5,13 @@ import com.loyayz.zeus.Identity;
 /**
  * @author loyayz (loyayz@foxmail.com)
  */
-public class RoleId extends Identity<String> {
+public class RoleId extends Identity<Long> {
 
-    static RoleId of(String code) {
-        return new RoleId(code);
+    static RoleId of(Long id) {
+        return new RoleId(id);
     }
 
-    private RoleId(String id) {
+    private RoleId(Long id) {
         super(id);
     }
 

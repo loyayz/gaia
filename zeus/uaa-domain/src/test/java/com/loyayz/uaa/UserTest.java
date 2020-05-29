@@ -1,11 +1,11 @@
 package com.loyayz.uaa;
 
 import com.loyayz.gaia.util.JsonUtils;
+import com.loyayz.uaa.common.dto.SimpleUser;
 import com.loyayz.uaa.data.UaaUser;
 import com.loyayz.uaa.data.UaaUserAccount;
 import com.loyayz.uaa.data.UaaUserRole;
 import com.loyayz.uaa.domain.user.User;
-import com.loyayz.uaa.common.dto.SimpleUser;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -143,19 +143,19 @@ public class UserTest {
         Assert.assertTrue(new UaaUserRole().listByCondition().isEmpty());
 
         User user = create(false);
-        List<String> roleCodes = new ArrayList<>();
+        List<Long> roleIds = new ArrayList<>();
         for (int j = 0; j < 5; j++) {
-            String roleCode = UUID.randomUUID().toString().substring(0, 10);
-            user.addRole(roleCode);
-            user.addRole(roleCode);
-            roleCodes.add(roleCode);
+            Long roleId = (long) new Random().nextInt(1000000);
+            user.addRole(roleId);
+            user.addRole(roleId);
+            roleIds.add(roleId);
         }
         user.save();
 
         UaaUserRole queryObject = UaaUserRole.builder().userId(user.id()).build();
-        Assert.assertEquals(roleCodes.size(), queryObject.listByCondition().size());
+        Assert.assertEquals(roleIds.size(), queryObject.listByCondition().size());
 
-        User.of(user.id()).removeRole(roleCodes.toArray(new String[]{})).save();
+        User.of(user.id()).removeRole(roleIds.toArray(new Long[]{})).save();
         Assert.assertTrue(queryObject.listByCondition().isEmpty());
     }
 

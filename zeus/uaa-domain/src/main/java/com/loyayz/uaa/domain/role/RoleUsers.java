@@ -11,16 +11,16 @@ import java.util.stream.Collectors;
  * @author loyayz (loyayz@foxmail.com)
  */
 class RoleUsers {
-    private final RoleId roleCode;
+    private final RoleId roleId;
     private final Set<Long> newUsers = new HashSet<>();
     private final Set<Long> deletedUsers = new HashSet<>();
 
-    static RoleUsers of(RoleId roleCode) {
-        return new RoleUsers(roleCode);
+    static RoleUsers of(RoleId roleId) {
+        return new RoleUsers(roleId);
     }
 
     void addUsers(List<Long> userIds) {
-        List<Long> existUsers = this.roleCode.isEmpty() ? Collections.emptyList() : UserRepository.listUserIdByRole(this.roleCode.get());
+        List<Long> existUsers = this.roleId.isEmpty() ? Collections.emptyList() : UserRepository.listUserIdByRole(this.roleId.get());
         for (Long userId : userIds) {
             if (!existUsers.contains(userId)) {
                 this.newUsers.add(userId);
@@ -43,7 +43,7 @@ class RoleUsers {
             return;
         }
         List<UaaUserRole> userRoles = this.newUsers.stream()
-                .map(userId -> new UaaUserRole(userId, this.roleCode.get()))
+                .map(userId -> new UaaUserRole(userId, this.roleId.get()))
                 .collect(Collectors.toList());
         new UaaUserRole().insert(userRoles);
     }
@@ -56,13 +56,13 @@ class RoleUsers {
             return;
         }
         Map<String, Object> param = new HashMap<>(2);
-        param.put("roleCode", this.roleCode.get());
+        param.put("roleId", this.roleId.get());
         param.put("userIds", this.deletedUsers);
         MybatisUtils.executeDelete(UaaUserRole.class, "deleteByUsersRole", param);
     }
 
-    private RoleUsers(RoleId roleCode) {
-        this.roleCode = roleCode;
+    private RoleUsers(RoleId roleId) {
+        this.roleId = roleId;
     }
 
 }

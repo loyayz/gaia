@@ -142,30 +142,30 @@ public class User extends AbstractEntity<UaaUser> {
     /**
      * 添加角色
      */
-    public User addRole(String... roleCodes) {
-        return this.addRole(Arrays.asList(roleCodes));
+    public User addRole(Long... roleIds) {
+        return this.addRole(Arrays.asList(roleIds));
     }
 
-    public User addRole(List<String> roleCodes) {
-        if (userRoles == null) {
-            userRoles = UserRoles.of(this.userId);
+    public User addRole(List<Long> roleIds) {
+        if (this.userRoles == null) {
+            this.userRoles = UserRoles.of(this.userId);
         }
-        userRoles.addCodes(roleCodes);
+        this.userRoles.addRoles(roleIds);
         return this;
     }
 
     /**
      * 删除角色
      */
-    public User removeRole(String... roleCodes) {
-        return this.removeRole(Arrays.asList(roleCodes));
+    public User removeRole(Long... roleIds) {
+        return this.removeRole(Arrays.asList(roleIds));
     }
 
-    public User removeRole(List<String> roleCodes) {
-        if (userRoles == null) {
-            userRoles = UserRoles.of(this.userId);
+    public User removeRole(List<Long> roleIds) {
+        if (this.userRoles == null) {
+            this.userRoles = UserRoles.of(this.userId);
         }
-        userRoles.removeCodes(roleCodes);
+        this.userRoles.removeRoles(roleIds);
         return this;
     }
 

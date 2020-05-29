@@ -16,32 +16,32 @@ public interface UaaUserRoleMapper extends BaseMapper<UaaUserRole> {
 
     @Delete("<script>" +
             "DELETE FROM uaa_user_role WHERE user_id = #{userId}" +
-            " AND role_code IN (" +
-            "   <foreach collection=\"roleCodes\" item=\"roleCode\" separator=\",\">" +
-            "       #{roleCode}" +
+            " AND role_id IN (" +
+            "   <foreach collection=\"roleIds\" item=\"roleId\" separator=\",\">" +
+            "       #{roleId}" +
             "   </foreach>" +
             "   )" +
             "</script>")
-    int deleteByUserRoles(@Param("userId") Long userId, @Param("roleCodes") List<String> roleCodes);
+    int deleteByUserRoles(@Param("userId") Long userId, @Param("roleIds") List<Long> roleIds);
 
     @Delete("<script>" +
-            "DELETE FROM uaa_user_role WHERE role_code = #{roleCode}" +
+            "DELETE FROM uaa_user_role WHERE role_id = #{roleId}" +
             " AND user_id IN (" +
             "   <foreach collection=\"userIds\" item=\"userId\" separator=\",\">" +
             "       #{userId}" +
             "   </foreach>" +
             "   )" +
             "</script>")
-    int deleteByUsersRole(@Param("userIds") List<Long> userIds, @Param("roleCode") String roleCode);
+    int deleteByUsersRole(@Param("userIds") List<Long> userIds, @Param("roleId") Long roleId);
 
     @Delete("DELETE FROM uaa_user_role WHERE user_id = #{userId}")
     int deleteByUser(@Param("userId") Long userId);
 
-    @Delete("DELETE FROM uaa_user_role WHERE role_code = #{roleCode}")
-    int deleteByRole(@Param("roleCode") String roleCode);
+    @Delete("DELETE FROM uaa_user_role WHERE role_id = #{roleId}")
+    int deleteByRole(@Param("roleId") Long roleId);
 
     @Select("SELECT r.* FROM uaa_user_role u,uaa_role r " +
-            "  WHERE u.role_code = r.code AND u.user_id = #{userId} ")
+            "  WHERE u.role_id = r.id AND u.user_id = #{userId} ")
     List<UaaRole> listByUser(@Param("userId") Long userId);
 
 }

@@ -18,7 +18,7 @@ public class UaaRolePermission extends AbstractTable<UaaRolePermission> {
     /**
      * 角色编码
      */
-    private String roleCode;
+    private Long roleId;
     /**
      * 权限类型
      */

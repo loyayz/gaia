@@ -23,6 +23,6 @@ public class UaaUserRole extends AbstractTable<UaaUserRole> {
     /**
      * 角色
      */
-    private String roleCode;
+    private Long roleId;
 
 }

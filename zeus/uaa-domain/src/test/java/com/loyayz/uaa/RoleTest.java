@@ -32,48 +32,44 @@ public class RoleTest {
 
     @Before
     public void init() {
-        SimpleRole role = new SimpleRole();
-        role.setCode(UUID.randomUUID().toString().substring(0, 10));
-        role.setName("loyayz");
+        SimpleRole roleParam = new SimpleRole();
+        roleParam.setName("loyayz");
 
-        Role.of(role.getCode()).name(role.getName()).save();
-        initRole.set(role);
+        Role role = Role.of().name(roleParam.getName());
+        role.save();
+        roleParam.setId(role.id());
+        initRole.set(roleParam);
     }
 
     @Test
     public void testCreate() {
-        SimpleRole role = initRole.get();
-        UaaRole query = UaaRole.builder().code(role.getCode()).build();
-        Assert.assertNotNull(query.listByCondition().get(0));
-
-        Role.of(role.getCode()).name(role.getName()).save();
+        UaaRole role = new UaaRole().findById(initRole.get().getId());
+        Assert.assertNotNull(role);
     }
 
     @Test
     public void testDelete() {
-        SimpleRole role = initRole.get();
-        UaaRole queryObject = UaaRole.builder().code(role.getCode()).build();
-        Assert.assertNotNull(queryObject.listByCondition().get(0));
-        Role.of(role.getCode()).delete();
-        Assert.assertTrue(queryObject.listByCondition().isEmpty());
+        UaaRole role = new UaaRole().findById(initRole.get().getId());
+        Role.of(role.getId()).delete();
+        role = new UaaRole().findById(initRole.get().getId());
+        Assert.assertNull(role);
     }
 
     @Test
     public void testUpdate() {
-        SimpleRole role = initRole.get();
-        UaaRole queryObject = UaaRole.builder().code(role.getCode()).build();
+        UaaRole role = new UaaRole().findById(initRole.get().getId());
         String newName = UUID.randomUUID().toString();
 
-        Assert.assertNotEquals(newName, queryObject.listByCondition().get(0).getName());
-        Role.of(role.getCode()).name(newName).save();
-        Assert.assertEquals(newName, queryObject.listByCondition().get(0).getName());
+        Assert.assertNotEquals(newName, role.getName());
+        Role.of(role.getId()).name(newName).save();
+        Assert.assertEquals(newName, role.getName());
     }
 
     @Test
     public void testUser() {
         Assert.assertTrue(new UaaUserRole().listByCondition().isEmpty());
 
-        Role role = Role.of(initRole.get().getCode());
+        Role role = Role.of(initRole.get().getId());
         List<Long> userIds = new ArrayList<>();
         for (int j = 0; j < 5; j++) {
             Long userId = (long) new Random().nextInt(1000000);
@@ -82,7 +78,7 @@ public class RoleTest {
         }
         role.save();
 
-        UaaUserRole queryObject = UaaUserRole.builder().roleCode(initRole.get().getCode()).build();
+        UaaUserRole queryObject = UaaUserRole.builder().roleId(initRole.get().getId()).build();
         Assert.assertEquals(userIds.size(), queryObject.listByCondition().size());
 
         Role.of(role.id()).removeUser(userIds.toArray(new Long[]{})).save();
@@ -93,7 +89,7 @@ public class RoleTest {
     public void testPermission() {
         Assert.assertTrue(new UaaRolePermission().listByCondition().isEmpty());
 
-        Role role = Role.of(initRole.get().getCode());
+        Role role = Role.of(initRole.get().getId());
         List<Long> appIds = new ArrayList<>();
         List<Long> menuIds = new ArrayList<>();
         List<Long> actionIds = new ArrayList<>();
@@ -110,7 +106,7 @@ public class RoleTest {
         }
         role.save();
 
-        UaaRolePermission queryObject = UaaRolePermission.builder().roleCode(initRole.get().getCode()).build();
+        UaaRolePermission queryObject = UaaRolePermission.builder().roleId(initRole.get().getId()).build();
         Assert.assertEquals(appIds.size() + menuIds.size() + actionIds.size(),
                 queryObject.listByCondition().size());
 

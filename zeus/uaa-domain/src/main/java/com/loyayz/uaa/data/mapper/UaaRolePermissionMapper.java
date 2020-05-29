@@ -12,17 +12,17 @@ import java.util.List;
  */
 public interface UaaRolePermissionMapper extends BaseMapper<UaaRolePermission> {
 
-    @Delete("DELETE FROM uaa_role_permission WHERE role_code = #{roleCode}")
-    int deleteByRole(@Param("roleCode") String roleCode);
+    @Delete("DELETE FROM uaa_role_permission WHERE role_id = #{roleId}")
+    int deleteByRole(@Param("roleId") Long roleId);
 
     @Delete("<script>" +
-            "DELETE FROM uaa_role_permission WHERE role_code = #{roleCode} AND type = #{type} " +
+            "DELETE FROM uaa_role_permission WHERE role_id = #{roleId} AND type = #{type} " +
             " AND ref_id IN (" +
             "   <foreach collection=\"refIds\" item=\"refId\" separator=\",\">" +
             "       #{refId}" +
             "   </foreach>" +
             "   )" +
             "</script>")
-    int deleteByRoleTypeRefs(@Param("roleCode") String roleCode, @Param("type") String type, @Param("refIds") List<Long> refIds);
+    int deleteByRoleTypeRefs(@Param("roleId") Long roleId, @Param("type") String type, @Param("refIds") List<Long> refIds);
 
 }

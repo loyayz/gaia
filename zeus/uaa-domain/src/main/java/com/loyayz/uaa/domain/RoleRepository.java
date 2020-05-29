@@ -13,17 +13,12 @@ import java.util.stream.Collectors;
  */
 public final class RoleRepository {
 
-    public static UaaRole getByCode(String code) {
-        UaaRole role = new UaaRole();
-        role.setCode(code);
-        return role.listByCondition()
-                .stream()
-                .findFirst()
-                .orElse(null);
+    public static UaaRole getRole(Long id) {
+        return new UaaRole().findById(id);
     }
 
-    public static List<Long> listRefIdByRole(String roleCode, String type) {
-        return UaaRolePermission.builder().roleCode(roleCode).type(type).build()
+    public static List<Long> listRefIdByRole(Long roleId, String type) {
+        return UaaRolePermission.builder().roleId(roleId).type(type).build()
                 .listByCondition()
                 .stream()
                 .map(UaaRolePermission::getRefId)

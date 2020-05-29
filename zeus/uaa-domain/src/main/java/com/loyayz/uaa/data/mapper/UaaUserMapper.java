@@ -26,8 +26,8 @@ public interface UaaUserMapper extends BaseMapper<UaaUser> {
             "   <if test=\"locked != null \">" +
             "       AND locked = #{locked} " +
             "   </if>" +
-            "   <if test=\"roleCode != null and roleCode != ''\">" +
-            "       AND id IN (SELECT user_id FROM uaa_user_role WHERE role_code = #{roleCode}) " +
+            "   <if test=\"roleId != null \">" +
+            "       AND id IN (SELECT user_id FROM uaa_user_role WHERE role_id = #{roleId}) " +
             "   </if>" +
             "</script>")
     List<UaaUser> listByParam(UserQueryParam queryParam);

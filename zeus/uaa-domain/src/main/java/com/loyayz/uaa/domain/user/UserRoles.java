@@ -12,25 +12,20 @@ import java.util.stream.Collectors;
  */
 class UserRoles {
     private final UserId userId;
-    private final Set<String> newCodes = new HashSet<>();
-    private final Set<String> deletedCodes = new HashSet<>();
+    private final Set<Long> newRoles = new HashSet<>();
+    private final Set<Long> deletedRoles = new HashSet<>();
 
     static UserRoles of(UserId userId) {
         return new UserRoles(userId);
     }
 
-    void addCodes(List<String> roleCodes) {
-        List<String> existRoles = this.userId.isEmpty() ? Collections.emptyList() : UserRepository.listRoleCodeByUser(this.userId.get());
-        for (String roleCode : roleCodes) {
-            if (!existRoles.contains(roleCode)) {
-                this.newCodes.add(roleCode);
-            }
-        }
+    void addRoles(List<Long> roleIds) {
+        this.newRoles.addAll(roleIds);
     }
 
-    void removeCodes(List<String> roleCodes) {
-        this.newCodes.removeAll(roleCodes);
-        this.deletedCodes.addAll(roleCodes);
+    void removeRoles(List<Long> roleIds) {
+        this.newRoles.removeAll(roleIds);
+        this.deletedRoles.addAll(roleIds);
     }
 
     void save() {
@@ -39,25 +34,29 @@ class UserRoles {
     }
 
     private void insert() {
-        if (this.newCodes.isEmpty()) {
+        if (this.newRoles.isEmpty()) {
             return;
         }
-        List<UaaUserRole> userRoles = this.newCodes.stream()
-                .map(roleCode -> new UaaUserRole(this.userId.get(), roleCode))
+        List<Long> existRoles = this.userId.isEmpty() ? Collections.emptyList() : UserRepository.listRoleIdByUser(this.userId.get());
+        List<UaaUserRole> userRoles = this.newRoles.stream()
+                .filter(roleId -> !existRoles.contains(roleId))
+                .map(roleId -> new UaaUserRole(this.userId.get(), roleId))
                 .collect(Collectors.toList());
-        new UaaUserRole().insert(userRoles);
+        if (!userRoles.isEmpty()) {
+            new UaaUserRole().insert(userRoles);
+        }
     }
 
     /**
      * {@link com.loyayz.uaa.data.mapper.UaaUserRoleMapper#deleteByUserRoles}
      */
     private void delete() {
-        if (this.deletedCodes.isEmpty()) {
+        if (this.deletedRoles.isEmpty()) {
             return;
         }
         Map<String, Object> param = new HashMap<>(2);
         param.put("userId", this.userId.get());
-        param.put("roleCodes", this.deletedCodes);
+        param.put("roleIds", this.deletedRoles);
         MybatisUtils.executeDelete(UaaUserRole.class, "deleteByUserRoles", param);
     }
 

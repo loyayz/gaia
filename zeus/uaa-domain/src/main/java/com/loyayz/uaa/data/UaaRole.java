@@ -17,10 +17,6 @@ import lombok.NoArgsConstructor;
 public class UaaRole extends AbstractTable<UaaRole> {
 
     /**
-     * 角色编码
-     */
-    private String code;
-    /**
      * 角色名
      */
     private String name;

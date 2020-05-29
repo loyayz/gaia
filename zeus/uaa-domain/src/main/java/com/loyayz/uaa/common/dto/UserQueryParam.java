@@ -30,6 +30,6 @@ public class UserQueryParam {
     /**
      * 角色
      */
-    private String roleCode;
+    private Long roleId;
 
 }

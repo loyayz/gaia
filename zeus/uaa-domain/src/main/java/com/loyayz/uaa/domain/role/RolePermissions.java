@@ -11,12 +11,12 @@ import java.util.*;
  * @author loyayz (loyayz@foxmail.com)
  */
 class RolePermissions {
-    private final RoleId roleCode;
+    private final RoleId roleId;
     private final Map<RolePermissionType, Set<Long>> newPermissions = new HashMap<>();
     private final Map<RolePermissionType, Set<Long>> deletedPermissions = new HashMap<>();
 
-    static RolePermissions of(RoleId roleCode) {
-        return new RolePermissions(roleCode);
+    static RolePermissions of(RoleId roleId) {
+        return new RolePermissions(roleId);
     }
 
     public void addPermission(RolePermissionType type, List<Long> refIds) {
@@ -42,12 +42,12 @@ class RolePermissions {
 
     private void insert() {
         List<UaaRolePermission> permissions = new ArrayList<>();
-        String role = this.roleCode.get();
+        Long rid = this.roleId.get();
         this.newPermissions.forEach((type, refIds) -> {
-            List<Long> existRefs = this.roleCode.isEmpty() ? Collections.emptyList() : RoleRepository.listRefIdByRole(role, type.getVal());
+            List<Long> existRefs = this.roleId.isEmpty() ? Collections.emptyList() : RoleRepository.listRefIdByRole(rid, type.getVal());
             refIds.forEach(refId -> {
                 if (!existRefs.contains(refId)) {
-                    permissions.add(new UaaRolePermission(role, type.getVal(), refId));
+                    permissions.add(new UaaRolePermission(rid, type.getVal(), refId));
                 }
             });
         });
@@ -62,15 +62,15 @@ class RolePermissions {
     private void delete() {
         this.deletedPermissions.forEach((type, refIds) -> {
             Map<String, Object> param = new HashMap<>(3);
-            param.put("roleCode", this.roleCode.get());
+            param.put("roleId", this.roleId.get());
             param.put("type", type.getVal());
             param.put("refIds", new ArrayList<>(refIds));
             MybatisUtils.executeDelete(UaaRolePermission.class, "deleteByRoleTypeRefs", param);
         });
     }
 
-    private RolePermissions(RoleId roleCode) {
-        this.roleCode = roleCode;
+    private RolePermissions(RoleId roleId) {
+        this.roleId = roleId;
     }
 
 }

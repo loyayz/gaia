@@ -12,9 +12,9 @@ public class SimpleRole implements Serializable {
     private static final long serialVersionUID = -1L;
 
     /**
-     * 角色编码
+     * 角色
      */
-    private String code;
+    private Long id;
     /**
      * 角色名
      */
