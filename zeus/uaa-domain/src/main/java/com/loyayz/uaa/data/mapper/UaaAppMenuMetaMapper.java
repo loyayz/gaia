@@ -17,22 +17,13 @@ public interface UaaAppMenuMetaMapper extends BaseMapper<UaaAppMenuMeta> {
     @Delete("DELETE FROM uaa_app_menu_meta WHERE app_id = #{appId}")
     int deleteByApp(@Param("appId") Long appId);
 
-    @Delete("<script>" +
-            "DELETE FROM uaa_app_menu_meta WHERE code IN (" +
-            "   <foreach collection=\"menuCodes\" item=\"code\" separator=\",\">" +
-            "       #{code}" +
-            "   </foreach>" +
-            "   )" +
-            "</script>")
-    int deleteByCodes(@Param("menuCodes") List<String> codes);
-
     @Select("<script>SELECT * FROM uaa_app_menu_meta " +
             "   <where> " +
             "   <if test=\"appId != null\">" +
             "       app_id = #{appId} " +
             "   </if>" +
-            "   <if test=\"parentCode != null and parentCode != ''\">" +
-            "       AND parent_code = #{parentCode} " +
+            "   <if test=\"pid != null\">" +
+            "       AND pid = #{pid} " +
             "   </if>" +
             "   <if test=\"code != null and code != ''\">" +
             "       AND code LIKE CONCAT('%',#{code},'%') " +

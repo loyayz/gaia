@@ -20,7 +20,7 @@ public final class MenuRepository {
      */
     public static Integer getNextSort(Long parentId) {
         Map<String, Object> param = new HashMap<>(2);
-        param.put("parentId", parentId);
+        param.put("pid", parentId);
         Integer sort = MybatisUtils.executeSelectOne(UaaMenu.class, "getMaxSortByParent", param);
         return sort == null ? 0 : sort + 1;
     }

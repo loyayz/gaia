@@ -12,26 +12,17 @@ import java.util.List;
  */
 public interface UaaAppMenuActionMapper extends BaseMapper<UaaAppMenuAction> {
 
-    @Delete("DELETE FROM uaa_app_menu_action WHERE app_id = #{appId}")
-    int deleteByApp(@Param("appId") Long appId);
-
-    @Delete("<script>DELETE FROM uaa_app_menu_action WHERE " +
-            " menu_code IN (" +
-            "   <foreach collection=\"menuCodes\" item=\"menuCode\" separator=\",\">" +
-            "       #{menuCode}" +
-            "   </foreach>" +
-            "   )" +
-            "</script>")
-    int deleteByMenus(@Param("menuCodes") List<String> menuCodes);
+    @Delete("DELETE FROM uaa_app_menu_action WHERE menu_meta_id = #{menuMetaId}")
+    int deleteByMenu(@Param("menuMetaId") Long menuMetaId);
 
     @Delete("<script>DELETE FROM uaa_app_menu_action " +
-            " WHERE menu_code = #{menuCode}" +
+            " WHERE menu_meta_id = #{menuMetaId}" +
             " AND code IN (" +
             "   <foreach collection=\"actionCodes\" item=\"actionCode\" separator=\",\">" +
             "       #{actionCode}" +
             "   </foreach>" +
             "   )" +
             "</script>")
-    int deleteByMenuAndCodes(@Param("menuCode") String menuCode, @Param("actionCodes") List<String> actionCodes);
+    int deleteByMenuAndCodes(@Param("menuMetaId") Long menuMetaId, @Param("actionCodes") List<String> actionCodes);
 
 }

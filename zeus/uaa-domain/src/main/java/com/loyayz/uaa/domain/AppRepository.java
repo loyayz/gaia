@@ -1,6 +1,5 @@
 package com.loyayz.uaa.domain;
 
-import com.loyayz.gaia.data.Sorter;
 import com.loyayz.gaia.data.mybatis.extension.MybatisUtils;
 import com.loyayz.uaa.common.dto.AppQueryParam;
 import com.loyayz.uaa.common.dto.MenuQueryParam;
@@ -45,12 +44,8 @@ public final class AppRepository {
                 .collect(Collectors.toList());
     }
 
-    public static UaaAppMenuMeta getAppMenuByCode(String code) {
-        return UaaAppMenuMeta.builder().code(code).build()
-                .listByCondition()
-                .stream()
-                .findFirst()
-                .orElse(null);
+    public static UaaAppMenuMeta getAppMenu(Long menuId) {
+        return new UaaAppMenuMeta().findById(menuId);
     }
 
     /**
@@ -60,27 +55,22 @@ public final class AppRepository {
         return MybatisUtils.executeSelectList(UaaAppMenuMeta.class, "listByParam", queryParam);
     }
 
-    public static Integer countAppMenuByParent(String parentCode) {
-        return UaaAppMenuMeta.builder().parentCode(parentCode).build()
+    public static Integer countAppMenuByParent(Long pid) {
+        return UaaAppMenuMeta.builder().pid(pid).build()
                 .countByCondition();
     }
 
-    public static UaaAppMenuAction getAppMenuActionByCode(String menuCode, String code) {
-        return UaaAppMenuAction.builder().menuCode(menuCode).code(code).build()
+    public static UaaAppMenuAction getAppMenuActionByCode(Long menuId, String code) {
+        return UaaAppMenuAction.builder().menuMetaId(menuId).code(code).build()
                 .listByCondition()
                 .stream()
                 .findFirst()
                 .orElse(null);
     }
 
-    public static List<UaaAppMenuAction> listAppMenuActionByApp(Long appId) {
-        return UaaAppMenuAction.builder().appId(appId).build()
-                .listByCondition(Sorter.asc("sort"));
-    }
-
-    public static List<UaaAppMenuAction> listAppMenuActionByMenu(String menuCode) {
-        return UaaAppMenuAction.builder().menuCode(menuCode).build()
-                .listByCondition(Sorter.asc("sort"));
+    public static List<UaaAppMenuAction> listAppMenuActionByMenu(Long menuId) {
+        return UaaAppMenuAction.builder().menuMetaId(menuId).build()
+                .listByCondition();
     }
 
 }

@@ -40,16 +40,16 @@ public final class AppQuery {
         queryParam.setAppId(appId);
 
         List<SimpleMenu> result = new ArrayList<>();
-        // parentCode,menu
-        Map<String, List<SimpleMenu>> parentMenus = new HashMap<>(16);
+        // pid,menu
+        Map<Long, List<SimpleMenu>> parentMenus = new HashMap<>(16);
         listMenu(queryParam).forEach(menu -> {
-            String parentCode = menu.getParentCode();
-            if (ROOT_MENU_CODE.equals(parentCode)) {
+            Long pid = menu.getPid();
+            if (ROOT_MENU_CODE.equals(pid)) {
                 result.add(menu);
             } else {
-                List<SimpleMenu> tempMenus = parentMenus.getOrDefault(parentCode, new ArrayList<>());
+                List<SimpleMenu> tempMenus = parentMenus.getOrDefault(pid, new ArrayList<>());
                 tempMenus.add(menu);
-                parentMenus.put(parentCode, tempMenus);
+                parentMenus.put(pid, tempMenus);
             }
         });
         for (SimpleMenu dir : result) {
@@ -58,25 +58,18 @@ public final class AppQuery {
         return result;
     }
 
-    public static List<SimpleMenuAction> listAppAction(Long appId) {
-        return AppRepository.listAppMenuActionByApp(appId)
+    public static List<SimpleMenuAction> listMenuAction(Long menuId) {
+        return AppRepository.listAppMenuActionByMenu(menuId)
                 .stream()
                 .map(AppConverter::toSimple)
                 .collect(Collectors.toList());
     }
 
-    public static List<SimpleMenuAction> listMenuAction(String menuCode) {
-        return AppRepository.listAppMenuActionByMenu(menuCode)
-                .stream()
-                .map(AppConverter::toSimple)
-                .collect(Collectors.toList());
-    }
-
-    private static void addMenu(SimpleMenu dir, Map<String, List<SimpleMenu>> parentMenus) {
+    private static void addMenu(SimpleMenu dir, Map<Long, List<SimpleMenu>> parentMenus) {
         if (!dir.getDir()) {
             return;
         }
-        List<SimpleMenu> subMenus = parentMenus.getOrDefault(dir.getCode(), Collections.emptyList());
+        List<SimpleMenu> subMenus = parentMenus.getOrDefault(dir.getId(), Collections.emptyList());
         for (SimpleMenu subMenu : subMenus) {
             addMenu(subMenu, parentMenus);
 

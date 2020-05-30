@@ -96,7 +96,7 @@ CREATE TABLE `uaa_app_menu_meta`
 (
     `id`           bigint(20) unsigned NOT NULL,
     `app_id`       bigint(20) unsigned NOT NULL COMMENT '应用',
-    `parent_code`  varchar(20)         NOT NULL COMMENT '上级编码',
+    `pid`          bigint(20) unsigned NOT NULL COMMENT '上级菜单',
     `dir`          tinyint(4)          NOT NULL DEFAULT '0' COMMENT '是否目录',
     `code`         varchar(20)         NOT NULL COMMENT '编码',
     `name`         varchar(50)         NOT NULL COMMENT '名称',
@@ -106,7 +106,6 @@ CREATE TABLE `uaa_app_menu_meta`
     `gmt_create`   datetime                     DEFAULT NULL,
     `gmt_modified` datetime                     DEFAULT NULL,
     PRIMARY KEY (`id`),
-    UNIQUE KEY `uk_uamm_code` (`code`),
     KEY `idx_uamm_app` (`app_id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='应用菜单元数据';
@@ -114,33 +113,31 @@ CREATE TABLE `uaa_app_menu_meta`
 CREATE TABLE `uaa_app_menu_action`
 (
     `id`           bigint(20) unsigned NOT NULL,
-    `app_id`       bigint(20) unsigned NOT NULL COMMENT '应用',
-    `menu_code`    varchar(20)         NOT NULL COMMENT '菜单',
+    `menu_meta_id` bigint(20) unsigned NOT NULL COMMENT '菜单',
     `code`         varchar(20)         NOT NULL COMMENT '编码',
     `name`         varchar(50)         NOT NULL COMMENT '名称',
     `gmt_create`   datetime DEFAULT NULL,
     `gmt_modified` datetime DEFAULT NULL,
     PRIMARY KEY (`id`),
-    KEY `idx_uama_menu` (`menu_code`, `app_id`),
-    KEY `idx_uama_code` (`code`)
+    KEY `idx_uama_menu` (`menu_meta_id`, `code`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='应用菜单功能';
 
 CREATE TABLE `uaa_menu`
 (
-    `id`           BIGINT(20) UNSIGNED NOT NULL,
-    `app_id`       BIGINT(20) UNSIGNED NOT NULL COMMENT '应用',
-    `parent_id`    BIGINT(20) UNSIGNED NOT NULL COMMENT '上级id',
-    `code`         VARCHAR(20)         NOT NULL COMMENT '编码',
+    `id`           bigint(20) unsigned NOT NULL,
+    `app_id`       bigint(20) unsigned NOT NULL COMMENT '应用',
+    `pid`          bigint(20) unsigned NOT NULL COMMENT '上级id',
+    `menu_meta_id` bigint(20) unsigned NOT NULL COMMENT '菜单元数据',
     `name`         VARCHAR(50)         NOT NULL COMMENT '名称',
     `icon`         VARCHAR(50)         NOT NULL COMMENT '图标',
     `sort`         INT(11)             NOT NULL COMMENT '序号',
     `gmt_create`   DATETIME DEFAULT NULL,
     `gmt_modified` DATETIME DEFAULT NULL,
     PRIMARY KEY (`id`),
-    KEY `idx_um_code` (`code`),
+    KEY `idx_um_meta` (`menu_meta_id`),
     KEY `idx_um_app` (`app_id`),
-    KEY `idx_um_pid` (`parent_id`)
+    KEY `idx_um_pid` (`pid`)
 ) ENGINE = INNODB
   DEFAULT CHARSET = utf8mb4 COMMENT ='菜单';
 

@@ -20,9 +20,9 @@ public class UaaAppMenuMeta extends AbstractTable<UaaAppMenuMeta> {
      */
     private Long appId;
     /**
-     * 上级编码
+     * 上级菜单
      */
-    private String parentCode;
+    private Long pid;
     /**
      * 是否目录
      */

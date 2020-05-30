@@ -16,13 +16,9 @@ import lombok.NoArgsConstructor;
 public class UaaAppMenuAction extends AbstractTable<UaaAppMenuAction> {
 
     /**
-     * 应用
-     */
-    private Long appId;
-    /**
      * 菜单
      */
-    private String menuCode;
+    private Long menuMetaId;
     /**
      * 编码
      */

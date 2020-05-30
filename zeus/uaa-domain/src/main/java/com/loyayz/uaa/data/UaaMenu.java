@@ -22,11 +22,11 @@ public class UaaMenu extends AbstractTable<UaaMenu> {
     /**
      * 上级id
      */
-    private Long parentId;
+    private Long pid;
     /**
-     * 编码
+     * 菜单元数据
      */
-    private String code;
+    private Long menuMetaId;
     /**
      * 名称
      */

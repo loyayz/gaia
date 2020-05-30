@@ -13,7 +13,8 @@ import java.util.List;
 public class SimpleMenu implements Serializable {
     private static final long serialVersionUID = -1L;
 
-    private String parentCode;
+    private Long id;
+    private Long pid;
     /**
      * 编码
      */

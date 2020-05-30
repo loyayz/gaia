@@ -28,18 +28,18 @@ public class Menu extends AbstractEntity<UaaMenu> {
         return this;
     }
 
-    public Menu parentId(Long parentId) {
+    public Menu pid(Long pid) {
         UaaMenu entity = super.entity();
-        entity.setParentId(parentId);
+        entity.setPid(pid);
         if (entity.getSort() == null) {
-            this.sort(MenuRepository.getNextSort(parentId));
+            this.sort(MenuRepository.getNextSort(pid));
         }
         super.markUpdated();
         return this;
     }
 
-    public Menu code(String code) {
-        super.entity().setCode(code);
+    public Menu metaId(Long metaId) {
+        super.entity().setMenuMetaId(metaId);
         super.markUpdated();
         return this;
     }

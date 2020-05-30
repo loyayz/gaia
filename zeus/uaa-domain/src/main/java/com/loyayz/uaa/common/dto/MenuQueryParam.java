@@ -9,7 +9,7 @@ import lombok.Data;
 public class MenuQueryParam {
 
     private Long appId;
-    private String parentCode;
+    private Long pid;
     /**
      * 菜单编码
      * 模糊查询

@@ -1,8 +1,8 @@
 package com.loyayz.uaa;
 
+import com.loyayz.uaa.common.dto.SimpleMenu;
 import com.loyayz.uaa.data.UaaMenu;
 import com.loyayz.uaa.domain.menu.Menu;
-import com.loyayz.uaa.common.dto.SimpleMenu;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,6 +11,7 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Random;
 import java.util.UUID;
 
 /**
@@ -52,6 +53,7 @@ public class MenuTest {
         Menu menu = create(true);
 
         SimpleMenu menuParam = new SimpleMenu();
+        menuParam.setId((long) new Random().nextInt(100000));
         menuParam.setCode(UUID.randomUUID().toString().substring(0, 20));
         menuParam.setName(UUID.randomUUID().toString());
         menuParam.setIcon(UUID.randomUUID().toString());
@@ -59,14 +61,14 @@ public class MenuTest {
 
         menu.name(menuParam.getName())
                 .appId(1L)
-                .parentId(2L)
-                .code(menuParam.getCode())
+                .pid(2L)
+                .metaId(menuParam.getId())
                 .name(menuParam.getName())
                 .icon(menuParam.getIcon())
                 .sort(menuParam.getSort());
 
         UaaMenu storeMenu = new UaaMenu().findById(menu.id());
-        Assert.assertNotEquals(menuParam.getCode(), storeMenu.getCode());
+        Assert.assertNotEquals(menuParam.getId(), storeMenu.getMenuMetaId());
         Assert.assertNotEquals(menuParam.getName(), storeMenu.getName());
         Assert.assertNotEquals(menuParam.getIcon(), storeMenu.getIcon());
         Assert.assertNotEquals(menuParam.getSort(), storeMenu.getSort());
@@ -74,7 +76,7 @@ public class MenuTest {
         menu.save();
 
         storeMenu = new UaaMenu().findById(menu.id());
-        Assert.assertEquals(menuParam.getCode(), storeMenu.getCode());
+        Assert.assertEquals(menuParam.getId(), storeMenu.getMenuMetaId());
         Assert.assertEquals(menuParam.getName(), storeMenu.getName());
         Assert.assertEquals(menuParam.getIcon(), storeMenu.getIcon());
         Assert.assertEquals(menuParam.getSort(), storeMenu.getSort());
@@ -83,8 +85,8 @@ public class MenuTest {
     private Menu create(boolean save) {
         Menu menu = Menu.of()
                 .appId(1L)
-                .parentId(2L)
-                .code(UUID.randomUUID().toString().substring(0, 20))
+                .pid(2L)
+                .metaId((long) new Random().nextInt(100000))
                 .name(UUID.randomUUID().toString());
         if (save) {
             menu.save();

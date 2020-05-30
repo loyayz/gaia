@@ -4,7 +4,6 @@ import com.loyayz.gaia.data.mybatis.extension.MybatisUtils;
 import com.loyayz.uaa.common.dto.SimpleMenu;
 import com.loyayz.uaa.common.dto.SimpleMenuAction;
 import com.loyayz.uaa.data.UaaApp;
-import com.loyayz.uaa.data.UaaAppMenuAction;
 import com.loyayz.uaa.data.UaaAppMenuMeta;
 import com.loyayz.uaa.data.UaaMenu;
 import com.loyayz.uaa.domain.AppRepository;
@@ -117,62 +116,62 @@ public class App extends AbstractEntity<UaaApp> {
      * 添加菜单元数据
      * 根据菜单编码查询元数据，存在则修改，否则新增
      *
-     * @param parentCode 上级菜单编码
-     * @param menus      菜单目录
+     * @param pid   上级菜单
+     * @param menus 菜单
      */
-    public App addMenuMeta(String parentCode, SimpleMenu... menus) {
-        return this.addMenuMeta(parentCode, Arrays.asList(menus));
+    public App addMenuMeta(Long pid, SimpleMenu... menus) {
+        return this.addMenuMeta(pid, Arrays.asList(menus));
     }
 
-    public App addMenuMeta(String parentCode, List<SimpleMenu> menus) {
+    public App addMenuMeta(Long pid, List<SimpleMenu> menus) {
         if (this.appMenus == null) {
             this.appMenus = AppMenus.of(this.appId);
         }
-        if (parentCode == null || parentCode.trim().isEmpty()) {
-            parentCode = ROOT_MENU_CODE;
+        if (pid == null) {
+            pid = ROOT_MENU_CODE;
         }
-        this.appMenus.addMeta(parentCode, menus);
+        this.appMenus.addMeta(pid, menus);
         return this;
     }
 
     /**
      * 删除菜单
      *
-     * @param menuCodes 菜单编码
+     * @param menuIds 菜单编码
      */
-    public App removeMenuMeta(String... menuCodes) {
-        return this.removeMenuMeta(Arrays.asList(menuCodes));
+    public App removeMenuMeta(Long... menuIds) {
+        return this.removeMenuMeta(Arrays.asList(menuIds));
     }
 
-    public App removeMenuMeta(List<String> menuCodes) {
+    public App removeMenuMeta(List<Long> menuIds) {
         if (this.appMenus == null) {
             this.appMenus = AppMenus.of(this.appId);
         }
-        this.appMenus.removeMeta(menuCodes);
+        this.appMenus.removeMeta(menuIds);
         return this;
     }
 
-    public App addMenuAction(String menuCode, SimpleMenuAction... menuActions) {
-        return this.addMenuAction(menuCode, Arrays.asList(menuActions));
+    public App addMenuAction(Long menuId, SimpleMenuAction... menuActions) {
+        return this.addMenuAction(menuId, Arrays.asList(menuActions));
     }
 
-    public App addMenuAction(String menuCode, List<SimpleMenuAction> menuActions) {
+    public App addMenuAction(Long menuId, List<SimpleMenuAction> menuActions) {
         if (this.appMenus == null) {
             this.appMenus = AppMenus.of(this.appId);
         }
-        this.appMenus.addAction(menuCode, menuActions);
+        this.appMenus.addAction(menuId, menuActions);
         return this;
     }
 
-    public App removeMenuAction(String menuCode, String... actionCodes) {
-        return this.removeMenuAction(menuCode, Arrays.asList(actionCodes));
+    public App removeMenuAction(Long menuId, String... actionCodes) {
+        return this.removeMenuAction(menuId, Arrays.asList(actionCodes));
     }
 
-    public App removeMenuAction(String menuCode, List<String> actionCodes) {
+    public App removeMenuAction(Long menuId, List<String> actionCodes) {
         if (this.appMenus == null) {
             this.appMenus = AppMenus.of(this.appId);
         }
-        this.appMenus.removeAction(menuCode, actionCodes);
+        this.appMenus.removeAction(menuId, actionCodes);
         return this;
     }
 
@@ -204,7 +203,6 @@ public class App extends AbstractEntity<UaaApp> {
 
     /**
      * {@link com.loyayz.uaa.data.mapper.UaaAppMenuMetaMapper#deleteByApp}
-     * {@link com.loyayz.uaa.data.mapper.UaaAppMenuActionMapper#deleteByApp}
      * {@link com.loyayz.uaa.data.mapper.UaaMenuMapper#deleteByApp}
      */
     @Override
@@ -213,9 +211,7 @@ public class App extends AbstractEntity<UaaApp> {
 
         Map<String, Object> param = new HashMap<>(2);
         param.put("appId", this.appId.get());
-
         MybatisUtils.executeDelete(UaaAppMenuMeta.class, "deleteByApp", param);
-        MybatisUtils.executeDelete(UaaAppMenuAction.class, "deleteByApp", param);
         MybatisUtils.executeDelete(UaaMenu.class, "deleteByApp", param);
     }
 

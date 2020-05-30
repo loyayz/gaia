@@ -25,7 +25,7 @@ public final class AppConverter {
 
     public static SimpleMenu toSimple(UaaAppMenuMeta menu) {
         SimpleMenu result = new SimpleMenu();
-        result.setParentCode(menu.getParentCode());
+        result.setPid(menu.getPid());
         result.setCode(menu.getCode());
         result.setName(menu.getName());
         result.setUrl(menu.getUrl());
@@ -35,22 +35,22 @@ public final class AppConverter {
         return result;
     }
 
-    public static UaaAppMenuMeta toEntity(Long appId, SimpleMenu menu) {
-        return UaaAppMenuMeta.builder()
-                .appId(appId)
-                .parentCode(menu.getParentCode())
+    public static UaaAppMenuMeta toEntity(SimpleMenu menu) {
+        UaaAppMenuMeta entity = UaaAppMenuMeta.builder()
+                .pid(menu.getPid())
                 .dir(menu.getDir() ? 1 : 0)
-                .code(menu.getCode())
+                .code(menu.getCode() == null ? "" : menu.getCode())
                 .name(menu.getName())
                 .url(menu.getUrl() == null ? "" : menu.getUrl())
                 .icon(menu.getIcon() == null ? "" : menu.getIcon())
                 .sort(menu.getSort())
                 .build();
+        entity.setId(menu.getId());
+        return entity;
     }
 
-    public static void setEntity(UaaAppMenuMeta entity, Long appId, SimpleMenu menu) {
-        entity.setAppId(appId);
-        entity.setParentCode(menu.getParentCode());
+    public static void setEntity(UaaAppMenuMeta entity, SimpleMenu menu) {
+        entity.setPid(menu.getPid());
         entity.setName(menu.getName());
         entity.setUrl(menu.getUrl());
         entity.setIcon(menu.getIcon());
@@ -61,10 +61,9 @@ public final class AppConverter {
         }
     }
 
-    public static UaaAppMenuAction toEntity(Long appId, String menuCode, SimpleMenuAction action) {
+    public static UaaAppMenuAction toEntity(Long menuId, SimpleMenuAction action) {
         return UaaAppMenuAction.builder()
-                .appId(appId)
-                .menuCode(menuCode)
+                .menuMetaId(menuId)
                 .code(action.getCode())
                 .name(action.getName())
                 .build();
