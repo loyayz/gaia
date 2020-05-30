@@ -20,12 +20,7 @@ class RoleUsers {
     }
 
     void addUsers(List<Long> userIds) {
-        List<Long> existUsers = this.roleId.isEmpty() ? Collections.emptyList() : UserRepository.listUserIdByRole(this.roleId.get());
-        for (Long userId : userIds) {
-            if (!existUsers.contains(userId)) {
-                this.newUsers.add(userId);
-            }
-        }
+        this.newUsers.addAll(userIds);
     }
 
     void removeUsers(List<Long> userIds) {
@@ -42,10 +37,14 @@ class RoleUsers {
         if (this.newUsers.isEmpty()) {
             return;
         }
+        List<Long> existUsers = this.roleId.isEmpty() ? Collections.emptyList() : UserRepository.listUserIdByRole(this.roleId.get());
         List<UaaUserRole> userRoles = this.newUsers.stream()
+                .filter(userId -> !existUsers.contains(userId))
                 .map(userId -> new UaaUserRole(userId, this.roleId.get()))
                 .collect(Collectors.toList());
-        new UaaUserRole().insert(userRoles);
+        if (!userRoles.isEmpty()) {
+            new UaaUserRole().insert(userRoles);
+        }
     }
 
     /**
