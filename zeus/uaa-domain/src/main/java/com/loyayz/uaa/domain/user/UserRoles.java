@@ -31,6 +31,9 @@ class UserRoles {
     void save() {
         this.insert();
         this.delete();
+
+        this.newRoles.clear();
+        this.deletedRoles.clear();
     }
 
     private void insert() {
@@ -54,7 +57,7 @@ class UserRoles {
         if (this.deletedRoles.isEmpty()) {
             return;
         }
-        Map<String, Object> param = new HashMap<>(2);
+        Map<String, Object> param = new HashMap<>(3);
         param.put("userId", this.userId.get());
         param.put("roleIds", this.deletedRoles);
         MybatisUtils.executeDelete(UaaUserRole.class, "deleteByUserRoles", param);

@@ -6,6 +6,8 @@ import com.loyayz.uaa.data.UaaRolePermission;
 import com.loyayz.uaa.data.UaaUserRole;
 import com.loyayz.uaa.domain.RoleRepository;
 import com.loyayz.zeus.AbstractEntity;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -15,16 +17,13 @@ import java.util.Map;
 /**
  * @author loyayz (loyayz@foxmail.com)
  */
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class AppRole extends AbstractEntity<UaaAppRole> {
     private final Long roleId;
     private AppRoleUsers roleUsers;
 
-    public static AppRole of(Long id) {
+    static AppRole of(Long id) {
         return new AppRole(id);
-    }
-
-    public Long id() {
-        return this.roleId;
     }
 
     public AppRole name(String name) {
@@ -95,10 +94,6 @@ public class AppRole extends AbstractEntity<UaaAppRole> {
         MybatisUtils.executeDelete(UaaUserRole.class, "deleteByRole", param);
         // delete rolePermission
         MybatisUtils.executeDelete(UaaRolePermission.class, "deleteByRole", param);
-    }
-
-    private AppRole(Long id) {
-        this.roleId = id;
     }
 
 }

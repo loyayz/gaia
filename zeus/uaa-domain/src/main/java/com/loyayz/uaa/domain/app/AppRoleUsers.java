@@ -31,6 +31,9 @@ class AppRoleUsers {
     void save() {
         this.insert();
         this.delete();
+
+        this.newUsers.clear();
+        this.deletedUsers.clear();
     }
 
     private void insert() {

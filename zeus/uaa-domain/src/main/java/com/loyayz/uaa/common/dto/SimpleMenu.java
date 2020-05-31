@@ -45,10 +45,6 @@ public class SimpleMenu implements Serializable {
      */
     private Boolean dir;
 
-    public Integer getSort() {
-        return sort == null ? 0 : sort;
-    }
-
     public List<SimpleMenu> getItems() {
         return items == null ? new ArrayList<>() : items;
     }

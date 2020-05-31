@@ -2,7 +2,6 @@ package com.loyayz.uaa.domain.app;
 
 import com.loyayz.gaia.data.mybatis.extension.MybatisUtils;
 import com.loyayz.uaa.common.dto.SimpleMenu;
-import com.loyayz.uaa.common.dto.SimpleMenuAction;
 import com.loyayz.uaa.data.UaaApp;
 import com.loyayz.uaa.data.UaaAppMenuMeta;
 import com.loyayz.uaa.data.UaaAppRole;
@@ -15,15 +14,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.loyayz.uaa.common.constant.UaaConstant.ROOT_MENU_CODE;
-
 /**
  * @author loyayz (loyayz@foxmail.com)
  */
 public class App extends AbstractEntity<UaaApp> {
     private final AppId appId;
-    private AppRoles appRoles;
-    private AppMenus appMenus;
+    private AppHelper helper;
 
     public static App of() {
         return new App();
@@ -77,91 +73,41 @@ public class App extends AbstractEntity<UaaApp> {
     }
 
     public App addRole(List<String> names) {
-        if (this.appRoles == null) {
-            this.appRoles = AppRoles.of(this.appId);
+        if (this.helper == null) {
+            this.helper = AppHelper.of(this.appId);
         }
-        this.appRoles.addRole(names);
-        return this;
-    }
-
-    /**
-     * 删除应用角色
-     *
-     * @param roleIds 角色id
-     */
-    public App removeRole(Long... roleIds) {
-        return this.removeRole(Arrays.asList(roleIds));
-    }
-
-    public App removeRole(List<Long> roleIds) {
-        if (this.appRoles == null) {
-            this.appRoles = AppRoles.of(this.appId);
-        }
-        this.appRoles.removeRole(roleIds);
+        this.helper.addRole(names);
         return this;
     }
 
     /**
      * 添加菜单元数据
-     * 根据菜单编码查询元数据，存在则修改，否则新增
      *
      * @param pid   上级菜单
      * @param menus 菜单
      */
-    public App addMenuMeta(Long pid, SimpleMenu... menus) {
-        return this.addMenuMeta(pid, Arrays.asList(menus));
+    public App addMenu(Long pid, SimpleMenu... menus) {
+        return this.addMenu(pid, Arrays.asList(menus));
     }
 
-    public App addMenuMeta(Long pid, List<SimpleMenu> menus) {
-        if (this.appMenus == null) {
-            this.appMenus = AppMenus.of(this.appId);
+    public App addMenu(Long pid, List<SimpleMenu> menus) {
+        if (this.helper == null) {
+            this.helper = AppHelper.of(this.appId);
         }
-        if (pid == null) {
-            pid = ROOT_MENU_CODE;
-        }
-        this.appMenus.addMeta(pid, menus);
+        this.helper.addMenu(pid, menus);
         return this;
     }
 
-    /**
-     * 删除菜单
-     *
-     * @param menuIds 菜单编码
-     */
-    public App removeMenuMeta(Long... menuIds) {
-        return this.removeMenuMeta(Arrays.asList(menuIds));
+    public AppRole role(Long roleId) {
+        return AppRole.of(roleId);
     }
 
-    public App removeMenuMeta(List<Long> menuIds) {
-        if (this.appMenus == null) {
-            this.appMenus = AppMenus.of(this.appId);
-        }
-        this.appMenus.removeMeta(menuIds);
-        return this;
+    public AppMenuMeta menuMeta(Long menuMetaId) {
+        return AppMenuMeta.of(this.appId, menuMetaId);
     }
 
-    public App addMenuAction(Long menuId, SimpleMenuAction... menuActions) {
-        return this.addMenuAction(menuId, Arrays.asList(menuActions));
-    }
-
-    public App addMenuAction(Long menuId, List<SimpleMenuAction> menuActions) {
-        if (this.appMenus == null) {
-            this.appMenus = AppMenus.of(this.appId);
-        }
-        this.appMenus.addAction(menuId, menuActions);
-        return this;
-    }
-
-    public App removeMenuAction(Long menuId, String... actionCodes) {
-        return this.removeMenuAction(menuId, Arrays.asList(actionCodes));
-    }
-
-    public App removeMenuAction(Long menuId, List<String> actionCodes) {
-        if (this.appMenus == null) {
-            this.appMenus = AppMenus.of(this.appId);
-        }
-        this.appMenus.removeAction(menuId, actionCodes);
-        return this;
+    public AppMenuAction menuAction(Long menuMetaId, String actionCode) {
+        return this.menuMeta(menuMetaId).action(actionCode);
     }
 
     @Override
@@ -182,11 +128,8 @@ public class App extends AbstractEntity<UaaApp> {
         super.save();
         this.appId.set(super.entity().getId());
 
-        if (this.appRoles != null) {
-            this.appRoles.save();
-        }
-        if (this.appMenus != null) {
-            this.appMenus.save();
+        if (this.helper != null) {
+            this.helper.save();
         }
     }
 

@@ -39,7 +39,7 @@ public class UserTest {
         User user = create(true);
 
         Assert.assertEquals(0, (int) new UaaUser().findById(user.id()).getDeleted());
-        User.of(user.id()).delete();
+        user.delete();
         Assert.assertEquals(1, (int) new UaaUser().findById(user.id()).getDeleted());
 
         user = create(true);
@@ -105,37 +105,35 @@ public class UserTest {
     public void testAccount() {
         Assert.assertTrue(new UaaUserAccount().listByCondition().isEmpty());
 
-        String type = "password";
         String name = UUID.randomUUID().toString();
         String password = UUID.randomUUID().toString();
-        User user = create(false)
-                .addAccount(type + "1", name + "1", password + "1")
-                .addAccount(type + "2", name + "2", password + "2")
-                .addAccount(type + "2", name + "2", password + "2");
-        user.save();
+        User user = create(true);
+        user.account("1", name + "1").password(password + "1").save();
+        user.account("2", name + "2").password(password + "2").save();
+        user.account("2", name + "2").password(password + "2").save();
 
         UaaUserAccount queryObject = UaaUserAccount.builder().userId(user.id()).build();
         List<UaaUserAccount> accounts = queryObject.listByCondition();
         Assert.assertEquals(2, accounts.size());
-        for (int j = 1; j < accounts.size() + 1; j++) {
-            UaaUserAccount account = accounts.get(j - 1);
-            Assert.assertEquals(type + j, account.getType());
-            Assert.assertEquals(name + j, account.getName());
-            Assert.assertEquals(password + j, account.getPassword());
-        }
 
-        user.removeAccount(type + 1, name + 1).save();
+        accounts.forEach(account -> {
+            Assert.assertEquals(name + account.getType(), account.getName());
+            Assert.assertEquals(password + account.getType(), account.getPassword());
+        });
+
+        String type = "1";
+        user.account(type, name + "1").delete();
         accounts = queryObject.listByCondition();
         Assert.assertEquals(1, accounts.size());
 
-        for (int j = 0; j < 2; j++) {
-            User.of(user.id()).addAccount(type, name, "").save();
-        }
         queryObject = UaaUserAccount.builder().userId(user.id()).type(type).name(name).build();
-        user.changeAccountPassword(type, name, "123")
-                .changeAccountPassword(type, name, "456").save();
-        UaaUserAccount account = queryObject.listByCondition().get(0);
-        Assert.assertEquals("456", account.getPassword());
+        Assert.assertTrue(queryObject.listByCondition().isEmpty());
+        for (int j = 0; j < 2; j++) {
+            user.account(type, name).save();
+        }
+        Assert.assertEquals("", queryObject.listByCondition().get(0).getPassword());
+        user.account(type, name).password("123").save();
+        Assert.assertEquals("123", queryObject.listByCondition().get(0).getPassword());
     }
 
     @Test
@@ -155,7 +153,7 @@ public class UserTest {
         UaaUserRole queryObject = UaaUserRole.builder().userId(user.id()).build();
         Assert.assertEquals(roleIds.size(), queryObject.listByCondition().size());
 
-        User.of(user.id()).removeRole(roleIds.toArray(new Long[]{})).save();
+        user.removeRole(roleIds.toArray(new Long[]{})).save();
         Assert.assertTrue(queryObject.listByCondition().isEmpty());
     }
 

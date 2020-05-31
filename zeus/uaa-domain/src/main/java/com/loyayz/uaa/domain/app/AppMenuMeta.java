@@ -2,7 +2,6 @@ package com.loyayz.uaa.domain.app;
 
 import com.loyayz.gaia.data.mybatis.extension.MybatisUtils;
 import com.loyayz.uaa.common.dto.SimpleMenu;
-import com.loyayz.uaa.common.dto.SimpleMenuAction;
 import com.loyayz.uaa.data.UaaAppMenuAction;
 import com.loyayz.uaa.data.UaaAppMenuMeta;
 import com.loyayz.uaa.data.UaaMenu;
@@ -10,84 +9,86 @@ import com.loyayz.uaa.data.converter.AppConverter;
 import com.loyayz.uaa.domain.AppRepository;
 import com.loyayz.zeus.AbstractEntity;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.loyayz.uaa.common.constant.UaaConstant.ROOT_MENU_CODE;
 
 /**
  * @author loyayz (loyayz@foxmail.com)
  */
-class AppMenuMeta extends AbstractEntity<UaaAppMenuMeta> {
+public class AppMenuMeta extends AbstractEntity<UaaAppMenuMeta> {
     private final AppId appId;
-    private SimpleMenu menu;
+    private Long menuId;
 
-    private final Map<String, AppMenuAction> menuActions = new HashMap<>();
     private final List<String> deletedMenuActions = new ArrayList<>();
 
+    static AppMenuMeta of(AppId appId) {
+        return of(appId, null);
+    }
+
     static AppMenuMeta of(AppId appId, Long menuId) {
-        SimpleMenu menu = new SimpleMenu();
-        menu.setId(menuId);
-        return new AppMenuMeta(appId, menu);
+        return new AppMenuMeta(appId, menuId);
     }
 
-    static AppMenuMeta of(AppId appId, SimpleMenu menu) {
-        AppMenuMeta meta = new AppMenuMeta(appId, menu);
-        meta.markUpdated();
-        return meta;
+    public Long id() {
+        return this.menuId;
     }
 
-    Long id() {
-        return super.entity().getId();
-    }
-
-    void info(SimpleMenu menu) {
-        this.menu = menu;
+    public AppMenuMeta info(SimpleMenu menu) {
+        if (this.menuId == null) {
+            this.menuId = menu.getId();
+        }
+        if (this.menuId == null) {
+            this.menuId = new UaaAppMenuMeta().genId();
+            this.entity(menu);
+        } else {
+            UaaAppMenuMeta entity = super.entity();
+            if (entity == null) {
+                this.entity(menu);
+            } else {
+                AppConverter.setEntity(entity, menu);
+            }
+        }
+        menu.setId(this.menuId);
         super.markUpdated();
+        return this;
     }
 
-    void addAction(List<SimpleMenuAction> actions) {
-        Long menuId = this.id();
-        for (SimpleMenuAction action : actions) {
-            this.menuActions.put(action.getCode(), AppMenuAction.of(menuId, action));
+    private void entity(SimpleMenu menu) {
+        if (menu.getPid() == null) {
+            menu.setPid(ROOT_MENU_CODE);
         }
+        UaaAppMenuMeta entity = AppConverter.toEntity(this.menuId, menu);
+        super.entity(entity);
     }
 
-    void removeAction(List<String> actionCodes) {
-        for (String actionCode : actionCodes) {
-            this.menuActions.remove(actionCode);
-        }
+    public AppMenuMeta removeAction(String... actionCodes) {
+        return this.removeAction(Arrays.asList(actionCodes));
+    }
+
+    public AppMenuMeta removeAction(List<String> actionCodes) {
         this.deletedMenuActions.addAll(actionCodes);
+        return this;
+    }
+
+    public AppMenuAction action(String actionCode) {
+        return AppMenuAction.of(this.id(), actionCode);
     }
 
     @Override
     protected UaaAppMenuMeta buildEntity() {
-        if (this.menu.getPid() == null) {
-            this.menu.setPid(ROOT_MENU_CODE);
-        }
-        UaaAppMenuMeta entity = null;
-        if (this.menu.getId() == null) {
-            this.menu.setId(new UaaAppMenuMeta().genId());
-        } else {
-            entity = AppRepository.getAppMenu(this.menu.getId());
-        }
-        if (entity == null) {
-            entity = AppConverter.toEntity(this.menu);
-        } else {
-            AppConverter.setEntity(entity, this.menu);
-        }
-        return entity;
+        return this.menuId == null ?
+                null : AppRepository.getAppMenu(menuId);
     }
 
     @Override
     public void save() {
-        super.entity().setAppId(this.appId.get());
-        super.save();
-
+        if (super.updated()) {
+            UaaAppMenuMeta entity = super.entity();
+            entity.setAppId(this.appId.get());
+            entity.save();
+        }
         this.saveActions();
-        this.deleteActions();
     }
 
     /**
@@ -96,7 +97,7 @@ class AppMenuMeta extends AbstractEntity<UaaAppMenuMeta> {
      */
     @Override
     public void delete() {
-        super.delete();
+        new UaaAppMenuMeta().deleteById(this.id());
 
         Map<String, Object> param = new HashMap<>(2);
         param.put("menuMetaId", this.id());
@@ -104,17 +105,10 @@ class AppMenuMeta extends AbstractEntity<UaaAppMenuMeta> {
         MybatisUtils.executeDelete(UaaMenu.class, "deleteByMeta", param);
     }
 
-    private void saveActions() {
-        if (this.menuActions.isEmpty()) {
-            return;
-        }
-        this.menuActions.forEach((actionCode, action) -> action.save());
-    }
-
     /**
      * {@link com.loyayz.uaa.data.mapper.UaaAppMenuActionMapper#deleteByMenuAndCodes}
      */
-    private void deleteActions() {
+    private void saveActions() {
         if (this.deletedMenuActions.isEmpty()) {
             return;
         }
@@ -124,8 +118,8 @@ class AppMenuMeta extends AbstractEntity<UaaAppMenuMeta> {
         MybatisUtils.executeDelete(UaaAppMenuAction.class, "deleteByMenuAndCodes", param);
     }
 
-    private AppMenuMeta(AppId appId, SimpleMenu menu) {
+    private AppMenuMeta(AppId appId, Long menuId) {
         this.appId = appId;
-        this.menu = menu;
+        this.menuId = menuId;
     }
 }

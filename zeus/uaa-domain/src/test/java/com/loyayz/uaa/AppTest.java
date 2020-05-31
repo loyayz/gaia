@@ -5,6 +5,7 @@ import com.loyayz.uaa.common.dto.SimpleMenu;
 import com.loyayz.uaa.common.dto.SimpleMenuAction;
 import com.loyayz.uaa.data.*;
 import com.loyayz.uaa.domain.app.App;
+import com.loyayz.uaa.domain.app.AppMenuMeta;
 import com.loyayz.uaa.domain.app.AppRole;
 import org.junit.Assert;
 import org.junit.Test;
@@ -49,7 +50,7 @@ public class AppTest {
     public void testDelete() {
         App app = create(true);
         Assert.assertNotNull(new UaaApp().findById(app.id()));
-        App.of(app.id()).delete();
+        app.delete();
         Assert.assertNull(new UaaApp().findById(app.id()));
     }
 
@@ -100,29 +101,26 @@ public class AppTest {
         Assert.assertEquals(3, roles.size());
 
         for (UaaAppRole role : roles) {
-            App.of(app.id()).removeRole(role.getId()).save();
+            app.role(role.getId()).delete();
         }
-        roles = queryObject.listByCondition();
-        Assert.assertTrue(roles.isEmpty());
 
-        App.of(app.id())
-                .addRole(UUID.randomUUID().toString())
+        Assert.assertTrue(queryObject.listByCondition().isEmpty());
+
+        app.addRole(UUID.randomUUID().toString())
                 .addRole(UUID.randomUUID().toString())
                 .addRole(UUID.randomUUID().toString())
                 .save();
-        roles = queryObject.listByCondition();
-        roles.forEach(role -> {
+        queryObject.listByCondition().forEach(role -> {
             Long roleId = role.getId();
+            AppRole appRole = app.role(roleId);
 
             // update
             String newName = UUID.randomUUID().toString();
             Assert.assertNotEquals(newName, role.getName());
-            AppRole.of(roleId).name(newName).save();
-            UaaAppRole newRole = new UaaAppRole().findById(roleId);
-            Assert.assertEquals(newName, newRole.getName());
+            appRole.name(newName).save();
+            Assert.assertEquals(newName, new UaaAppRole().findById(roleId).getName());
 
             // role user
-            AppRole appRole = AppRole.of(roleId);
             List<Long> userIds = new ArrayList<>();
             for (int i = 0; i < 5; i++) {
                 Long userId = (long) new Random().nextInt(1000000);
@@ -133,11 +131,11 @@ public class AppTest {
 
             UaaUserRole roleQueryObject = UaaUserRole.builder().roleId(roleId).build();
             Assert.assertEquals(userIds.size(), roleQueryObject.listByCondition().size());
-            AppRole.of(roleId).removeUser(userIds.toArray(new Long[]{})).save();
+            appRole.removeUser(userIds.toArray(new Long[]{})).save();
             Assert.assertTrue(roleQueryObject.listByCondition().isEmpty());
 
             // delete
-            AppRole.of(roleId).delete();
+            appRole.delete();
             role = new UaaAppRole().findById(roleId);
             Assert.assertNull(role);
         });
@@ -155,53 +153,45 @@ public class AppTest {
         menu2.addItem(this.mockMenu());
         SimpleMenu menu3 = this.mockMenu();
 
-        app.addMenuMeta(0L, menu1)
-                .addMenuMeta(0L, menu2)
-                .addMenuMeta(0L, menu3)
+        app.addMenu(0L, menu1)
+                .addMenu(0L, menu2)
+                .addMenu(0L, menu3)
                 .save();
 
+        Long menu1Id = menu1.getId();
+        Long menu2Id = menu2.getId();
         UaaAppMenuMeta queryObject = UaaAppMenuMeta.builder().appId(app.id()).build();
-        UaaAppMenuMeta queryObject1 = UaaAppMenuMeta.builder().appId(app.id()).pid(menu1.getId()).build();
-        UaaAppMenuMeta queryObject2 = UaaAppMenuMeta.builder().appId(app.id()).pid(menu2.getId()).build();
+        UaaAppMenuMeta queryObject1 = UaaAppMenuMeta.builder().appId(app.id()).pid(menu1Id).build();
+        UaaAppMenuMeta queryObject2 = UaaAppMenuMeta.builder().appId(app.id()).pid(menu2Id).build();
         Assert.assertEquals(6, queryObject.listByCondition().size());
         Assert.assertEquals(2, queryObject1.listByCondition().size());
         Assert.assertEquals(1, queryObject2.listByCondition().size());
 
-        App.of(app.id()).removeMenuMeta(menu3.getId()).save();
+        app.menuMeta(menu3.getId()).delete();
         Assert.assertEquals(5, queryObject.listByCondition().size());
-    }
 
-    @Test
-    public void testMenuAction() {
+
+        // menu action
         Assert.assertTrue(new UaaAppMenuAction().listByCondition().isEmpty());
-        App app = create(true);
+        SimpleMenuAction action1 = this.mockAction();
+        SimpleMenuAction action2 = this.mockAction();
+        SimpleMenuAction action3 = this.mockAction();
 
-        SimpleMenuAction action1 = new SimpleMenuAction();
-        action1.setCode(UUID.randomUUID().toString().substring(0, 20));
-        action1.setName(UUID.randomUUID().toString().substring(0, 20));
-        SimpleMenuAction action2 = new SimpleMenuAction();
-        action2.setCode(UUID.randomUUID().toString().substring(0, 20));
-        action2.setName(UUID.randomUUID().toString().substring(0, 20));
-        SimpleMenuAction action3 = new SimpleMenuAction();
-        action3.setCode(UUID.randomUUID().toString().substring(0, 20));
-        action3.setName(UUID.randomUUID().toString().substring(0, 20));
+        app.menuAction(menu1Id, action1.getCode()).name(action1.getName()).save();
+        app.menuAction(menu2Id, action2.getCode()).name(action2.getName()).save();
+        app.menuAction(menu2Id, action3.getCode()).name(action3.getName()).save();
 
-        app.addMenuAction(0L, action1)
-                .addMenuAction(1L, action2)
-                .addMenuAction(1L, action3)
-                .save();
+        UaaAppMenuAction actionQueryObject1 = UaaAppMenuAction.builder().menuMetaId(menu1Id).build();
+        UaaAppMenuAction actionQueryObject2 = UaaAppMenuAction.builder().menuMetaId(menu2Id).build();
+        Assert.assertEquals(1, actionQueryObject1.listByCondition().size());
+        Assert.assertEquals(2, actionQueryObject2.listByCondition().size());
 
-        UaaAppMenuAction queryObject1 = UaaAppMenuAction.builder().menuMetaId(0L).build();
-        UaaAppMenuAction queryObject2 = UaaAppMenuAction.builder().menuMetaId(1L).build();
-        Assert.assertEquals(1, queryObject1.listByCondition().size());
-        Assert.assertEquals(2, queryObject2.listByCondition().size());
-
-        App.of(app.id()).removeMenuAction(0L, action2.getCode()).save();
-        Assert.assertEquals(1, queryObject1.listByCondition().size());
-        Assert.assertEquals(2, queryObject2.listByCondition().size());
-        App.of(app.id()).removeMenuAction(1L, action2.getCode()).save();
-        Assert.assertEquals(1, queryObject1.listByCondition().size());
-        Assert.assertEquals(1, queryObject2.listByCondition().size());
+        app.menuMeta(menu1Id).removeAction(action2.getCode()).save();
+        Assert.assertEquals(1, actionQueryObject1.listByCondition().size());
+        Assert.assertEquals(2, actionQueryObject2.listByCondition().size());
+        app.menuMeta(menu2Id).removeAction(action2.getCode()).save();
+        Assert.assertEquals(1, actionQueryObject1.listByCondition().size());
+        Assert.assertEquals(1, actionQueryObject2.listByCondition().size());
     }
 
     private App create(boolean save) {
@@ -217,6 +207,13 @@ public class AppTest {
         menu.setCode(UUID.randomUUID().toString().substring(0, 20));
         menu.setName(UUID.randomUUID().toString());
         return menu;
+    }
+
+    private SimpleMenuAction mockAction() {
+        SimpleMenuAction action = new SimpleMenuAction();
+        action.setCode(UUID.randomUUID().toString().substring(0, 20));
+        action.setName(UUID.randomUUID().toString().substring(0, 20));
+        return action;
     }
 
 }

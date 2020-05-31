@@ -7,6 +7,7 @@ import com.loyayz.uaa.domain.UserRepository;
 import com.loyayz.zeus.AbstractEntity;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,30 +15,21 @@ import java.util.Map;
 /**
  * @author loyayz (loyayz@foxmail.com)
  */
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-class UserAccount extends AbstractEntity<UaaUserAccount> {
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+public class UserAccount extends AbstractEntity<UaaUserAccount> {
     private final UserId userId;
     private final String type;
     private final String name;
-    private String password;
 
     static UserAccount of(UserId userId, String type, String name) {
-        return of(userId, type, name, null);
-    }
-
-    static UserAccount of(UserId userId, String type, String name, String password) {
-        UserAccount account = new UserAccount(userId, type, name, password);
+        UserAccount account = new UserAccount(userId, type, name);
         account.markUpdated();
         return account;
     }
 
-    void password(String password) {
-        this.password = password;
+    public UserAccount password(String password) {
         this.entity().setPassword(password);
-    }
-
-    boolean same(String otherType, String otherName) {
-        return type.equals(otherType) && name.equals(otherName);
+        return this;
     }
 
     @Override
@@ -48,8 +40,8 @@ class UserAccount extends AbstractEntity<UaaUserAccount> {
             entity.setUserId(userId.get());
             entity.setType(type);
             entity.setName(name);
+            entity.setPassword("");
         }
-        entity.setPassword(password);
         return entity;
     }
 

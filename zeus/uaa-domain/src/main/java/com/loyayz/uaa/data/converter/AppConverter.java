@@ -1,5 +1,6 @@
 package com.loyayz.uaa.data.converter;
 
+import com.loyayz.gaia.util.Functions;
 import com.loyayz.uaa.common.dto.SimpleApp;
 import com.loyayz.uaa.common.dto.SimpleMenu;
 import com.loyayz.uaa.common.dto.SimpleMenuAction;
@@ -35,7 +36,7 @@ public final class AppConverter {
         return result;
     }
 
-    public static UaaAppMenuMeta toEntity(SimpleMenu menu) {
+    public static UaaAppMenuMeta toEntity(Long menuId, SimpleMenu menu) {
         UaaAppMenuMeta entity = UaaAppMenuMeta.builder()
                 .pid(menu.getPid())
                 .dir(menu.getDir() ? 1 : 0)
@@ -43,29 +44,28 @@ public final class AppConverter {
                 .name(menu.getName())
                 .url(menu.getUrl() == null ? "" : menu.getUrl())
                 .icon(menu.getIcon() == null ? "" : menu.getIcon())
-                .sort(menu.getSort())
+                .sort(menu.getSort() == null ? 0 : menu.getSort())
                 .build();
-        entity.setId(menu.getId());
+        entity.setId(menuId);
         return entity;
     }
 
     public static void setEntity(UaaAppMenuMeta entity, SimpleMenu menu) {
-        entity.setPid(menu.getPid());
-        entity.setName(menu.getName());
-        entity.setUrl(menu.getUrl());
-        entity.setIcon(menu.getIcon());
-        entity.setSort(menu.getSort());
+        Functions.executeIfNotNull(entity::setPid, menu.getPid());
+        Functions.executeIfNotNull(entity::setName, menu.getName());
+        Functions.executeIfNotNull(entity::setUrl, menu.getUrl());
+        Functions.executeIfNotNull(entity::setIcon, menu.getIcon());
+        Functions.executeIfNotNull(entity::setSort, menu.getSort());
         // 菜单可修改为目录，目录无法修改为菜单
         if (menu.getDir()) {
             entity.setDir(1);
         }
     }
 
-    public static UaaAppMenuAction toEntity(Long menuId, SimpleMenuAction action) {
+    public static UaaAppMenuAction toEntity(Long menuId, String code) {
         return UaaAppMenuAction.builder()
                 .menuMetaId(menuId)
-                .code(action.getCode())
-                .name(action.getName())
+                .code(code)
                 .build();
     }
 

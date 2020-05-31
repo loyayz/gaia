@@ -8,16 +8,16 @@ import com.loyayz.uaa.data.converter.UserConverter;
 import com.loyayz.uaa.domain.UserRepository;
 import com.loyayz.zeus.AbstractEntity;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author loyayz (loyayz@foxmail.com)
  */
 public class User extends AbstractEntity<UaaUser> {
     private final UserId userId;
-    private List<UserAccount> updatedAccounts = new ArrayList<>();
-    private List<UserAccount> deletedAccounts = new ArrayList<>();
     private UserRoles userRoles;
 
     public static User of() {
@@ -99,46 +99,6 @@ public class User extends AbstractEntity<UaaUser> {
     }
 
     /**
-     * 添加账号
-     */
-    public User addAccount(String accountType, String accountName, String password) {
-        UserAccount account = UserAccount.of(this.userId, accountType, accountName, password);
-        this.updatedAccounts = this.updatedAccounts.stream()
-                .filter(a -> !a.same(accountType, accountName))
-                .collect(Collectors.toList());
-        this.updatedAccounts.add(account);
-        return this;
-    }
-
-    /**
-     * 删除账号
-     */
-    public User removeAccount(String accountType, String accountName) {
-        UserAccount account = UserAccount.of(this.userId, accountType, accountName);
-        this.updatedAccounts = this.updatedAccounts.stream()
-                .filter(a -> !a.same(accountType, accountName))
-                .collect(Collectors.toList());
-        this.deletedAccounts.add(account);
-        return this;
-    }
-
-    /**
-     * 修改账号密码
-     */
-    public User changeAccountPassword(String accountType, String accountName, String password) {
-        UserAccount account = UserAccount.of(this.userId, accountType, accountName, password);
-        Optional<UserAccount> accountOptional = this.updatedAccounts.stream()
-                .filter(a -> a.same(accountType, accountName))
-                .findFirst();
-        if (accountOptional.isPresent()) {
-            accountOptional.get().password(password);
-        } else {
-            this.updatedAccounts.add(account);
-        }
-        return this;
-    }
-
-    /**
      * 添加角色
      */
     public User addRole(Long... roleIds) {
@@ -168,6 +128,16 @@ public class User extends AbstractEntity<UaaUser> {
         return this;
     }
 
+    /**
+     * 账号
+     *
+     * @param accountType 账号类型
+     * @param accountName 账号名
+     */
+    public UserAccount account(String accountType, String accountName) {
+        return UserAccount.of(this.userId, accountType, accountName);
+    }
+
     @Override
     protected UaaUser buildEntity() {
         if (this.userId.isEmpty()) {
@@ -185,14 +155,8 @@ public class User extends AbstractEntity<UaaUser> {
         super.save();
         this.userId.set(super.entity().getId());
 
-        for (UserAccount account : updatedAccounts) {
-            account.save();
-        }
-        for (UserAccount account : deletedAccounts) {
-            account.delete();
-        }
-        if (userRoles != null) {
-            userRoles.save();
+        if (this.userRoles != null) {
+            this.userRoles.save();
         }
     }
 
