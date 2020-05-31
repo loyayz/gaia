@@ -9,10 +9,9 @@ import lombok.Data;
 public class RoleQueryParam {
 
     /**
-     * 角色编码
-     * 模糊查询
+     * 应用
      */
-    private String code;
+    private Long appId;
     /**
      * 角色名
      * 模糊查询

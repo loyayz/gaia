@@ -11,11 +11,11 @@ import java.util.*;
  * @author loyayz (loyayz@foxmail.com)
  */
 class RolePermissions {
-    private final RoleId roleId;
+    private final Long roleId;
     private final Map<RolePermissionType, Set<Long>> newPermissions = new HashMap<>();
     private final Map<RolePermissionType, Set<Long>> deletedPermissions = new HashMap<>();
 
-    static RolePermissions of(RoleId roleId) {
+    static RolePermissions of(Long roleId) {
         return new RolePermissions(roleId);
     }
 
@@ -42,12 +42,11 @@ class RolePermissions {
 
     private void insert() {
         List<UaaRolePermission> permissions = new ArrayList<>();
-        Long rid = this.roleId.get();
         this.newPermissions.forEach((type, refIds) -> {
-            List<Long> existRefs = this.roleId.isEmpty() ? Collections.emptyList() : RoleRepository.listRefIdByRole(rid, type.getVal());
+            List<Long> existRefs = RoleRepository.listRefIdByRole(roleId, type.getVal());
             refIds.forEach(refId -> {
                 if (!existRefs.contains(refId)) {
-                    permissions.add(new UaaRolePermission(rid, type.getVal(), refId));
+                    permissions.add(new UaaRolePermission(roleId, type.getVal(), refId));
                 }
             });
         });
@@ -62,14 +61,14 @@ class RolePermissions {
     private void delete() {
         this.deletedPermissions.forEach((type, refIds) -> {
             Map<String, Object> param = new HashMap<>(3);
-            param.put("roleId", this.roleId.get());
+            param.put("roleId", this.roleId);
             param.put("type", type.getVal());
             param.put("refIds", new ArrayList<>(refIds));
             MybatisUtils.executeDelete(UaaRolePermission.class, "deleteByRoleTypeRefs", param);
         });
     }
 
-    private RolePermissions(RoleId roleId) {
+    private RolePermissions(Long roleId) {
         this.roleId = roleId;
     }
 

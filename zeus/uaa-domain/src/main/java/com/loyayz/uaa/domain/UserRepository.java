@@ -2,7 +2,7 @@ package com.loyayz.uaa.domain;
 
 import com.loyayz.gaia.data.mybatis.extension.MybatisUtils;
 import com.loyayz.uaa.common.dto.UserQueryParam;
-import com.loyayz.uaa.data.UaaRole;
+import com.loyayz.uaa.data.UaaAppRole;
 import com.loyayz.uaa.data.UaaUser;
 import com.loyayz.uaa.data.UaaUserAccount;
 import com.loyayz.uaa.data.UaaUserRole;
@@ -49,7 +49,7 @@ public final class UserRepository {
     /**
      * {@link UaaUserRoleMapper#listByUser}
      */
-    public static List<UaaRole> listRoleByUser(Long userId) {
+    public static List<UaaAppRole> listRoleByUser(Long userId) {
         Map<String, Object> param = new HashMap<>(2);
         param.put("userId", userId);
         return MybatisUtils.executeSelectList(UaaUserRole.class, "listByUser", param);

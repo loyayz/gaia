@@ -5,6 +5,7 @@ import com.loyayz.uaa.common.dto.SimpleMenu;
 import com.loyayz.uaa.common.dto.SimpleMenuAction;
 import com.loyayz.uaa.data.UaaApp;
 import com.loyayz.uaa.data.UaaAppMenuMeta;
+import com.loyayz.uaa.data.UaaAppRole;
 import com.loyayz.uaa.data.UaaMenu;
 import com.loyayz.uaa.domain.AppRepository;
 import com.loyayz.zeus.AbstractEntity;
@@ -21,6 +22,7 @@ import static com.loyayz.uaa.common.constant.UaaConstant.ROOT_MENU_CODE;
  */
 public class App extends AbstractEntity<UaaApp> {
     private final AppId appId;
+    private AppRoles appRoles;
     private AppMenus appMenus;
 
     public static App of() {
@@ -62,6 +64,40 @@ public class App extends AbstractEntity<UaaApp> {
     public App sort(int sort) {
         super.entity().setSort(sort);
         super.markUpdated();
+        return this;
+    }
+
+    /**
+     * 添加应用角色
+     *
+     * @param names 角色名
+     */
+    public App addRole(String... names) {
+        return this.addRole(Arrays.asList(names));
+    }
+
+    public App addRole(List<String> names) {
+        if (this.appRoles == null) {
+            this.appRoles = AppRoles.of(this.appId);
+        }
+        this.appRoles.addRole(names);
+        return this;
+    }
+
+    /**
+     * 删除应用角色
+     *
+     * @param roleIds 角色id
+     */
+    public App removeRole(Long... roleIds) {
+        return this.removeRole(Arrays.asList(roleIds));
+    }
+
+    public App removeRole(List<Long> roleIds) {
+        if (this.appRoles == null) {
+            this.appRoles = AppRoles.of(this.appId);
+        }
+        this.appRoles.removeRole(roleIds);
         return this;
     }
 
@@ -146,12 +182,16 @@ public class App extends AbstractEntity<UaaApp> {
         super.save();
         this.appId.set(super.entity().getId());
 
+        if (this.appRoles != null) {
+            this.appRoles.save();
+        }
         if (this.appMenus != null) {
             this.appMenus.save();
         }
     }
 
     /**
+     * {@link com.loyayz.uaa.data.mapper.UaaAppRoleMapper#deleteByApp}
      * {@link com.loyayz.uaa.data.mapper.UaaAppMenuMetaMapper#deleteByApp}
      * {@link com.loyayz.uaa.data.mapper.UaaMenuMapper#deleteByApp}
      */
@@ -161,6 +201,7 @@ public class App extends AbstractEntity<UaaApp> {
 
         Map<String, Object> param = new HashMap<>(2);
         param.put("appId", this.appId.get());
+        MybatisUtils.executeDelete(UaaAppRole.class, "deleteByApp", param);
         MybatisUtils.executeDelete(UaaAppMenuMeta.class, "deleteByApp", param);
         MybatisUtils.executeDelete(UaaMenu.class, "deleteByApp", param);
     }

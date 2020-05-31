@@ -9,13 +9,16 @@ import lombok.NoArgsConstructor;
 /**
  * @author loyayz (loyayz@foxmail.com)
  */
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UaaRole extends AbstractTable<UaaRole> {
+public class UaaAppRole extends AbstractTable<UaaAppRole> {
 
+    /**
+     * 应用
+     */
+    private Long appId;
     /**
      * 角色名
      */

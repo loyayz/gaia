@@ -1,4 +1,4 @@
-package com.loyayz.uaa.domain.role;
+package com.loyayz.uaa.domain.app;
 
 import com.loyayz.gaia.data.mybatis.extension.MybatisUtils;
 import com.loyayz.uaa.data.UaaUserRole;
@@ -10,13 +10,13 @@ import java.util.stream.Collectors;
 /**
  * @author loyayz (loyayz@foxmail.com)
  */
-class RoleUsers {
-    private final RoleId roleId;
+class AppRoleUsers {
+    private final Long roleId;
     private final Set<Long> newUsers = new HashSet<>();
     private final Set<Long> deletedUsers = new HashSet<>();
 
-    static RoleUsers of(RoleId roleId) {
-        return new RoleUsers(roleId);
+    static AppRoleUsers of(Long roleId) {
+        return new AppRoleUsers(roleId);
     }
 
     void addUsers(List<Long> userIds) {
@@ -37,10 +37,10 @@ class RoleUsers {
         if (this.newUsers.isEmpty()) {
             return;
         }
-        List<Long> existUsers = this.roleId.isEmpty() ? Collections.emptyList() : UserRepository.listUserIdByRole(this.roleId.get());
+        List<Long> existUsers = UserRepository.listUserIdByRole(this.roleId);
         List<UaaUserRole> userRoles = this.newUsers.stream()
                 .filter(userId -> !existUsers.contains(userId))
-                .map(userId -> new UaaUserRole(userId, this.roleId.get()))
+                .map(userId -> new UaaUserRole(userId, this.roleId))
                 .collect(Collectors.toList());
         if (!userRoles.isEmpty()) {
             new UaaUserRole().insert(userRoles);
@@ -54,13 +54,13 @@ class RoleUsers {
         if (this.deletedUsers.isEmpty()) {
             return;
         }
-        Map<String, Object> param = new HashMap<>(2);
-        param.put("roleId", this.roleId.get());
+        Map<String, Object> param = new HashMap<>(3);
+        param.put("roleId", this.roleId);
         param.put("userIds", this.deletedUsers);
         MybatisUtils.executeDelete(UaaUserRole.class, "deleteByUsersRole", param);
     }
 
-    private RoleUsers(RoleId roleId) {
+    private AppRoleUsers(Long roleId) {
         this.roleId = roleId;
     }
 
