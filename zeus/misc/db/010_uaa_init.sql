@@ -79,19 +79,6 @@ CREATE TABLE `uaa_app`
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='应用';
 
-CREATE TABLE `uaa_app_admin`
-(
-    `id`           bigint(20) unsigned NOT NULL,
-    `app_id`       bigint(20) unsigned NOT NULL COMMENT '应用',
-    `user_id`      bigint(20) unsigned NOT NULL COMMENT '用户',
-    `gmt_create`   datetime DEFAULT NULL,
-    `gmt_modified` datetime DEFAULT NULL,
-    PRIMARY KEY (`id`),
-    KEY `idx_uaa_aid` (`app_id`),
-    KEY `idx_uaa_uid` (`user_id`)
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4 COMMENT ='应用管理员';
-
 CREATE TABLE `uaa_app_menu_meta`
 (
     `id`           bigint(20) unsigned NOT NULL,

@@ -21,7 +21,6 @@ import static com.loyayz.uaa.common.constant.UaaConstant.ROOT_MENU_CODE;
  */
 public class App extends AbstractEntity<UaaApp> {
     private final AppId appId;
-    private AppAdmins appAdmins;
     private AppMenus appMenus;
 
     public static App of() {
@@ -63,52 +62,6 @@ public class App extends AbstractEntity<UaaApp> {
     public App sort(int sort) {
         super.entity().setSort(sort);
         super.markUpdated();
-        return this;
-    }
-
-    /**
-     * 是否管理员
-     *
-     * @param userId 用户id
-     */
-    public boolean isAdmin(Long userId) {
-        if (this.appAdmins == null) {
-            this.appAdmins = AppAdmins.of(this.appId);
-        }
-        return this.appAdmins.containsUser(userId);
-    }
-
-    /**
-     * 添加管理员
-     *
-     * @param userIds 用户id
-     */
-    public App addAdmin(Long... userIds) {
-        return this.addAdmin(Arrays.asList(userIds));
-    }
-
-    public App addAdmin(List<Long> userIds) {
-        if (this.appAdmins == null) {
-            this.appAdmins = AppAdmins.of(this.appId);
-        }
-        this.appAdmins.addUsers(userIds);
-        return this;
-    }
-
-    /**
-     * 删除管理员
-     *
-     * @param userIds 用户id
-     */
-    public App removeAdmin(Long... userIds) {
-        return this.removeAdmin(Arrays.asList(userIds));
-    }
-
-    public App removeAdmin(List<Long> userIds) {
-        if (this.appAdmins == null) {
-            this.appAdmins = AppAdmins.of(this.appId);
-        }
-        this.appAdmins.removeUsers(userIds);
         return this;
     }
 
@@ -193,9 +146,6 @@ public class App extends AbstractEntity<UaaApp> {
         super.save();
         this.appId.set(super.entity().getId());
 
-        if (this.appAdmins != null) {
-            this.appAdmins.save();
-        }
         if (this.appMenus != null) {
             this.appMenus.save();
         }

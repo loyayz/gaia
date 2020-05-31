@@ -1,7 +1,6 @@
 package com.loyayz.uaa.domain.user;
 
 import com.loyayz.gaia.data.mybatis.extension.MybatisUtils;
-import com.loyayz.uaa.data.UaaAppAdmin;
 import com.loyayz.uaa.data.UaaUser;
 import com.loyayz.uaa.data.UaaUserAccount;
 import com.loyayz.uaa.data.UaaUserRole;
@@ -202,7 +201,6 @@ public class User extends AbstractEntity<UaaUser> {
      * 逻辑删除用户信息，物理删除账号、角色、应用管理员
      * {@link com.loyayz.uaa.data.mapper.UaaUserAccountMapper#deleteByUser}
      * {@link com.loyayz.uaa.data.mapper.UaaUserRoleMapper#deleteByUser}
-     * {@link com.loyayz.uaa.data.mapper.UaaAppAdminMapper#deleteByUser}
      */
     @Override
     public void delete() {
@@ -218,8 +216,6 @@ public class User extends AbstractEntity<UaaUser> {
         MybatisUtils.executeDelete(UaaUserAccount.class, "deleteByUser", param);
         // delete userRole
         MybatisUtils.executeDelete(UaaUserRole.class, "deleteByUser", param);
-        // delete appAdmin
-        MybatisUtils.executeDelete(UaaAppAdmin.class, "deleteByUser", param);
     }
 
     private User() {
