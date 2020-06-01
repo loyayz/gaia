@@ -65,13 +65,15 @@ public class MenuTest {
                 .metaId(menuParam.getId())
                 .name(menuParam.getName())
                 .icon(menuParam.getIcon())
-                .sort(menuParam.getSort());
+                .sort(menuParam.getSort())
+                .hidden();
 
         UaaMenu storeMenu = new UaaMenu().findById(menu.id());
         Assert.assertNotEquals(menuParam.getId(), storeMenu.getMenuMetaId());
         Assert.assertNotEquals(menuParam.getName(), storeMenu.getName());
         Assert.assertNotEquals(menuParam.getIcon(), storeMenu.getIcon());
         Assert.assertNotEquals(menuParam.getSort(), storeMenu.getSort());
+        Assert.assertEquals(0, (int) storeMenu.getHidden());
 
         menu.save();
 
@@ -80,6 +82,11 @@ public class MenuTest {
         Assert.assertEquals(menuParam.getName(), storeMenu.getName());
         Assert.assertEquals(menuParam.getIcon(), storeMenu.getIcon());
         Assert.assertEquals(menuParam.getSort(), storeMenu.getSort());
+        Assert.assertEquals(1, (int) storeMenu.getHidden());
+
+        menu.open().save();
+        storeMenu = new UaaMenu().findById(menu.id());
+        Assert.assertEquals(0, (int) storeMenu.getHidden());
     }
 
     private Menu create(boolean save) {

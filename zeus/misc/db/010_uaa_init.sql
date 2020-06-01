@@ -120,13 +120,15 @@ CREATE TABLE `uaa_menu`
     `menu_meta_id` bigint(20) unsigned NOT NULL COMMENT '菜单元数据',
     `name`         VARCHAR(50)         NOT NULL COMMENT '名称',
     `icon`         VARCHAR(50)         NOT NULL COMMENT '图标',
+    `hidden`       tinyint(4)          NOT NULL DEFAULT '0' COMMENT '是否隐藏',
     `sort`         INT(11)             NOT NULL COMMENT '序号',
-    `gmt_create`   DATETIME DEFAULT NULL,
-    `gmt_modified` DATETIME DEFAULT NULL,
+    `gmt_create`   DATETIME                     DEFAULT NULL,
+    `gmt_modified` DATETIME                     DEFAULT NULL,
     PRIMARY KEY (`id`),
-    KEY `idx_um_meta` (`menu_meta_id`),
     KEY `idx_um_app` (`app_id`),
-    KEY `idx_um_pid` (`pid`)
+    KEY `idx_um_pid` (`pid`),
+    KEY `idx_um_meta` (`menu_meta_id`),
+    KEY `idx_um_hidden` (`hidden`)
 ) ENGINE = INNODB
   DEFAULT CHARSET = utf8mb4 COMMENT ='菜单';
 

@@ -14,8 +14,8 @@ public class Menu extends AbstractEntity<UaaMenu> {
         return new Menu();
     }
 
-    public static Menu of(Long appId) {
-        return new Menu(appId);
+    public static Menu of(Long menuId) {
+        return new Menu(menuId);
     }
 
     public Long id() {
@@ -62,12 +62,31 @@ public class Menu extends AbstractEntity<UaaMenu> {
         return this;
     }
 
+    /**
+     * 隐藏菜单
+     */
+    public Menu hidden() {
+        super.entity().setHidden(1);
+        super.markUpdated();
+        return this;
+    }
+
+    /**
+     * 开放菜单
+     */
+    public Menu open() {
+        super.entity().setHidden(0);
+        super.markUpdated();
+        return this;
+    }
+
     @Override
     protected UaaMenu buildEntity() {
         if (this.menuId.isEmpty()) {
             UaaMenu entity = new UaaMenu();
             entity.setName("");
             entity.setIcon("");
+            entity.setHidden(0);
             return entity;
         } else {
             return MenuRepository.findById(this.id());

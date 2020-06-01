@@ -36,7 +36,11 @@ public class UaaMenu extends AbstractTable<UaaMenu> {
      */
     private String icon;
     /**
-     * 序号a
+     * 是否隐藏
+     */
+    private Integer hidden;
+    /**
+     * 序号
      */
     private Integer sort;
 
