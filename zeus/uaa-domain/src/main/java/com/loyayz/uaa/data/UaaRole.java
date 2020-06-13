@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UaaAppRole extends AbstractTable<UaaAppRole> {
+public class UaaRole extends AbstractTable<UaaRole> {
 
     /**
      * 应用

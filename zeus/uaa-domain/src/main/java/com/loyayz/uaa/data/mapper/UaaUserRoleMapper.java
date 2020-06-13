@@ -1,7 +1,7 @@
 package com.loyayz.uaa.data.mapper;
 
 import com.loyayz.gaia.data.mybatis.BaseMapper;
-import com.loyayz.uaa.data.UaaAppRole;
+import com.loyayz.uaa.data.UaaRole;
 import com.loyayz.uaa.data.UaaUserRole;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Param;
@@ -40,8 +40,8 @@ public interface UaaUserRoleMapper extends BaseMapper<UaaUserRole> {
     @Delete("DELETE FROM uaa_user_role WHERE role_id = #{roleId}")
     int deleteByRole(@Param("roleId") Long roleId);
 
-    @Select("SELECT r.* FROM uaa_user_role u,uaa_app_role r " +
+    @Select("SELECT r.* FROM uaa_user_role u,uaa_role r " +
             "  WHERE u.role_id = r.id AND u.user_id = #{userId} ")
-    List<UaaAppRole> listByUser(@Param("userId") Long userId);
+    List<UaaRole> listByUser(@Param("userId") Long userId);
 
 }

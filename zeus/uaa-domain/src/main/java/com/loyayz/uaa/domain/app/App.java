@@ -4,8 +4,8 @@ import com.loyayz.gaia.data.mybatis.extension.MybatisUtils;
 import com.loyayz.uaa.common.dto.SimpleMenu;
 import com.loyayz.uaa.data.UaaApp;
 import com.loyayz.uaa.data.UaaAppMenuMeta;
-import com.loyayz.uaa.data.UaaAppRole;
 import com.loyayz.uaa.data.UaaMenu;
+import com.loyayz.uaa.data.UaaRole;
 import com.loyayz.uaa.domain.AppRepository;
 import com.loyayz.zeus.AbstractEntity;
 
@@ -98,10 +98,6 @@ public class App extends AbstractEntity<UaaApp> {
         return this;
     }
 
-    public AppRole role(Long roleId) {
-        return AppRole.of(roleId);
-    }
-
     public AppMenuMeta menuMeta(Long menuMetaId) {
         return AppMenuMeta.of(this.appId, menuMetaId);
     }
@@ -134,9 +130,9 @@ public class App extends AbstractEntity<UaaApp> {
     }
 
     /**
-     * {@link com.loyayz.uaa.data.mapper.UaaAppRoleMapper#deleteByApp}
      * {@link com.loyayz.uaa.data.mapper.UaaAppMenuMetaMapper#deleteByApp}
      * {@link com.loyayz.uaa.data.mapper.UaaMenuMapper#deleteByApp}
+     * {@link com.loyayz.uaa.data.mapper.UaaRoleMapper#deleteByApp}
      */
     @Override
     public void delete() {
@@ -144,9 +140,9 @@ public class App extends AbstractEntity<UaaApp> {
 
         Map<String, Object> param = new HashMap<>(2);
         param.put("appId", this.appId.get());
-        MybatisUtils.executeDelete(UaaAppRole.class, "deleteByApp", param);
         MybatisUtils.executeDelete(UaaAppMenuMeta.class, "deleteByApp", param);
         MybatisUtils.executeDelete(UaaMenu.class, "deleteByApp", param);
+        MybatisUtils.executeDelete(UaaRole.class, "deleteByApp", param);
     }
 
     private App() {

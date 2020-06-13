@@ -1,4 +1,4 @@
-package com.loyayz.uaa.domain.app;
+package com.loyayz.uaa.domain.role;
 
 import com.loyayz.gaia.data.mybatis.extension.MybatisUtils;
 import com.loyayz.uaa.data.UaaUserRole;
@@ -10,13 +10,13 @@ import java.util.stream.Collectors;
 /**
  * @author loyayz (loyayz@foxmail.com)
  */
-class AppRoleUsers {
-    private final Long roleId;
+class RoleUsers {
+    private final RoleId roleId;
     private final Set<Long> newUsers = new HashSet<>();
     private final Set<Long> deletedUsers = new HashSet<>();
 
-    static AppRoleUsers of(Long roleId) {
-        return new AppRoleUsers(roleId);
+    static RoleUsers of(RoleId roleId) {
+        return new RoleUsers(roleId);
     }
 
     void addUsers(List<Long> userIds) {
@@ -40,10 +40,11 @@ class AppRoleUsers {
         if (this.newUsers.isEmpty()) {
             return;
         }
-        List<Long> existUsers = UserRepository.listUserIdByRole(this.roleId);
+        Long rid = this.roleId.get();
+        List<Long> existUsers = UserRepository.listUserIdByRole(rid);
         List<UaaUserRole> userRoles = this.newUsers.stream()
                 .filter(userId -> !existUsers.contains(userId))
-                .map(userId -> new UaaUserRole(userId, this.roleId))
+                .map(userId -> new UaaUserRole(userId, rid))
                 .collect(Collectors.toList());
         if (!userRoles.isEmpty()) {
             new UaaUserRole().insert(userRoles);
@@ -58,12 +59,12 @@ class AppRoleUsers {
             return;
         }
         Map<String, Object> param = new HashMap<>(3);
-        param.put("roleId", this.roleId);
+        param.put("roleId", this.roleId.get());
         param.put("userIds", this.deletedUsers);
         MybatisUtils.executeDelete(UaaUserRole.class, "deleteByUsersRole", param);
     }
 
-    private AppRoleUsers(Long roleId) {
+    private RoleUsers(RoleId roleId) {
         this.roleId = roleId;
     }
 

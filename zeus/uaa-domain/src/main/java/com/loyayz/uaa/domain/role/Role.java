@@ -1,13 +1,11 @@
-package com.loyayz.uaa.domain.app;
+package com.loyayz.uaa.domain.role;
 
 import com.loyayz.gaia.data.mybatis.extension.MybatisUtils;
-import com.loyayz.uaa.data.UaaAppRole;
+import com.loyayz.uaa.data.UaaRole;
 import com.loyayz.uaa.data.UaaRolePermission;
 import com.loyayz.uaa.data.UaaUserRole;
 import com.loyayz.uaa.domain.RoleRepository;
 import com.loyayz.zeus.AbstractEntity;
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -17,16 +15,19 @@ import java.util.Map;
 /**
  * @author loyayz (loyayz@foxmail.com)
  */
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public class AppRole extends AbstractEntity<UaaAppRole> {
-    private final Long roleId;
-    private AppRoleUsers roleUsers;
+public class Role extends AbstractEntity<UaaRole> {
+    private final RoleId roleId;
+    private RoleUsers roleUsers;
 
-    static AppRole of(Long id) {
-        return new AppRole(id);
+    public static Role of(Long id) {
+        return new Role(id);
     }
 
-    public AppRole name(String name) {
+    public Long id() {
+        return this.roleId.get();
+    }
+
+    public Role name(String name) {
         super.entity().setName(name);
         super.markUpdated();
         return this;
@@ -37,13 +38,13 @@ public class AppRole extends AbstractEntity<UaaAppRole> {
      *
      * @param userIds 用户id
      */
-    public AppRole addUser(Long... userIds) {
+    public Role addUser(Long... userIds) {
         return this.addUser(Arrays.asList(userIds));
     }
 
-    public AppRole addUser(List<Long> userIds) {
+    public Role addUser(List<Long> userIds) {
         if (this.roleUsers == null) {
-            this.roleUsers = AppRoleUsers.of(this.roleId);
+            this.roleUsers = RoleUsers.of(this.roleId);
         }
         this.roleUsers.addUsers(userIds);
         return this;
@@ -54,21 +55,21 @@ public class AppRole extends AbstractEntity<UaaAppRole> {
      *
      * @param userIds 用户id
      */
-    public AppRole removeUser(Long... userIds) {
+    public Role removeUser(Long... userIds) {
         return this.removeUser(Arrays.asList(userIds));
     }
 
-    public AppRole removeUser(List<Long> userIds) {
+    public Role removeUser(List<Long> userIds) {
         if (this.roleUsers == null) {
-            this.roleUsers = AppRoleUsers.of(this.roleId);
+            this.roleUsers = RoleUsers.of(this.roleId);
         }
         this.roleUsers.removeUsers(userIds);
         return this;
     }
 
     @Override
-    protected UaaAppRole buildEntity() {
-        return RoleRepository.getRole(this.roleId);
+    protected UaaRole buildEntity() {
+        return RoleRepository.getRole(this.roleId.get());
     }
 
     @Override
@@ -86,14 +87,17 @@ public class AppRole extends AbstractEntity<UaaAppRole> {
      */
     @Override
     public void delete() {
-        new UaaAppRole().deleteById(this.roleId);
+        new UaaRole().deleteById(this.roleId.get());
 
         Map<String, Object> param = new HashMap<>(2);
-        param.put("roleId", this.roleId);
+        param.put("roleId", this.roleId.get());
         // delete userRole
         MybatisUtils.executeDelete(UaaUserRole.class, "deleteByRole", param);
         // delete rolePermission
         MybatisUtils.executeDelete(UaaRolePermission.class, "deleteByRole", param);
     }
 
+    private Role(Long roleId) {
+        this.roleId = RoleId.of(roleId);
+    }
 }

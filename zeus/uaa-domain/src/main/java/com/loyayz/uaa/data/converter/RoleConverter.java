@@ -1,14 +1,14 @@
 package com.loyayz.uaa.data.converter;
 
 import com.loyayz.uaa.common.dto.SimpleRole;
-import com.loyayz.uaa.data.UaaAppRole;
+import com.loyayz.uaa.data.UaaRole;
 
 /**
  * @author loyayz (loyayz@foxmail.com)
  */
 public final class RoleConverter {
 
-    public static SimpleRole toSimple(UaaAppRole role) {
+    public static SimpleRole toSimple(UaaRole role) {
         SimpleRole result = new SimpleRole();
         result.setId(role.getId());
         result.setName(role.getName());

@@ -3,10 +3,10 @@ package com.loyayz.uaa;
 import com.loyayz.uaa.common.dto.SimpleApp;
 import com.loyayz.uaa.common.dto.SimpleMenu;
 import com.loyayz.uaa.common.dto.SimpleMenuAction;
-import com.loyayz.uaa.data.*;
+import com.loyayz.uaa.data.UaaApp;
+import com.loyayz.uaa.data.UaaAppMenuAction;
+import com.loyayz.uaa.data.UaaAppMenuMeta;
 import com.loyayz.uaa.domain.app.App;
-import com.loyayz.uaa.domain.app.AppMenuMeta;
-import com.loyayz.uaa.domain.app.AppRole;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,9 +15,6 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 import java.util.UUID;
 
 /**
@@ -86,59 +83,6 @@ public class AppTest {
         Assert.assertEquals(appParam.getUrl(), storeApp.getUrl());
         Assert.assertEquals(appParam.getRemark(), storeApp.getRemark());
         Assert.assertEquals(appParam.getSort(), storeApp.getSort());
-    }
-
-    @Test
-    public void testRole() {
-        App app = create(false)
-                .addRole(UUID.randomUUID().toString())
-                .addRole(UUID.randomUUID().toString())
-                .addRole(UUID.randomUUID().toString());
-        app.save();
-
-        UaaAppRole queryObject = UaaAppRole.builder().appId(app.id()).build();
-        List<UaaAppRole> roles = queryObject.listByCondition();
-        Assert.assertEquals(3, roles.size());
-
-        for (UaaAppRole role : roles) {
-            app.role(role.getId()).delete();
-        }
-
-        Assert.assertTrue(queryObject.listByCondition().isEmpty());
-
-        app.addRole(UUID.randomUUID().toString())
-                .addRole(UUID.randomUUID().toString())
-                .addRole(UUID.randomUUID().toString())
-                .save();
-        queryObject.listByCondition().forEach(role -> {
-            Long roleId = role.getId();
-            AppRole appRole = app.role(roleId);
-
-            // update
-            String newName = UUID.randomUUID().toString();
-            Assert.assertNotEquals(newName, role.getName());
-            appRole.name(newName).save();
-            Assert.assertEquals(newName, new UaaAppRole().findById(roleId).getName());
-
-            // role user
-            List<Long> userIds = new ArrayList<>();
-            for (int i = 0; i < 5; i++) {
-                Long userId = (long) new Random().nextInt(1000000);
-                appRole.addUser(userId);
-                userIds.add(userId);
-            }
-            appRole.save();
-
-            UaaUserRole roleQueryObject = UaaUserRole.builder().roleId(roleId).build();
-            Assert.assertEquals(userIds.size(), roleQueryObject.listByCondition().size());
-            appRole.removeUser(userIds.toArray(new Long[]{})).save();
-            Assert.assertTrue(roleQueryObject.listByCondition().isEmpty());
-
-            // delete
-            appRole.delete();
-            role = new UaaAppRole().findById(roleId);
-            Assert.assertNull(role);
-        });
     }
 
     @Test

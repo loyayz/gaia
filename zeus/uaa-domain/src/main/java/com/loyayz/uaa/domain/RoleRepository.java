@@ -2,9 +2,9 @@ package com.loyayz.uaa.domain;
 
 import com.loyayz.gaia.data.mybatis.extension.MybatisUtils;
 import com.loyayz.uaa.common.dto.RoleQueryParam;
-import com.loyayz.uaa.data.UaaAppRole;
+import com.loyayz.uaa.data.UaaRole;
 import com.loyayz.uaa.data.UaaRolePermission;
-import com.loyayz.uaa.data.mapper.UaaAppRoleMapper;
+import com.loyayz.uaa.data.mapper.UaaRoleMapper;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,8 +14,8 @@ import java.util.stream.Collectors;
  */
 public final class RoleRepository {
 
-    public static UaaAppRole getRole(Long id) {
-        return new UaaAppRole().findById(id);
+    public static UaaRole getRole(Long id) {
+        return new UaaRole().findById(id);
     }
 
     public static List<Long> listRefIdByRole(Long roleId, String type) {
@@ -27,10 +27,10 @@ public final class RoleRepository {
     }
 
     /**
-     * {@link UaaAppRoleMapper#listByParam}
+     * {@link UaaRoleMapper#listByParam}
      */
-    public static List<UaaAppRole> listByParam(RoleQueryParam queryParam) {
-        return MybatisUtils.executeSelectList(UaaAppRole.class, "listByParam", queryParam);
+    public static List<UaaRole> listByParam(RoleQueryParam queryParam) {
+        return MybatisUtils.executeSelectList(UaaRole.class, "listByParam", queryParam);
     }
 
 }

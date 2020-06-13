@@ -1,7 +1,7 @@
 package com.loyayz.uaa.domain.app;
 
 import com.loyayz.uaa.common.dto.SimpleMenu;
-import com.loyayz.uaa.data.UaaAppRole;
+import com.loyayz.uaa.data.UaaRole;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,10 +48,10 @@ class AppHelper {
         if (this.newRoleNames.isEmpty()) {
             return;
         }
-        List<UaaAppRole> roles = this.newRoleNames.stream()
-                .map(name -> new UaaAppRole(this.appId.get(), name))
+        List<UaaRole> roles = this.newRoleNames.stream()
+                .map(name -> new UaaRole(this.appId.get(), name))
                 .collect(Collectors.toList());
-        new UaaAppRole().insert(roles);
+        new UaaRole().insert(roles);
         this.newRoleNames.clear();
     }
 
