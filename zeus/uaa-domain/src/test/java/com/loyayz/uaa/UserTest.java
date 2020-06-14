@@ -4,7 +4,6 @@ import com.loyayz.gaia.util.JsonUtils;
 import com.loyayz.uaa.common.dto.SimpleUser;
 import com.loyayz.uaa.data.UaaUser;
 import com.loyayz.uaa.data.UaaUserAccount;
-import com.loyayz.uaa.data.UaaUserRole;
 import com.loyayz.uaa.domain.user.User;
 import org.junit.Assert;
 import org.junit.Test;
@@ -14,7 +13,10 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author loyayz (loyayz@foxmail.com)
@@ -134,27 +136,6 @@ public class UserTest {
         Assert.assertEquals("", queryObject.listByCondition().get(0).getPassword());
         user.account(type, name).password("123").save();
         Assert.assertEquals("123", queryObject.listByCondition().get(0).getPassword());
-    }
-
-    @Test
-    public void testRole() {
-        Assert.assertTrue(new UaaUserRole().listByCondition().isEmpty());
-
-        User user = create(false);
-        List<Long> roleIds = new ArrayList<>();
-        for (int j = 0; j < 5; j++) {
-            Long roleId = (long) new Random().nextInt(1000000);
-            user.addRole(roleId);
-            user.addRole(roleId);
-            roleIds.add(roleId);
-        }
-        user.save();
-
-        UaaUserRole queryObject = UaaUserRole.builder().userId(user.id()).build();
-        Assert.assertEquals(roleIds.size(), queryObject.listByCondition().size());
-
-        user.removeRole(roleIds.toArray(new Long[]{})).save();
-        Assert.assertTrue(queryObject.listByCondition().isEmpty());
     }
 
     private User create(boolean save) {

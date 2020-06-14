@@ -62,12 +62,8 @@ public class AppMenuMeta extends AbstractEntity<UaaAppMenuMeta> {
         super.entity(entity);
     }
 
-    public AppMenuMeta removeAction(String... actionCodes) {
-        return this.removeAction(Arrays.asList(actionCodes));
-    }
-
-    public AppMenuMeta removeAction(List<String> actionCodes) {
-        this.deletedMenuActions.addAll(actionCodes);
+    public AppMenuMeta removeAction(String actionCode) {
+        this.deletedMenuActions.add(actionCode);
         return this;
     }
 

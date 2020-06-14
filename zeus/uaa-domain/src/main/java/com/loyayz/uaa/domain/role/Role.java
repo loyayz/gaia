@@ -39,10 +39,6 @@ public class Role extends AbstractEntity<UaaRole> {
      *
      * @param userIds 用户id
      */
-    public Role addUser(Long... userIds) {
-        return this.addUser(Arrays.asList(userIds));
-    }
-
     public Role addUser(List<Long> userIds) {
         if (this.roleUsers == null) {
             this.roleUsers = RoleUsers.of(this.roleId);
@@ -56,10 +52,6 @@ public class Role extends AbstractEntity<UaaRole> {
      *
      * @param userIds 用户id
      */
-    public Role removeUser(Long... userIds) {
-        return this.removeUser(Arrays.asList(userIds));
-    }
-
     public Role removeUser(List<Long> userIds) {
         if (this.roleUsers == null) {
             this.roleUsers = RoleUsers.of(this.roleId);

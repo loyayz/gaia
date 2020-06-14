@@ -21,21 +21,23 @@ class AppHelper {
         return new AppHelper(appId);
     }
 
-    void addRole(List<String> names) {
-        this.newRoleNames.addAll(names);
+    void addRole(String name) {
+        this.newRoleNames.add(name);
     }
 
-    void addMenu(Long pid, List<SimpleMenu> menus) {
+    void addMenu(Long pid, SimpleMenu menu) {
         if (pid == null) {
             pid = ROOT_MENU_CODE;
         }
-        for (SimpleMenu menu : menus) {
-            menu.setPid(pid);
-            menu.setId(null);
 
-            AppMenuMeta menuMeta = AppMenuMeta.of(this.appId).info(menu);
-            this.newMenuMetas.add(menuMeta);
-            this.addMenu(menuMeta.id(), menu.getItems());
+        menu.setPid(pid);
+        menu.setId(null);
+
+        AppMenuMeta menuMeta = AppMenuMeta.of(this.appId).info(menu);
+        this.newMenuMetas.add(menuMeta);
+
+        for (SimpleMenu subMenu : menu.getItems()) {
+            this.addMenu(menuMeta.id(), subMenu);
         }
     }
 

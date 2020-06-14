@@ -15,16 +15,6 @@ import java.util.List;
 public interface UaaUserRoleMapper extends BaseMapper<UaaUserRole> {
 
     @Delete("<script>" +
-            "DELETE FROM uaa_user_role WHERE user_id = #{userId}" +
-            " AND role_id IN (" +
-            "   <foreach collection=\"roleIds\" item=\"roleId\" separator=\",\">" +
-            "       #{roleId}" +
-            "   </foreach>" +
-            "   )" +
-            "</script>")
-    int deleteByUserRoles(@Param("userId") Long userId, @Param("roleIds") List<Long> roleIds);
-
-    @Delete("<script>" +
             "DELETE FROM uaa_user_role WHERE role_id = #{roleId}" +
             " AND user_id IN (" +
             "   <foreach collection=\"userIds\" item=\"userId\" separator=\",\">" +

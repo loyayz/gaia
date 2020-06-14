@@ -58,14 +58,14 @@ public class RoleTest {
         List<Long> userIds = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             Long userId = (long) new Random().nextInt(1000000);
-            role.addUser(userId);
             userIds.add(userId);
         }
+        role.addUser(userIds);
         role.save();
 
         UaaUserRole roleQueryObject = UaaUserRole.builder().roleId(role.id()).build();
         Assert.assertEquals(userIds.size(), roleQueryObject.listByCondition().size());
-        role.removeUser(userIds.toArray(new Long[]{})).save();
+        role.removeUser(userIds).save();
         Assert.assertTrue(roleQueryObject.listByCondition().isEmpty());
     }
 

@@ -9,9 +9,7 @@ import com.loyayz.uaa.data.UaaRole;
 import com.loyayz.uaa.domain.AppRepository;
 import com.loyayz.zeus.AbstractEntity;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -66,35 +64,27 @@ public class App extends AbstractEntity<UaaApp> {
     /**
      * 添加应用角色
      *
-     * @param names 角色名
+     * @param roleName 角色名
      */
-    public App addRole(String... names) {
-        return this.addRole(Arrays.asList(names));
-    }
-
-    public App addRole(List<String> names) {
+    public App addRole(String roleName) {
         if (this.helper == null) {
             this.helper = AppHelper.of(this.appId);
         }
-        this.helper.addRole(names);
+        this.helper.addRole(roleName);
         return this;
     }
 
     /**
      * 添加菜单元数据
      *
-     * @param pid   上级菜单
-     * @param menus 菜单
+     * @param pid  上级菜单
+     * @param menu 菜单
      */
-    public App addMenu(Long pid, SimpleMenu... menus) {
-        return this.addMenu(pid, Arrays.asList(menus));
-    }
-
-    public App addMenu(Long pid, List<SimpleMenu> menus) {
+    public App addMenu(Long pid, SimpleMenu menu) {
         if (this.helper == null) {
             this.helper = AppHelper.of(this.appId);
         }
-        this.helper.addMenu(pid, menus);
+        this.helper.addMenu(pid, menu);
         return this;
     }
 

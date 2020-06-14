@@ -30,14 +30,6 @@ public final class UserRepository {
         return MybatisUtils.executeSelectList(UaaUser.class, "listByParam", queryParam);
     }
 
-    public static List<Long> listRoleIdByUser(Long userId) {
-        return UaaUserRole.builder().userId(userId).build()
-                .listByCondition()
-                .stream()
-                .map(UaaUserRole::getRoleId)
-                .collect(Collectors.toList());
-    }
-
     public static List<Long> listUserIdByRole(Long roleId) {
         return UaaUserRole.builder().roleId(roleId).build()
                 .listByCondition()

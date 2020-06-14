@@ -8,9 +8,7 @@ import com.loyayz.uaa.data.converter.UserConverter;
 import com.loyayz.uaa.domain.UserRepository;
 import com.loyayz.zeus.AbstractEntity;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -18,7 +16,6 @@ import java.util.Map;
  */
 public class User extends AbstractEntity<UaaUser> {
     private final UserId userId;
-    private UserRoles userRoles;
 
     public static User of() {
         return new User();
@@ -99,36 +96,6 @@ public class User extends AbstractEntity<UaaUser> {
     }
 
     /**
-     * 添加角色
-     */
-    public User addRole(Long... roleIds) {
-        return this.addRole(Arrays.asList(roleIds));
-    }
-
-    public User addRole(List<Long> roleIds) {
-        if (this.userRoles == null) {
-            this.userRoles = UserRoles.of(this.userId);
-        }
-        this.userRoles.addRoles(roleIds);
-        return this;
-    }
-
-    /**
-     * 删除角色
-     */
-    public User removeRole(Long... roleIds) {
-        return this.removeRole(Arrays.asList(roleIds));
-    }
-
-    public User removeRole(List<Long> roleIds) {
-        if (this.userRoles == null) {
-            this.userRoles = UserRoles.of(this.userId);
-        }
-        this.userRoles.removeRoles(roleIds);
-        return this;
-    }
-
-    /**
      * 账号
      *
      * @param accountType 账号类型
@@ -154,10 +121,6 @@ public class User extends AbstractEntity<UaaUser> {
     public void save() {
         super.save();
         this.userId.set(super.entity().getId());
-
-        if (this.userRoles != null) {
-            this.userRoles.save();
-        }
     }
 
     /**
