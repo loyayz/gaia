@@ -1,38 +1,30 @@
 package com.loyayz.uaa.domain.role;
 
 import com.loyayz.gaia.data.mybatis.extension.MybatisUtils;
-import com.loyayz.uaa.common.constant.RolePermissionType;
 import com.loyayz.uaa.data.UaaRolePermission;
 import com.loyayz.uaa.domain.RoleRepository;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author loyayz (loyayz@foxmail.com)
  */
 class RolePermissions {
-    private final Long roleId;
-    private final Map<RolePermissionType, Set<Long>> newPermissions = new HashMap<>();
-    private final Map<RolePermissionType, Set<Long>> deletedPermissions = new HashMap<>();
+    private final RoleId roleId;
+    private final List<BasePermission> newPermissions = new ArrayList<>();
+    private final List<BasePermission> deletedPermissions = new ArrayList<>();
 
-    static RolePermissions of(Long roleId) {
+    static RolePermissions of(RoleId roleId) {
         return new RolePermissions(roleId);
     }
 
-    public void addPermission(RolePermissionType type, List<Long> refIds) {
-        Set<Long> newRefIds = this.newPermissions.getOrDefault(type, new HashSet<>());
-        newRefIds.addAll(refIds);
-        this.newPermissions.put(type, newRefIds);
+    void add(BasePermission permission) {
+        this.newPermissions.add(permission);
     }
 
-    public void removePermission(RolePermissionType type, List<Long> refIds) {
-        Set<Long> newRefIds = this.newPermissions.getOrDefault(type, new HashSet<>());
-        newRefIds.removeAll(refIds);
-        this.newPermissions.put(type, newRefIds);
-
-        Set<Long> deletedRefIds = this.deletedPermissions.getOrDefault(type, new HashSet<>());
-        deletedRefIds.addAll(refIds);
-        this.deletedPermissions.put(type, deletedRefIds);
+    void remove(BasePermission permission) {
+        this.deletedPermissions.add(permission);
     }
 
     void save() {
@@ -42,14 +34,15 @@ class RolePermissions {
 
     private void insert() {
         List<UaaRolePermission> permissions = new ArrayList<>();
-        this.newPermissions.forEach((type, refIds) -> {
-            List<Long> existRefs = RoleRepository.listRefIdByRole(roleId, type.getVal());
-            refIds.forEach(refId -> {
-                if (!existRefs.contains(refId)) {
-                    permissions.add(new UaaRolePermission(roleId, type.getVal(), refId));
-                }
-            });
-        });
+        this.combineType(this.newPermissions)
+                .forEach((type, refIds) -> {
+                    List<Long> existRefs = RoleRepository.listRefIdByRole(roleId.get(), type);
+                    refIds.forEach(refId -> {
+                        if (!existRefs.contains(refId)) {
+                            permissions.add(new UaaRolePermission(roleId.get(), type, refId));
+                        }
+                    });
+                });
         if (!permissions.isEmpty()) {
             new UaaRolePermission().insert(permissions);
         }
@@ -59,16 +52,25 @@ class RolePermissions {
      * {@link com.loyayz.uaa.data.mapper.UaaRolePermissionMapper#deleteByRoleTypeRefs}
      */
     private void delete() {
-        this.deletedPermissions.forEach((type, refIds) -> {
-            Map<String, Object> param = new HashMap<>(3);
-            param.put("roleId", this.roleId);
-            param.put("type", type.getVal());
-            param.put("refIds", new ArrayList<>(refIds));
-            MybatisUtils.executeDelete(UaaRolePermission.class, "deleteByRoleTypeRefs", param);
-        });
+        this.combineType(this.deletedPermissions)
+                .forEach((type, refIds) -> {
+                    Map<String, Object> param = new HashMap<>(3);
+                    param.put("roleId", this.roleId.get());
+                    param.put("type", type);
+                    param.put("refIds", new ArrayList<>(refIds));
+                    MybatisUtils.executeDelete(UaaRolePermission.class, "deleteByRoleTypeRefs", param);
+                });
     }
 
-    private RolePermissions(Long roleId) {
+    private Map<String, Set<Long>> combineType(List<BasePermission> permissions) {
+        return permissions.stream()
+                .collect(Collectors.groupingBy(
+                        BasePermission::type,
+                        Collectors.mapping(BasePermission::refId, Collectors.toSet())
+                ));
+    }
+
+    private RolePermissions(RoleId roleId) {
         this.roleId = roleId;
     }
 

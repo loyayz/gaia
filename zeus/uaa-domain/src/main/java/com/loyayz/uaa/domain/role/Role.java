@@ -18,6 +18,7 @@ import java.util.Map;
 public class Role extends AbstractEntity<UaaRole> {
     private final RoleId roleId;
     private RoleUsers roleUsers;
+    private RolePermissions rolePermissions;
 
     public static Role of(Long id) {
         return new Role(id);
@@ -67,6 +68,22 @@ public class Role extends AbstractEntity<UaaRole> {
         return this;
     }
 
+    public Role addPermission(BasePermission permission) {
+        if (this.rolePermissions == null) {
+            this.rolePermissions = RolePermissions.of(this.roleId);
+        }
+        this.rolePermissions.add(permission);
+        return this;
+    }
+
+    public Role removePermission(BasePermission permission) {
+        if (this.rolePermissions == null) {
+            this.rolePermissions = RolePermissions.of(this.roleId);
+        }
+        this.rolePermissions.remove(permission);
+        return this;
+    }
+
     @Override
     protected UaaRole buildEntity() {
         return RoleRepository.getRole(this.roleId.get());
@@ -78,6 +95,9 @@ public class Role extends AbstractEntity<UaaRole> {
 
         if (this.roleUsers != null) {
             this.roleUsers.save();
+        }
+        if (this.rolePermissions != null) {
+            this.rolePermissions.save();
         }
     }
 

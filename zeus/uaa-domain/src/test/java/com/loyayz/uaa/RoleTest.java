@@ -1,8 +1,11 @@
 package com.loyayz.uaa;
 
 import com.loyayz.uaa.data.UaaRole;
+import com.loyayz.uaa.data.UaaRolePermission;
 import com.loyayz.uaa.data.UaaUserRole;
 import com.loyayz.uaa.domain.app.App;
+import com.loyayz.uaa.domain.role.BasePermission;
+import com.loyayz.uaa.domain.role.PermissionFactory;
 import com.loyayz.uaa.domain.role.Role;
 import org.junit.Assert;
 import org.junit.Test;
@@ -64,6 +67,34 @@ public class RoleTest {
         Assert.assertEquals(userIds.size(), roleQueryObject.listByCondition().size());
         role.removeUser(userIds.toArray(new Long[]{})).save();
         Assert.assertTrue(roleQueryObject.listByCondition().isEmpty());
+    }
+
+    @Test
+    public void testPermission() {
+        Role role = create();
+
+        BasePermission menu1 = PermissionFactory.menu((long) new Random().nextInt(100000));
+        BasePermission menu2 = PermissionFactory.menu((long) new Random().nextInt(100000));
+        role.addPermission(menu1);
+        role.addPermission(menu2);
+        role.addPermission(PermissionFactory.menuAction((long) new Random().nextInt(100000)));
+        role.save();
+
+        UaaRolePermission queryObject = UaaRolePermission.builder().roleId(role.id()).build();
+        Assert.assertEquals(3, queryObject.listByCondition().size());
+        queryObject.setType(PermissionFactory.menu(null).type());
+        Assert.assertEquals(2, queryObject.listByCondition().size());
+        queryObject.setType(PermissionFactory.menuAction(null).type());
+        Assert.assertEquals(1, queryObject.listByCondition().size());
+
+        role.removePermission(menu1);
+        role.save();
+        queryObject = UaaRolePermission.builder().roleId(role.id()).build();
+        Assert.assertEquals(2, queryObject.listByCondition().size());
+        queryObject.setType(PermissionFactory.menu(null).type());
+        Assert.assertEquals(1, queryObject.listByCondition().size());
+        queryObject.setType(PermissionFactory.menuAction(null).type());
+        Assert.assertEquals(1, queryObject.listByCondition().size());
     }
 
     private Role create() {
