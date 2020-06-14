@@ -2,7 +2,7 @@ package com.loyayz.uaa.domain.role;
 
 import com.loyayz.gaia.data.mybatis.extension.MybatisUtils;
 import com.loyayz.uaa.data.UaaUserRole;
-import com.loyayz.uaa.domain.UserRepository;
+import com.loyayz.uaa.domain.RoleRepository;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -31,9 +31,6 @@ class RoleUsers {
     void save() {
         this.insert();
         this.delete();
-
-        this.newUsers.clear();
-        this.deletedUsers.clear();
     }
 
     private void insert() {
@@ -41,18 +38,20 @@ class RoleUsers {
             return;
         }
         Long rid = this.roleId.get();
-        List<Long> existUsers = UserRepository.listUserIdByRole(rid);
+        List<Long> existUsers = RoleRepository.listUserIdByRoleUsers(rid, new ArrayList<>(this.newUsers));
+        this.newUsers.removeAll(existUsers);
+
         List<UaaUserRole> userRoles = this.newUsers.stream()
-                .filter(userId -> !existUsers.contains(userId))
                 .map(userId -> new UaaUserRole(userId, rid))
                 .collect(Collectors.toList());
         if (!userRoles.isEmpty()) {
             new UaaUserRole().insert(userRoles);
         }
+        this.newUsers.clear();
     }
 
     /**
-     * {@link com.loyayz.uaa.data.mapper.UaaUserRoleMapper#deleteByUsersRole}
+     * {@link com.loyayz.uaa.data.mapper.UaaUserRoleMapper#deleteByRoleUsers}
      */
     private void delete() {
         if (this.deletedUsers.isEmpty()) {
@@ -61,7 +60,8 @@ class RoleUsers {
         Map<String, Object> param = new HashMap<>(3);
         param.put("roleId", this.roleId.get());
         param.put("userIds", this.deletedUsers);
-        MybatisUtils.executeDelete(UaaUserRole.class, "deleteByUsersRole", param);
+        MybatisUtils.executeDelete(UaaUserRole.class, "deleteByRoleUsers", param);
+        this.deletedUsers.clear();
     }
 
     private RoleUsers(RoleId roleId) {

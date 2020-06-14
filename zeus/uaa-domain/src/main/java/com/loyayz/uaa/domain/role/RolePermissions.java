@@ -36,16 +36,18 @@ class RolePermissions {
         List<UaaRolePermission> permissions = new ArrayList<>();
         this.combineType(this.newPermissions)
                 .forEach((type, refIds) -> {
-                    List<Long> existRefs = RoleRepository.listRefIdByRole(roleId.get(), type);
-                    refIds.forEach(refId -> {
-                        if (!existRefs.contains(refId)) {
-                            permissions.add(new UaaRolePermission(roleId.get(), type, refId));
-                        }
+                    List<Long> newRefIds = new ArrayList<>(refIds);
+                    List<Long> existRefs = RoleRepository.listPermissionRefIdByRoleRefs(roleId.get(), type, newRefIds);
+                    newRefIds.removeAll(existRefs);
+
+                    newRefIds.forEach(refId -> {
+                        permissions.add(new UaaRolePermission(roleId.get(), type, refId));
                     });
                 });
         if (!permissions.isEmpty()) {
             new UaaRolePermission().insert(permissions);
         }
+        this.newPermissions.clear();
     }
 
     /**
@@ -60,6 +62,7 @@ class RolePermissions {
                     param.put("refIds", new ArrayList<>(refIds));
                     MybatisUtils.executeDelete(UaaRolePermission.class, "deleteByRoleTypeRefs", param);
                 });
+        this.deletedPermissions.clear();
     }
 
     private Map<String, Set<Long>> combineType(List<BasePermission> permissions) {

@@ -22,13 +22,23 @@ public interface UaaUserRoleMapper extends BaseMapper<UaaUserRole> {
             "   </foreach>" +
             "   )" +
             "</script>")
-    int deleteByUsersRole(@Param("userIds") List<Long> userIds, @Param("roleId") Long roleId);
+    int deleteByRoleUsers(@Param("roleId") Long roleId, @Param("userIds") List<Long> userIds);
 
     @Delete("DELETE FROM uaa_user_role WHERE user_id = #{userId}")
     int deleteByUser(@Param("userId") Long userId);
 
     @Delete("DELETE FROM uaa_user_role WHERE role_id = #{roleId}")
     int deleteByRole(@Param("roleId") Long roleId);
+
+    @Select("<script>" +
+            "SELECT user_id FROM uaa_user_role WHERE role_id = #{roleId}" +
+            " AND user_id IN (" +
+            "   <foreach collection=\"userIds\" item=\"userId\" separator=\",\">" +
+            "       #{userId}" +
+            "   </foreach>" +
+            "   )" +
+            "</script>")
+    List<Long> listUserByRoleUsers(@Param("roleId") Long roleId, @Param("userIds") List<Long> userIds);
 
     @Select("SELECT r.* FROM uaa_user_role u,uaa_role r " +
             "  WHERE u.role_id = r.id AND u.user_id = #{userId} ")

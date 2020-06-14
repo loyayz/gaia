@@ -6,13 +6,10 @@ import com.loyayz.uaa.data.UaaRole;
 import com.loyayz.uaa.data.UaaUser;
 import com.loyayz.uaa.data.UaaUserAccount;
 import com.loyayz.uaa.data.UaaUserRole;
-import com.loyayz.uaa.data.mapper.UaaUserAccountMapper;
-import com.loyayz.uaa.data.mapper.UaaUserRoleMapper;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @author loyayz (loyayz@foxmail.com)
@@ -30,16 +27,8 @@ public final class UserRepository {
         return MybatisUtils.executeSelectList(UaaUser.class, "listByParam", queryParam);
     }
 
-    public static List<Long> listUserIdByRole(Long roleId) {
-        return UaaUserRole.builder().roleId(roleId).build()
-                .listByCondition()
-                .stream()
-                .map(UaaUserRole::getUserId)
-                .collect(Collectors.toList());
-    }
-
     /**
-     * {@link UaaUserRoleMapper#listByUser}
+     * {@link com.loyayz.uaa.data.mapper.UaaUserRoleMapper#listByUser}
      */
     public static List<UaaRole> listRoleByUser(Long userId) {
         Map<String, Object> param = new HashMap<>(2);
@@ -48,7 +37,7 @@ public final class UserRepository {
     }
 
     /**
-     * {@link UaaUserAccountMapper#getAccount}
+     * {@link com.loyayz.uaa.data.mapper.UaaUserAccountMapper#getAccount}
      */
     public static UaaUserAccount getAccount(String type, String name) {
         Map<String, Object> param = new HashMap<>(4);

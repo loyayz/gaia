@@ -65,6 +65,12 @@ public class RoleTest {
 
         UaaUserRole roleQueryObject = UaaUserRole.builder().roleId(role.id()).build();
         Assert.assertEquals(userIds.size(), roleQueryObject.listByCondition().size());
+
+        // valid repeat add
+        role.addUser(userIds);
+        role.save();
+        Assert.assertEquals(userIds.size(), roleQueryObject.listByCondition().size());
+
         role.removeUser(userIds).save();
         Assert.assertTrue(roleQueryObject.listByCondition().isEmpty());
     }
@@ -86,6 +92,13 @@ public class RoleTest {
         Assert.assertEquals(2, queryObject.listByCondition().size());
         queryObject.setType(PermissionFactory.menuAction(null).type());
         Assert.assertEquals(1, queryObject.listByCondition().size());
+
+        // valid repeat add
+        role.addPermission(menu1);
+        role.addPermission(menu2);
+        role.save();
+        queryObject = UaaRolePermission.builder().roleId(role.id()).build();
+        Assert.assertEquals(3, queryObject.listByCondition().size());
 
         role.removePermission(menu1);
         role.save();

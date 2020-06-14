@@ -25,4 +25,14 @@ public interface UaaRolePermissionMapper extends BaseMapper<UaaRolePermission> {
             "</script>")
     int deleteByRoleTypeRefs(@Param("roleId") Long roleId, @Param("type") String type, @Param("refIds") List<Long> refIds);
 
+    @Delete("<script>" +
+            "SELECT ref_id FROM uaa_role_permission WHERE role_id = #{roleId} AND type = #{type} " +
+            " AND ref_id IN (" +
+            "   <foreach collection=\"refIds\" item=\"refId\" separator=\",\">" +
+            "       #{refId}" +
+            "   </foreach>" +
+            "   )" +
+            "</script>")
+    List<Long> listRefByRoleTypeRefs(@Param("roleId") Long roleId, @Param("type") String type, @Param("refIds") List<Long> refIds);
+
 }
