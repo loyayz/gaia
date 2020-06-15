@@ -11,7 +11,7 @@ public class Menu extends AbstractEntity<UaaMenu> {
     private final MenuId menuId;
 
     public static Menu of() {
-        return new Menu();
+        return of(null);
     }
 
     public static Menu of(Long menuId) {
@@ -29,11 +29,7 @@ public class Menu extends AbstractEntity<UaaMenu> {
     }
 
     public Menu pid(Long pid) {
-        UaaMenu entity = super.entity();
-        entity.setPid(pid);
-        if (entity.getSort() == null) {
-            this.sort(MenuRepository.getNextSort(pid));
-        }
+        super.entity().setPid(pid);
         super.markUpdated();
         return this;
     }
@@ -95,12 +91,14 @@ public class Menu extends AbstractEntity<UaaMenu> {
 
     @Override
     public void save() {
-        super.save();
-        this.menuId.set(super.entity().getId());
-    }
-
-    private Menu() {
-        this.menuId = MenuId.of();
+        if (super.updated()) {
+            UaaMenu entity = super.entity();
+            if (entity.getSort() == null) {
+                this.sort(MenuRepository.getNextSort(entity.getPid()));
+            }
+            entity.save();
+            this.menuId.set(entity.getId());
+        }
     }
 
     private Menu(Long appId) {

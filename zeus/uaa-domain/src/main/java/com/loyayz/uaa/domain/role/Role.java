@@ -7,7 +7,6 @@ import com.loyayz.uaa.data.UaaUserRole;
 import com.loyayz.uaa.domain.RoleRepository;
 import com.loyayz.zeus.AbstractEntity;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,8 +16,8 @@ import java.util.Map;
  */
 public class Role extends AbstractEntity<UaaRole> {
     private final RoleId roleId;
-    private RoleUsers roleUsers;
-    private RolePermissions rolePermissions;
+    private final RoleUsers roleUsers;
+    private final RolePermissions rolePermissions;
 
     public static Role of(Long id) {
         return new Role(id);
@@ -40,9 +39,6 @@ public class Role extends AbstractEntity<UaaRole> {
      * @param userIds 用户id
      */
     public Role addUser(List<Long> userIds) {
-        if (this.roleUsers == null) {
-            this.roleUsers = RoleUsers.of(this.roleId);
-        }
         this.roleUsers.addUsers(userIds);
         return this;
     }
@@ -53,25 +49,16 @@ public class Role extends AbstractEntity<UaaRole> {
      * @param userIds 用户id
      */
     public Role removeUser(List<Long> userIds) {
-        if (this.roleUsers == null) {
-            this.roleUsers = RoleUsers.of(this.roleId);
-        }
         this.roleUsers.removeUsers(userIds);
         return this;
     }
 
     public Role addPermission(BasePermission permission) {
-        if (this.rolePermissions == null) {
-            this.rolePermissions = RolePermissions.of(this.roleId);
-        }
         this.rolePermissions.add(permission);
         return this;
     }
 
     public Role removePermission(BasePermission permission) {
-        if (this.rolePermissions == null) {
-            this.rolePermissions = RolePermissions.of(this.roleId);
-        }
         this.rolePermissions.remove(permission);
         return this;
     }
@@ -84,13 +71,8 @@ public class Role extends AbstractEntity<UaaRole> {
     @Override
     public void save() {
         super.save();
-
-        if (this.roleUsers != null) {
-            this.roleUsers.save();
-        }
-        if (this.rolePermissions != null) {
-            this.rolePermissions.save();
-        }
+        this.roleUsers.save();
+        this.rolePermissions.save();
     }
 
     /**
@@ -111,5 +93,7 @@ public class Role extends AbstractEntity<UaaRole> {
 
     private Role(Long roleId) {
         this.roleId = RoleId.of(roleId);
+        this.roleUsers = RoleUsers.of(this.roleId);
+        this.rolePermissions = RolePermissions.of(this.roleId);
     }
 }

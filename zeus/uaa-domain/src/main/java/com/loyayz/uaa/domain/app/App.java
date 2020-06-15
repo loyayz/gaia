@@ -17,10 +17,10 @@ import java.util.Map;
  */
 public class App extends AbstractEntity<UaaApp> {
     private final AppId appId;
-    private AppHelper helper;
+    private final AppHelper helper;
 
     public static App of() {
-        return new App();
+        return of(null);
     }
 
     public static App of(Long appId) {
@@ -67,9 +67,6 @@ public class App extends AbstractEntity<UaaApp> {
      * @param roleName 角色名
      */
     public App addRole(String roleName) {
-        if (this.helper == null) {
-            this.helper = AppHelper.of(this.appId);
-        }
         this.helper.addRole(roleName);
         return this;
     }
@@ -81,9 +78,6 @@ public class App extends AbstractEntity<UaaApp> {
      * @param menu 菜单
      */
     public App addMenu(Long pid, SimpleMenu menu) {
-        if (this.helper == null) {
-            this.helper = AppHelper.of(this.appId);
-        }
         this.helper.addMenu(pid, menu);
         return this;
     }
@@ -102,7 +96,6 @@ public class App extends AbstractEntity<UaaApp> {
             UaaApp app = new UaaApp();
             app.setRemote(0);
             app.setUrl("");
-            app.setSort(AppRepository.getAppNextSort());
             return app;
         } else {
             return AppRepository.findById(this.id());
@@ -111,12 +104,16 @@ public class App extends AbstractEntity<UaaApp> {
 
     @Override
     public void save() {
-        super.save();
-        this.appId.set(super.entity().getId());
-
-        if (this.helper != null) {
-            this.helper.save();
+        if (super.updated()) {
+            UaaApp entity = super.entity();
+            if (entity.getSort() == null) {
+                entity.setSort(AppRepository.getAppNextSort());
+            }
+            entity.save();
+            this.appId.set(entity.getId());
         }
+
+        this.helper.save();
     }
 
     /**
@@ -126,7 +123,7 @@ public class App extends AbstractEntity<UaaApp> {
      */
     @Override
     public void delete() {
-        super.delete();
+        new UaaApp().deleteById(this.appId.get());
 
         Map<String, Object> param = new HashMap<>(2);
         param.put("appId", this.appId.get());
@@ -135,12 +132,9 @@ public class App extends AbstractEntity<UaaApp> {
         MybatisUtils.executeDelete(UaaRole.class, "deleteByApp", param);
     }
 
-    private App() {
-        this.appId = AppId.of();
-    }
-
     private App(Long appId) {
         this.appId = AppId.of(appId);
+        this.helper = AppHelper.of(this.appId);
     }
 
 }
