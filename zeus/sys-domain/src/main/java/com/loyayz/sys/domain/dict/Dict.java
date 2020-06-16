@@ -55,9 +55,9 @@ public class Dict extends AbstractEntity<SysDict> {
     }
 
     /**
-     * 删除角色
+     * 删除字典项
      *
-     * @param itemIds 角色
+     * @param itemIds 字典项
      */
     public Dict removeItem(List<Long> itemIds) {
         this.items.remove(itemIds);
