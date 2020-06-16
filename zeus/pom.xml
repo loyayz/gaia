@@ -13,6 +13,7 @@
         <module>zeus-parent</module>
         <module>zeus-core</module>
         <module>uaa-domain</module>
+        <module>sys-domain</module>
     </modules>
 
     <properties>

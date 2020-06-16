@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.55.111:3306/zeus?allowMultiQueries=true&useUnicode=true&characterEncoding=utf-8
+    username: work
+    password: 123456
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+gaia:
+  mybatis.page-helper:
+    offset-as-page-num: true
+    close-conn: true
