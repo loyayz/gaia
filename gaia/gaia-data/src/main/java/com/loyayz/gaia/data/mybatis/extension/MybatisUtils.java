@@ -6,14 +6,11 @@ import com.baomidou.mybatisplus.core.incrementer.IdentifierGenerator;
 import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
 import com.baomidou.mybatisplus.core.toolkit.GlobalConfigUtils;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
-import com.loyayz.gaia.util.Wrapper;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.ibatis.session.SqlSession;
 import org.mybatis.spring.SqlSessionUtils;
 
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 /**
@@ -21,19 +18,6 @@ import java.util.List;
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class MybatisUtils {
-
-    public static void saveThrowDuplicate(Wrapper saveAction, Wrapper throwAction) {
-        try {
-            saveAction.execute();
-        } catch (PersistenceException e) {
-            Throwable causeException = e.getCause();
-            if (causeException instanceof SQLIntegrityConstraintViolationException && causeException.getMessage().contains("Duplicate")) {
-                throwAction.execute();
-            } else {
-                throw e;
-            }
-        }
-    }
 
     public static <R> List<R> executeSelectList(Class<?> clazz, String sqlMethod, Object param) {
         String statement = MybatisUtils.sqlStatement(clazz, sqlMethod);

@@ -65,7 +65,7 @@ public abstract class BaseTable<T extends BaseTable> implements Serializable {
      */
     public boolean deleteByIds(Collection<Serializable> ids) {
         Assert.isFalse(CollectionUtils.isEmpty(ids), "deleteByIds primaryKeys is empty.");
-        Map<String, Object> map = new HashMap<>(1);
+        Map<String, Object> map = new HashMap<>(2);
         map.put(Constants.COLLECTION, ids);
         return MybatisUtils.executeDelete(getClass(), MybatisConstants.METHOD_DELETE_BY_IDS, map);
     }
@@ -79,7 +79,7 @@ public abstract class BaseTable<T extends BaseTable> implements Serializable {
 
     public boolean updateById(Serializable id) {
         Assert.isFalse(StringUtils.checkValNull(id), "updateById primaryKey is null.");
-        Map<String, Object> map = new HashMap<>(1);
+        Map<String, Object> map = new HashMap<>(2);
         map.put(Constants.ENTITY, this);
         return MybatisUtils.executeUpdate(getClass(), MybatisConstants.METHOD_UPDATE_BY_ID, map);
     }
@@ -100,7 +100,7 @@ public abstract class BaseTable<T extends BaseTable> implements Serializable {
      * 列表：根据 ids 查询
      */
     public List<T> listByIds(Collection<Serializable> ids, Sorter... sorters) {
-        Map<String, Object> map = new HashMap<>(1);
+        Map<String, Object> map = new HashMap<>(2);
         map.put(Constants.COLLECTION, ids);
         map.put(MybatisConstants.CONDITION_SORTER, sorters);
         return MybatisUtils.executeSelectList(getClass(), MybatisConstants.METHOD_LIST_BY_IDS, map);
@@ -110,7 +110,7 @@ public abstract class BaseTable<T extends BaseTable> implements Serializable {
      * 列表：根据字段值查询
      */
     public List<T> listByCondition(Sorter... sorters) {
-        Map<String, Object> map = new HashMap<>(1);
+        Map<String, Object> map = new HashMap<>(3);
         map.put(Constants.ENTITY, this);
         map.put(MybatisConstants.CONDITION_SORTER, sorters);
         return MybatisUtils.executeSelectList(getClass(), MybatisConstants.METHOD_LIST_BY_CONDITION, map);
@@ -133,7 +133,7 @@ public abstract class BaseTable<T extends BaseTable> implements Serializable {
      * 查询总数
      */
     public Integer countByCondition() {
-        Map<String, Object> map = new HashMap<>(1);
+        Map<String, Object> map = new HashMap<>(2);
         map.put(Constants.ENTITY, this);
         Integer total = MybatisUtils.executeSelectOne(getClass(), MybatisConstants.METHOD_COUNT_BY_CONDITION, map);
         return SqlHelper.retCount(total);
@@ -151,7 +151,7 @@ public abstract class BaseTable<T extends BaseTable> implements Serializable {
      * 主键值
      */
     protected Serializable pkVal() {
-        return (Serializable) ReflectionKit.getMethodValue(this, TableInfoHelper.getTableInfo(getClass()).getKeyProperty());
+        return (Serializable) ReflectionKit.getFieldValue(this, TableInfoHelper.getTableInfo(getClass()).getKeyProperty());
     }
 
 }
