@@ -100,7 +100,7 @@ public abstract class BaseTable<T extends BaseTable> implements Serializable {
      * 列表：根据 ids 查询
      */
     public List<T> listByIds(Collection<Serializable> ids, Sorter... sorters) {
-        Map<String, Object> map = new HashMap<>(2);
+        Map<String, Object> map = new HashMap<>(3);
         map.put(Constants.COLLECTION, ids);
         map.put(MybatisConstants.CONDITION_SORTER, sorters);
         return MybatisUtils.executeSelectList(getClass(), MybatisConstants.METHOD_LIST_BY_IDS, map);
@@ -150,7 +150,7 @@ public abstract class BaseTable<T extends BaseTable> implements Serializable {
     /**
      * 主键值
      */
-    protected Serializable pkVal() {
+    public Serializable pkVal() {
         return (Serializable) ReflectionKit.getFieldValue(this, TableInfoHelper.getTableInfo(getClass()).getKeyProperty());
     }
 
