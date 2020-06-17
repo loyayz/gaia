@@ -2,6 +2,7 @@ package com.loyayz.uaa.domain.app;
 
 import com.loyayz.uaa.common.dto.SimpleMenu;
 import com.loyayz.uaa.data.UaaRole;
+import com.loyayz.zeus.Identity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,11 +14,11 @@ import static com.loyayz.uaa.common.constant.UaaConstant.ROOT_MENU_CODE;
  * @author loyayz (loyayz@foxmail.com)
  */
 class AppHelper {
-    private final AppId appId;
+    private final Identity appId;
     private final List<String> newRoleNames = new ArrayList<>();
     private final List<AppMenuMeta> newMenuMetas = new ArrayList<>();
 
-    static AppHelper of(AppId appId) {
+    static AppHelper of(Identity appId) {
         return new AppHelper(appId);
     }
 
@@ -62,7 +63,7 @@ class AppHelper {
         this.newMenuMetas.clear();
     }
 
-    private AppHelper(AppId appId) {
+    private AppHelper(Identity appId) {
         this.appId = appId;
     }
 }

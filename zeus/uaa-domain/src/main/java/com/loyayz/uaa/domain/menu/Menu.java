@@ -7,8 +7,7 @@ import com.loyayz.zeus.AbstractEntity;
 /**
  * @author loyayz (loyayz@foxmail.com)
  */
-public class Menu extends AbstractEntity<UaaMenu> {
-    private final MenuId menuId;
+public class Menu extends AbstractEntity<UaaMenu, Long> {
 
     public static Menu of() {
         return of(null);
@@ -16,10 +15,6 @@ public class Menu extends AbstractEntity<UaaMenu> {
 
     public static Menu of(Long menuId) {
         return new Menu(menuId);
-    }
-
-    public Long id() {
-        return this.menuId.get();
     }
 
     public Menu appId(Long appId) {
@@ -78,7 +73,7 @@ public class Menu extends AbstractEntity<UaaMenu> {
 
     @Override
     protected UaaMenu buildEntity() {
-        if (this.menuId.isEmpty()) {
+        if (super.idIsEmpty()) {
             UaaMenu entity = new UaaMenu();
             entity.setName("");
             entity.setIcon("");
@@ -90,19 +85,14 @@ public class Menu extends AbstractEntity<UaaMenu> {
     }
 
     @Override
-    public void save() {
-        if (super.updated()) {
-            UaaMenu entity = super.entity();
-            if (entity.getSort() == null) {
-                this.sort(MenuRepository.getNextSort(entity.getPid()));
-            }
-            entity.save();
-            this.menuId.set(entity.getId());
+    protected void fillEntityBeforeSave(UaaMenu entity) {
+        if (entity.getSort() == null) {
+            this.sort(MenuRepository.getNextSort(entity.getPid()));
         }
     }
 
-    private Menu(Long appId) {
-        this.menuId = MenuId.of(appId);
+    private Menu(Long menuId) {
+        super(menuId);
     }
 
 }

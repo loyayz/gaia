@@ -6,6 +6,7 @@ import com.loyayz.uaa.data.UaaDeptRole;
 import com.loyayz.uaa.data.UaaDeptUser;
 import com.loyayz.uaa.domain.DeptRepository;
 import com.loyayz.zeus.AbstractEntity;
+import com.loyayz.zeus.Identity;
 
 import java.util.HashMap;
 import java.util.List;
@@ -16,8 +17,7 @@ import static com.loyayz.uaa.common.constant.UaaConstant.ROOT_DEPT_ID;
 /**
  * @author loyayz (loyayz@foxmail.com)
  */
-public class Dept extends AbstractEntity<UaaDept> {
-    private final DeptId deptId;
+public class Dept extends AbstractEntity<UaaDept, Long> {
     private final DeptRoles deptRoles;
     private final DeptUsers deptUsers;
 
@@ -27,10 +27,6 @@ public class Dept extends AbstractEntity<UaaDept> {
 
     public static Dept of(Long deptId) {
         return new Dept(deptId);
-    }
-
-    public Long id() {
-        return this.deptId.get();
     }
 
     public Dept pid(Long pid) {
@@ -93,7 +89,7 @@ public class Dept extends AbstractEntity<UaaDept> {
 
     @Override
     protected UaaDept buildEntity() {
-        if (this.deptId.isEmpty()) {
+        if (super.idIsEmpty()) {
             return new UaaDept();
         } else {
             return DeptRepository.findById(this.id());
@@ -101,19 +97,17 @@ public class Dept extends AbstractEntity<UaaDept> {
     }
 
     @Override
-    public void save() {
-        if (super.updated()) {
-            UaaDept entity = super.entity();
-            if (entity.getPid() == null) {
-                entity.setPid(ROOT_DEPT_ID);
-            }
-            if (entity.getSort() == null) {
-                entity.setSort(DeptRepository.getNextSort(entity.getPid()));
-            }
-            entity.save();
-            this.deptId.set(entity.getId());
+    protected void fillEntityBeforeSave(UaaDept entity) {
+        if (entity.getPid() == null) {
+            entity.setPid(ROOT_DEPT_ID);
         }
+        if (entity.getSort() == null) {
+            entity.setSort(DeptRepository.getNextSort(entity.getPid()));
+        }
+    }
 
+    @Override
+    protected void saveExtra() {
         this.deptUsers.save();
         this.deptRoles.save();
     }
@@ -123,19 +117,18 @@ public class Dept extends AbstractEntity<UaaDept> {
      * {@link com.loyayz.uaa.data.mapper.UaaDeptUserMapper#deleteByDept}
      */
     @Override
-    public void delete() {
-        new UaaDept().deleteById(this.deptId.get());
-
+    protected void deleteExtra() {
         Map<String, Object> param = new HashMap<>(2);
-        param.put("deptId", this.deptId.get());
+        param.put("deptId", super.id());
         MybatisUtils.executeDelete(UaaDeptRole.class, "deleteByDept", param);
         MybatisUtils.executeDelete(UaaDeptUser.class, "deleteByDept", param);
     }
 
     private Dept(Long deptId) {
-        this.deptId = DeptId.of(deptId);
-        this.deptRoles = DeptRoles.of(this.deptId);
-        this.deptUsers = DeptUsers.of(this.deptId);
+        super(deptId);
+        Identity id = super.identity();
+        this.deptRoles = DeptRoles.of(id);
+        this.deptUsers = DeptUsers.of(id);
     }
 
 }

@@ -3,6 +3,7 @@ package com.loyayz.uaa.domain.role;
 import com.loyayz.gaia.data.mybatis.extension.MybatisUtils;
 import com.loyayz.uaa.data.UaaRolePermission;
 import com.loyayz.uaa.domain.RoleRepository;
+import com.loyayz.zeus.Identity;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -11,11 +12,11 @@ import java.util.stream.Collectors;
  * @author loyayz (loyayz@foxmail.com)
  */
 class RolePermissions {
-    private final RoleId roleId;
+    private final Identity roleId;
     private final List<BasePermission> newPermissions = new ArrayList<>();
     private final List<BasePermission> deletedPermissions = new ArrayList<>();
 
-    static RolePermissions of(RoleId roleId) {
+    static RolePermissions of(Identity roleId) {
         return new RolePermissions(roleId);
     }
 
@@ -73,7 +74,7 @@ class RolePermissions {
                 ));
     }
 
-    private RolePermissions(RoleId roleId) {
+    private RolePermissions(Identity roleId) {
         this.roleId = roleId;
     }
 

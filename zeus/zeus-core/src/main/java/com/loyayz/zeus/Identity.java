@@ -3,15 +3,20 @@ package com.loyayz.zeus;
 /**
  * @author loyayz (loyayz@foxmail.com)
  */
-public abstract class Identity<T> implements ValueObject {
+public class Identity implements ValueObject {
 
-    private T id;
-
-    public T get() {
-        return this.id;
+    public static <T> Identity of(T id) {
+        return new Identity(id);
     }
 
-    public void set(T id) {
+    private Object id;
+
+    @SuppressWarnings("unchecked")
+    public <T> T get() {
+        return (T) this.id;
+    }
+
+    public <T> void set(T id) {
         this.id = id;
     }
 
@@ -19,7 +24,7 @@ public abstract class Identity<T> implements ValueObject {
         return this.id == null;
     }
 
-    protected Identity(T id) {
+    private Identity(Object id) {
         this.id = id;
     }
 

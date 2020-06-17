@@ -3,6 +3,7 @@ package com.loyayz.uaa.domain.role;
 import com.loyayz.gaia.data.mybatis.extension.MybatisUtils;
 import com.loyayz.uaa.data.UaaUserRole;
 import com.loyayz.uaa.domain.RoleRepository;
+import com.loyayz.zeus.Identity;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -11,11 +12,11 @@ import java.util.stream.Collectors;
  * @author loyayz (loyayz@foxmail.com)
  */
 class RoleUsers {
-    private final RoleId roleId;
+    private final Identity roleId;
     private final Set<Long> newUsers = new HashSet<>();
     private final Set<Long> deletedUsers = new HashSet<>();
 
-    static RoleUsers of(RoleId roleId) {
+    static RoleUsers of(Identity roleId) {
         return new RoleUsers(roleId);
     }
 
@@ -64,7 +65,7 @@ class RoleUsers {
         this.deletedUsers.clear();
     }
 
-    private RoleUsers(RoleId roleId) {
+    private RoleUsers(Identity roleId) {
         this.roleId = roleId;
     }
 

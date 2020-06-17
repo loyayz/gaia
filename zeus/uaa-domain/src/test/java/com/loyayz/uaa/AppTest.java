@@ -15,6 +15,7 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Random;
 import java.util.UUID;
 
 /**
@@ -62,22 +63,23 @@ public class AppTest {
         appParam.setRemark(UUID.randomUUID().toString());
         appParam.setSort(100);
 
-        app.name(appParam.getName())
-                .remote(appParam.getRemote())
-                .url(appParam.getUrl())
-                .remark(appParam.getRemark())
-                .sort(appParam.getSort());
-
-        UaaApp storeApp = new UaaApp().findById(app.id());
+        Long appId = app.id();
+        UaaApp storeApp = new UaaApp().findById(appId);
         Assert.assertNotEquals(appParam.getName(), storeApp.getName());
         Assert.assertNotEquals(appParam.getRemote() ? 1 : 0, (int) storeApp.getRemote());
         Assert.assertNotEquals(appParam.getUrl(), storeApp.getUrl());
         Assert.assertNotEquals(appParam.getRemark(), storeApp.getRemark());
         Assert.assertEquals(0, (int) storeApp.getSort());
 
+        app = App.of(appId)
+                .name(appParam.getName())
+                .remote(appParam.getRemote())
+                .url(appParam.getUrl())
+                .remark(appParam.getRemark())
+                .sort(appParam.getSort());
         app.save();
 
-        storeApp = new UaaApp().findById(app.id());
+        storeApp = new UaaApp().findById(appId);
         Assert.assertEquals(appParam.getName(), storeApp.getName());
         Assert.assertEquals(appParam.getRemote() ? 1 : 0, (int) storeApp.getRemote());
         Assert.assertEquals(appParam.getUrl(), storeApp.getUrl());
@@ -96,10 +98,11 @@ public class AppTest {
         SimpleMenu menu2 = this.mockMenu();
         menu2.addItem(this.mockMenu());
         SimpleMenu menu3 = this.mockMenu();
+        menu3.setId((long) new Random().nextInt(100000));
 
         app.addMenu(0L, menu1)
                 .addMenu(0L, menu2)
-                .addMenu(0L, menu3)
+                .addMenu(null, menu3)
                 .save();
 
         Long menu1Id = menu1.getId();
@@ -136,6 +139,8 @@ public class AppTest {
         app.menuMeta(menu2Id).removeAction(action2.getCode()).save();
         Assert.assertEquals(1, actionQueryObject1.listByCondition().size());
         Assert.assertEquals(1, actionQueryObject2.listByCondition().size());
+        app.menuAction(menu2Id, action3.getCode()).delete();
+        Assert.assertEquals(0, actionQueryObject2.listByCondition().size());
     }
 
     private App create(boolean save) {

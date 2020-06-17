@@ -14,19 +14,14 @@ import java.util.Map;
 /**
  * @author loyayz (loyayz@foxmail.com)
  */
-public class User extends AbstractEntity<UaaUser> {
-    private final UserId userId;
+public class User extends AbstractEntity<UaaUser, Long> {
 
     public static User of() {
-        return new User();
+        return of(null);
     }
 
     public static User of(Long userId) {
         return new User(userId);
-    }
-
-    public Long id() {
-        return this.userId.get();
     }
 
     /**
@@ -102,25 +97,19 @@ public class User extends AbstractEntity<UaaUser> {
      * @param accountName 账号名
      */
     public UserAccount account(String accountType, String accountName) {
-        return UserAccount.of(this.userId, accountType, accountName);
+        return UserAccount.of(super.identity(), accountType, accountName);
     }
 
     @Override
     protected UaaUser buildEntity() {
-        if (this.userId.isEmpty()) {
+        if (super.idIsEmpty()) {
             UaaUser user = new UaaUser();
             user.setLocked(0);
             user.setDeleted(0);
             return user;
         } else {
-            return UserRepository.findById(this.userId.get());
+            return UserRepository.findById(super.id());
         }
-    }
-
-    @Override
-    public void save() {
-        super.save();
-        this.userId.set(super.entity().getId());
     }
 
     /**
@@ -131,26 +120,23 @@ public class User extends AbstractEntity<UaaUser> {
      */
     @Override
     public void delete() {
+        Long userId = super.id();
         // delete user
         UaaUser user = new UaaUser();
-        user.setId(this.userId.get());
+        user.setId(userId);
         user.setDeleted(1);
         user.updateById();
 
         Map<String, Object> param = new HashMap<>(2);
-        param.put("userId", this.userId.get());
+        param.put("userId", userId);
         // delete account
         MybatisUtils.executeDelete(UaaUserAccount.class, "deleteByUser", param);
         // delete userRole
         MybatisUtils.executeDelete(UaaUserRole.class, "deleteByUser", param);
     }
 
-    private User() {
-        this.userId = UserId.of();
-    }
-
     private User(Long userId) {
-        this.userId = UserId.of(userId);
+        super(userId);
     }
 
 }

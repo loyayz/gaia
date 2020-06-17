@@ -6,6 +6,7 @@ import com.loyayz.uaa.data.UaaRolePermission;
 import com.loyayz.uaa.data.UaaUserRole;
 import com.loyayz.uaa.domain.RoleRepository;
 import com.loyayz.zeus.AbstractEntity;
+import com.loyayz.zeus.Identity;
 
 import java.util.HashMap;
 import java.util.List;
@@ -14,17 +15,12 @@ import java.util.Map;
 /**
  * @author loyayz (loyayz@foxmail.com)
  */
-public class Role extends AbstractEntity<UaaRole> {
-    private final RoleId roleId;
+public class Role extends AbstractEntity<UaaRole, Long> {
     private final RoleUsers roleUsers;
     private final RolePermissions rolePermissions;
 
     public static Role of(Long id) {
         return new Role(id);
-    }
-
-    public Long id() {
-        return this.roleId.get();
     }
 
     public Role name(String name) {
@@ -65,12 +61,11 @@ public class Role extends AbstractEntity<UaaRole> {
 
     @Override
     protected UaaRole buildEntity() {
-        return RoleRepository.getRole(this.roleId.get());
+        return RoleRepository.getRole(super.id());
     }
 
     @Override
-    public void save() {
-        super.save();
+    protected void saveExtra() {
         this.roleUsers.save();
         this.rolePermissions.save();
     }
@@ -80,11 +75,9 @@ public class Role extends AbstractEntity<UaaRole> {
      * {@link com.loyayz.uaa.data.mapper.UaaRolePermissionMapper#deleteByRole}
      */
     @Override
-    public void delete() {
-        new UaaRole().deleteById(this.roleId.get());
-
+    protected void deleteExtra() {
         Map<String, Object> param = new HashMap<>(2);
-        param.put("roleId", this.roleId.get());
+        param.put("roleId", super.id());
         // delete userRole
         MybatisUtils.executeDelete(UaaUserRole.class, "deleteByRole", param);
         // delete rolePermission
@@ -92,8 +85,9 @@ public class Role extends AbstractEntity<UaaRole> {
     }
 
     private Role(Long roleId) {
-        this.roleId = RoleId.of(roleId);
-        this.roleUsers = RoleUsers.of(this.roleId);
-        this.rolePermissions = RolePermissions.of(this.roleId);
+        super(roleId);
+        Identity id = super.identity();
+        this.roleUsers = RoleUsers.of(id);
+        this.rolePermissions = RolePermissions.of(id);
     }
 }

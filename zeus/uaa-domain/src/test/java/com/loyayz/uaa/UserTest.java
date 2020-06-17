@@ -88,6 +88,7 @@ public class UserTest {
             Assert.assertEquals(entry.getValue(), storeInfos.get(entry.getKey()));
         }
 
+        user = User.of(user.id());
         user.addInfo("name", userParam.getName())
                 .save();
         storeUser = new UaaUser().findById(user.id());

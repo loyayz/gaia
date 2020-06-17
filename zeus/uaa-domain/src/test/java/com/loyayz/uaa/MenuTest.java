@@ -84,6 +84,7 @@ public class MenuTest {
         Assert.assertEquals(menuParam.getSort(), storeMenu.getSort());
         Assert.assertEquals(1, (int) storeMenu.getHidden());
 
+        menu = Menu.of(menu.id());
         menu.open().save();
         storeMenu = new UaaMenu().findById(menu.id());
         Assert.assertEquals(0, (int) storeMenu.getHidden());

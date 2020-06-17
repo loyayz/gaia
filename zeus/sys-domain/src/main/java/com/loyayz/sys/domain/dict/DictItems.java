@@ -4,6 +4,7 @@ import com.loyayz.gaia.data.mybatis.extension.MybatisUtils;
 import com.loyayz.sys.common.dto.SimpleDictItem;
 import com.loyayz.sys.data.SysDictItem;
 import com.loyayz.sys.domain.DictRepository;
+import com.loyayz.zeus.Identity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,11 +15,11 @@ import java.util.Map;
  * @author loyayz (loyayz@foxmail.com)
  */
 class DictItems {
-    private final DictId dictId;
+    private final Identity dictId;
     private final List<SimpleDictItem> newItems = new ArrayList<>();
     private final List<Long> deletedItems = new ArrayList<>();
 
-    static DictItems of(DictId dictId) {
+    static DictItems of(Identity dictId) {
         return new DictItems(dictId);
     }
 
@@ -80,7 +81,7 @@ class DictItems {
                 .build();
     }
 
-    private DictItems(DictId dictId) {
+    private DictItems(Identity dictId) {
         this.dictId = dictId;
     }
 }

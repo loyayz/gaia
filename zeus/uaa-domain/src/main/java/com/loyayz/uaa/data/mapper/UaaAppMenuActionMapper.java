@@ -15,6 +15,9 @@ public interface UaaAppMenuActionMapper extends BaseMapper<UaaAppMenuAction> {
     @Delete("DELETE FROM uaa_app_menu_action WHERE menu_meta_id = #{menuMetaId}")
     int deleteByMenu(@Param("menuMetaId") Long menuMetaId);
 
+    @Delete("DELETE FROM uaa_app_menu_action WHERE menu_meta_id = #{menuMetaId} AND code = #{actionCode}")
+    int deleteByMenuAndCode(@Param("menuMetaId") Long menuMetaId, @Param("actionCode") String code);
+
     @Delete("<script>DELETE FROM uaa_app_menu_action " +
             " WHERE menu_meta_id = #{menuMetaId}" +
             " AND code IN (" +

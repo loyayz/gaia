@@ -15,8 +15,7 @@ import java.util.Map;
 /**
  * @author loyayz (loyayz@foxmail.com)
  */
-public class App extends AbstractEntity<UaaApp> {
-    private final AppId appId;
+public class App extends AbstractEntity<UaaApp, Long> {
     private final AppHelper helper;
 
     public static App of() {
@@ -25,10 +24,6 @@ public class App extends AbstractEntity<UaaApp> {
 
     public static App of(Long appId) {
         return new App(appId);
-    }
-
-    public Long id() {
-        return this.appId.get();
     }
 
     public App name(String name) {
@@ -83,7 +78,7 @@ public class App extends AbstractEntity<UaaApp> {
     }
 
     public AppMenuMeta menuMeta(Long menuMetaId) {
-        return AppMenuMeta.of(this.appId, menuMetaId);
+        return AppMenuMeta.of(super.identity(), menuMetaId);
     }
 
     public AppMenuAction menuAction(Long menuMetaId, String actionCode) {
@@ -92,7 +87,7 @@ public class App extends AbstractEntity<UaaApp> {
 
     @Override
     protected UaaApp buildEntity() {
-        if (this.appId.isEmpty()) {
+        if (super.idIsEmpty()) {
             UaaApp app = new UaaApp();
             app.setRemote(0);
             app.setUrl("");
@@ -103,16 +98,14 @@ public class App extends AbstractEntity<UaaApp> {
     }
 
     @Override
-    public void save() {
-        if (super.updated()) {
-            UaaApp entity = super.entity();
-            if (entity.getSort() == null) {
-                entity.setSort(AppRepository.getAppNextSort());
-            }
-            entity.save();
-            this.appId.set(entity.getId());
+    protected void fillEntityBeforeSave(UaaApp entity) {
+        if (entity.getSort() == null) {
+            entity.setSort(AppRepository.getAppNextSort());
         }
+    }
 
+    @Override
+    protected void saveExtra() {
         this.helper.save();
     }
 
@@ -122,19 +115,17 @@ public class App extends AbstractEntity<UaaApp> {
      * {@link com.loyayz.uaa.data.mapper.UaaRoleMapper#deleteByApp}
      */
     @Override
-    public void delete() {
-        new UaaApp().deleteById(this.appId.get());
-
+    protected void deleteExtra() {
         Map<String, Object> param = new HashMap<>(2);
-        param.put("appId", this.appId.get());
+        param.put("appId", super.id());
         MybatisUtils.executeDelete(UaaAppMenuMeta.class, "deleteByApp", param);
         MybatisUtils.executeDelete(UaaMenu.class, "deleteByApp", param);
         MybatisUtils.executeDelete(UaaRole.class, "deleteByApp", param);
     }
 
     private App(Long appId) {
-        this.appId = AppId.of(appId);
-        this.helper = AppHelper.of(this.appId);
+        super(appId);
+        this.helper = AppHelper.of(super.identity());
     }
 
 }

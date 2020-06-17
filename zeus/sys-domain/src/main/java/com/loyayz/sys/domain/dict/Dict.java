@@ -14,16 +14,11 @@ import java.util.Map;
 /**
  * @author loyayz (loyayz@foxmail.com)
  */
-public class Dict extends AbstractEntity<SysDict> {
-    private final DictId dictId;
+public class Dict extends AbstractEntity<SysDict, String> {
     private final DictItems items;
 
     public static Dict of(String dictCode) {
         return new Dict(dictCode);
-    }
-
-    public String id() {
-        return this.dictId.get();
     }
 
     public Dict group(String groupName) {
@@ -75,17 +70,17 @@ public class Dict extends AbstractEntity<SysDict> {
     }
 
     @Override
-    public void save() {
-        if (super.updated()) {
-            SysDict entity = super.entity();
-            if (entity.getGroupName() == null) {
-                entity.setGroupName("");
-            }
-            if (entity.getSort() == null) {
-                entity.setSort(DictRepository.getDictNextSort(entity.getGroupName()));
-            }
-            entity.save();
+    protected void fillEntityBeforeSave(SysDict entity) {
+        if (entity.getGroupName() == null) {
+            entity.setGroupName("");
         }
+        if (entity.getSort() == null) {
+            entity.setSort(DictRepository.getDictNextSort(entity.getGroupName()));
+        }
+    }
+
+    @Override
+    protected void saveExtra() {
         this.items.save();
     }
 
@@ -96,15 +91,15 @@ public class Dict extends AbstractEntity<SysDict> {
     @Override
     public void delete() {
         Map<String, Object> param = new HashMap<>(2);
-        param.put("dictCode", this.dictId.get());
+        param.put("dictCode", super.id());
 
         MybatisUtils.executeDelete(SysDict.class, "deleteByCode", param);
         MybatisUtils.executeDelete(SysDictItem.class, "deleteByCode", param);
     }
 
     private Dict(String code) {
-        this.dictId = DictId.of(code);
-        this.items = DictItems.of(this.dictId);
+        super(code);
+        this.items = DictItems.of(super.identity());
     }
 
 }

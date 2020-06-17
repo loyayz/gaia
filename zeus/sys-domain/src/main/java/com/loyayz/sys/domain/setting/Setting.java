@@ -11,15 +11,10 @@ import java.util.Map;
 /**
  * @author loyayz (loyayz@foxmail.com)
  */
-public class Setting extends AbstractEntity<SysSetting> {
-    private final SettingId id;
+public class Setting extends AbstractEntity<SysSetting, String> {
 
     public static Setting of(String code) {
         return new Setting(code);
-    }
-
-    public String id() {
-        return this.id.get();
     }
 
     public Setting name(String name) {
@@ -50,13 +45,13 @@ public class Setting extends AbstractEntity<SysSetting> {
     @Override
     public void delete() {
         Map<String, Object> param = new HashMap<>(2);
-        param.put("code", this.id.get());
+        param.put("code", super.id());
 
         MybatisUtils.executeDelete(SysSetting.class, "deleteByCode", param);
     }
 
     private Setting(String code) {
-        this.id = SettingId.of(code);
+        super(code);
     }
 
 }
