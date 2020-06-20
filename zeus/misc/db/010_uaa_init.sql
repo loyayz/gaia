@@ -169,3 +169,28 @@ CREATE TABLE `uaa_dept_user`
     KEY `idx_udu_uid` (`user_id`)
 ) ENGINE = INNODB
   DEFAULT CHARSET = utf8mb4 COMMENT ='部门用户';
+
+CREATE TABLE `uaa_client`
+(
+    `id`           bigint(20) unsigned NOT NULL,
+    `name`         varchar(50)         NOT NULL COMMENT '名称',
+    `private_key`  text                NOT NULL COMMENT '私钥',
+    `public_key`   text                NOT NULL COMMENT '公钥',
+    `remark`       varchar(200)        NOT NULL COMMENT '备注',
+    `gmt_create`   datetime DEFAULT NULL,
+    `gmt_modified` datetime DEFAULT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4 COMMENT ='客户端';
+
+CREATE TABLE `uaa_client_app`
+(
+    `id`           bigint(20) unsigned NOT NULL,
+    `client_id`    bigint(20) unsigned NOT NULL COMMENT '客户端',
+    `app_id`       bigint(20) unsigned NOT NULL COMMENT '应用',
+    `gmt_create`   datetime DEFAULT NULL,
+    `gmt_modified` datetime DEFAULT NULL,
+    PRIMARY KEY (`id`),
+    KEY `idx_uca_cid` (`client_id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4 COMMENT ='客户端应用';

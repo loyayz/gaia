@@ -2,10 +2,7 @@ package com.loyayz.uaa.domain.app;
 
 import com.loyayz.gaia.data.mybatis.extension.MybatisUtils;
 import com.loyayz.uaa.common.dto.SimpleMenu;
-import com.loyayz.uaa.data.UaaApp;
-import com.loyayz.uaa.data.UaaAppMenuMeta;
-import com.loyayz.uaa.data.UaaMenu;
-import com.loyayz.uaa.data.UaaRole;
+import com.loyayz.uaa.data.*;
 import com.loyayz.uaa.domain.AppRepository;
 import com.loyayz.zeus.AbstractEntity;
 
@@ -107,6 +104,7 @@ public class App extends AbstractEntity<UaaApp, Long> {
      * {@link com.loyayz.uaa.data.mapper.UaaAppMenuMetaMapper#deleteByApp}
      * {@link com.loyayz.uaa.data.mapper.UaaMenuMapper#deleteByApp}
      * {@link com.loyayz.uaa.data.mapper.UaaRoleMapper#deleteByApp}
+     * {@link com.loyayz.uaa.data.mapper.UaaClientAppMapper#deleteByApp}
      */
     @Override
     protected void deleteExtra() {
@@ -115,6 +113,7 @@ public class App extends AbstractEntity<UaaApp, Long> {
         MybatisUtils.executeDelete(UaaAppMenuMeta.class, "deleteByApp", param);
         MybatisUtils.executeDelete(UaaMenu.class, "deleteByApp", param);
         MybatisUtils.executeDelete(UaaRole.class, "deleteByApp", param);
+        MybatisUtils.executeDelete(UaaClientApp.class, "deleteByApp", param);
     }
 
     private App(Long appId) {
