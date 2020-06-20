@@ -58,7 +58,6 @@ public class AppTest {
 
         SimpleApp appParam = new SimpleApp();
         appParam.setName(UUID.randomUUID().toString());
-        appParam.setRemote(true);
         appParam.setUrl(UUID.randomUUID().toString());
         appParam.setRemark(UUID.randomUUID().toString());
         appParam.setSort(100);
@@ -66,14 +65,12 @@ public class AppTest {
         Long appId = app.id();
         UaaApp storeApp = new UaaApp().findById(appId);
         Assert.assertNotEquals(appParam.getName(), storeApp.getName());
-        Assert.assertNotEquals(appParam.getRemote() ? 1 : 0, (int) storeApp.getRemote());
         Assert.assertNotEquals(appParam.getUrl(), storeApp.getUrl());
         Assert.assertNotEquals(appParam.getRemark(), storeApp.getRemark());
         Assert.assertEquals(0, (int) storeApp.getSort());
 
         app = App.of(appId)
                 .name(appParam.getName())
-                .remote(appParam.getRemote())
                 .url(appParam.getUrl())
                 .remark(appParam.getRemark())
                 .sort(appParam.getSort());
@@ -81,7 +78,6 @@ public class AppTest {
 
         storeApp = new UaaApp().findById(appId);
         Assert.assertEquals(appParam.getName(), storeApp.getName());
-        Assert.assertEquals(appParam.getRemote() ? 1 : 0, (int) storeApp.getRemote());
         Assert.assertEquals(appParam.getUrl(), storeApp.getUrl());
         Assert.assertEquals(appParam.getRemark(), storeApp.getRemark());
         Assert.assertEquals(appParam.getSort(), storeApp.getSort());

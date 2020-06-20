@@ -18,10 +18,6 @@ public class SimpleApp implements Serializable {
      */
     private String name;
     /**
-     * 远程组件
-     */
-    private Boolean remote;
-    /**
      * 地址
      */
     private String url;

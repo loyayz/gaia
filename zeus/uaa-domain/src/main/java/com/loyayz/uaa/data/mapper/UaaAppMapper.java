@@ -20,9 +20,6 @@ public interface UaaAppMapper extends BaseMapper<UaaApp> {
             "   <if test=\"name != null and name != ''\">" +
             "       AND name LIKE CONCAT('%',#{name},'%') " +
             "   </if>" +
-            "   <if test=\"remote != null\">" +
-            "       AND remote = #{remote} " +
-            "   </if>" +
             "</where> </script>")
     List<UaaApp> listByParam(AppQueryParam queryParam);
 

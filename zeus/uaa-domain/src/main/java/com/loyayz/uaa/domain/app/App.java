@@ -32,12 +32,6 @@ public class App extends AbstractEntity<UaaApp, Long> {
         return this;
     }
 
-    public App remote(boolean remote) {
-        super.entity().setRemote(remote ? 1 : 0);
-        super.markUpdated();
-        return this;
-    }
-
     public App url(String url) {
         super.entity().setUrl(url);
         super.markUpdated();
@@ -89,8 +83,8 @@ public class App extends AbstractEntity<UaaApp, Long> {
     protected UaaApp buildEntity() {
         if (super.idIsEmpty()) {
             UaaApp app = new UaaApp();
-            app.setRemote(0);
             app.setUrl("");
+            app.setRemark("");
             return app;
         } else {
             return AppRepository.findById(this.id());

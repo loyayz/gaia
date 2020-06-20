@@ -13,9 +13,5 @@ public class AppQueryParam  {
      * 模糊查询
      */
     private String name;
-    /**
-     * 远程组件
-     */
-    private Integer remote;
 
 }

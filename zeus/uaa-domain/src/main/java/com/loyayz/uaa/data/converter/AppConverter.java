@@ -17,7 +17,6 @@ public final class AppConverter {
         SimpleApp result = new SimpleApp();
         result.setId(app.getId());
         result.setName(app.getName());
-        result.setRemote(app.getRemote() == 1);
         result.setUrl(app.getUrl());
         result.setRemark(app.getRemark());
         result.setSort(app.getSort());

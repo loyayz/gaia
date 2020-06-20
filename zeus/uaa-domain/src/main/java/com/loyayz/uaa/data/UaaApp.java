@@ -20,10 +20,6 @@ public class UaaApp extends AbstractTable<UaaApp> {
      */
     private String name;
     /**
-     * 远程组件
-     */
-    private Integer remote;
-    /**
      * 地址
      */
     private String url;

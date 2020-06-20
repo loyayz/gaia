@@ -46,12 +46,11 @@ CREATE TABLE `uaa_app`
 (
     `id`           bigint(20) unsigned NOT NULL,
     `name`         varchar(50)         NOT NULL COMMENT '名称',
-    `remote`       tinyint(4)          NOT NULL DEFAULT '0' COMMENT '远程组件',
     `url`          varchar(100)        NOT NULL COMMENT '地址',
-    `remark`       varchar(200)                 DEFAULT NULL COMMENT '备注',
+    `remark`       varchar(200)        NOT NULL COMMENT '备注',
     `sort`         int(11)             NOT NULL COMMENT '序号',
-    `gmt_create`   datetime                     DEFAULT NULL,
-    `gmt_modified` datetime                     DEFAULT NULL,
+    `gmt_create`   datetime DEFAULT NULL,
+    `gmt_modified` datetime DEFAULT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='应用';
