@@ -7,10 +7,14 @@
         <groupId>com.loyayz</groupId>
         <artifactId>zeus-parent</artifactId>
         <version>0.1.0-SNAPSHOT</version>
-        <relativePath>../zeus-parent/pom.xml</relativePath>
+        <relativePath>../../zeus-parent/pom.xml</relativePath>
     </parent>
 
     <artifactId>uaa-domain</artifactId>
+
+    <properties>
+        <main.user.dir>${basedir}/../../..</main.user.dir>
+    </properties>
 
     <dependencies>
         <dependency>
