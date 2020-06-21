@@ -5,19 +5,16 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.loyayz</groupId>
-    <artifactId>zeus-build</artifactId>
+    <artifactId>zeus-sys-build</artifactId>
     <version>0.1.0</version>
     <packaging>pom</packaging>
 
     <modules>
-        <module>zeus-parent</module>
-        <module>zeus-core</module>
-        <module>zeus-uaa</module>
-        <module>zeus-sys</module>
+        <module>sys-domain</module>
     </modules>
 
     <properties>
-        <main.user.dir>${basedir}/..</main.user.dir>
+        <main.user.dir>${basedir}/../..</main.user.dir>
         <maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
     </properties>
 
