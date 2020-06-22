@@ -7,6 +7,7 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.3.1.RELEASE</version>
+        <relativePath/>
     </parent>
 
     <groupId>com.loyayz</groupId>
@@ -102,6 +103,11 @@
             <dependency>
                 <groupId>com.loyayz</groupId>
                 <artifactId>uaa-domain</artifactId>
+                <version>${zeus.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.loyayz</groupId>
+                <artifactId>sys-domain</artifactId>
                 <version>${zeus.version}</version>
             </dependency>
 
