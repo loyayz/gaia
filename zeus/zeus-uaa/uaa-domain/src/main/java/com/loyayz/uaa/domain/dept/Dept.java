@@ -53,7 +53,7 @@ public class Dept extends AbstractEntity<UaaDept, Long> {
      * @param roleIds 角色
      */
     public Dept addRole(List<Long> roleIds) {
-        this.deptRoles.addRoles(roleIds);
+        this.deptRoles.add(roleIds);
         return this;
     }
 
@@ -63,7 +63,7 @@ public class Dept extends AbstractEntity<UaaDept, Long> {
      * @param roleIds 角色
      */
     public Dept removeRole(List<Long> roleIds) {
-        this.deptRoles.removeRoles(roleIds);
+        this.deptRoles.remove(roleIds);
         return this;
     }
 
@@ -73,7 +73,7 @@ public class Dept extends AbstractEntity<UaaDept, Long> {
      * @param userIds 用户
      */
     public Dept addUser(List<Long> userIds) {
-        this.deptUsers.addUsers(userIds);
+        this.deptUsers.add(userIds);
         return this;
     }
 
@@ -83,7 +83,7 @@ public class Dept extends AbstractEntity<UaaDept, Long> {
      * @param userIds 用户
      */
     public Dept removeUser(List<Long> userIds) {
-        this.deptUsers.removeUsers(userIds);
+        this.deptUsers.remove(userIds);
         return this;
     }
 

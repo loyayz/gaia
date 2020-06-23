@@ -16,15 +16,8 @@ public interface UaaDeptUserMapper extends BaseMapper<UaaDeptUser> {
     @Delete("DELETE FROM uaa_dept_user WHERE dept_id = #{deptId}")
     int deleteByDept(@Param("deptId") Long deptId);
 
-    @Delete("<script>" +
-            "DELETE FROM uaa_dept_user WHERE dept_id = #{deptId}" +
-            " AND user_id IN (" +
-            "   <foreach collection=\"userIds\" item=\"userId\" separator=\",\">" +
-            "       #{userId}" +
-            "   </foreach>" +
-            "   )" +
-            "</script>")
-    int deleteByDeptUsers(@Param("deptId") Long deptId, @Param("userIds") List<Long> userIds);
+    @Delete("DELETE FROM uaa_dept_user WHERE dept_id = #{deptId} AND user_id = #{userId}")
+    int deleteByEntityRelation(UaaDeptUser entity);
 
     @Select("<script>" +
             "SELECT user_id FROM uaa_dept_user WHERE dept_id = #{deptId}" +

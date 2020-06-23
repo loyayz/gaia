@@ -6,6 +6,7 @@ import com.loyayz.uaa.data.UaaRole;
 import com.loyayz.uaa.data.UaaRolePermission;
 import com.loyayz.uaa.data.UaaUserRole;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +23,7 @@ public final class RoleRepository {
     /**
      * {@link com.loyayz.uaa.data.mapper.UaaUserRoleMapper#listUserByRoleUsers}
      */
-    public static List<Long> listUserIdByRoleUsers(Long roleId, List<Long> userIds) {
+    public static List<Long> listUserIdByRoleUsers(Long roleId, Collection<Long> userIds) {
         Map<String, Object> param = new HashMap<>(3);
         param.put("roleId", roleId);
         param.put("userIds", userIds);

@@ -35,7 +35,7 @@ public class Role extends AbstractEntity<UaaRole, Long> {
      * @param userIds 用户id
      */
     public Role addUser(List<Long> userIds) {
-        this.roleUsers.addUsers(userIds);
+        this.roleUsers.add(userIds);
         return this;
     }
 
@@ -45,7 +45,7 @@ public class Role extends AbstractEntity<UaaRole, Long> {
      * @param userIds 用户id
      */
     public Role removeUser(List<Long> userIds) {
-        this.roleUsers.removeUsers(userIds);
+        this.roleUsers.remove(userIds);
         return this;
     }
 

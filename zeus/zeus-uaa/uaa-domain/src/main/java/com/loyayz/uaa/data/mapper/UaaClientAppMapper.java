@@ -19,15 +19,8 @@ public interface UaaClientAppMapper extends BaseMapper<UaaClientApp> {
     @Delete("DELETE FROM uaa_client_app WHERE app_id = #{appId}")
     int deleteByApp(@Param("appId") Long appId);
 
-    @Delete("<script>" +
-            "DELETE FROM uaa_client_app WHERE client_id = #{clientId}" +
-            " AND app_id IN (" +
-            "   <foreach collection=\"appIds\" item=\"appId\" separator=\",\">" +
-            "       #{appId}" +
-            "   </foreach>" +
-            "   )" +
-            "</script>")
-    int deleteByClientApps(@Param("clientId") Long clientId, @Param("appIds") List<Long> appIds);
+    @Delete("DELETE FROM uaa_client_app WHERE client_id = #{clientId} AND app_id = ${appId}")
+    int deleteByEntityRelation(UaaClientApp entity);
 
     @Select("<script>" +
             "SELECT app_id FROM uaa_client_app WHERE client_id = #{clientId}" +

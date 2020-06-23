@@ -1,72 +1,41 @@
 package com.loyayz.uaa.domain.dept;
 
-import com.loyayz.gaia.data.mybatis.extension.MybatisUtils;
 import com.loyayz.uaa.data.UaaDeptUser;
 import com.loyayz.uaa.domain.DeptRepository;
+import com.loyayz.zeus.AbstractEntityRelations;
 import com.loyayz.zeus.EntityId;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.List;
+import java.util.Set;
 
 /**
+ * {@link com.loyayz.uaa.data.mapper.UaaDeptUserMapper#deleteByEntityRelation}
+ *
  * @author loyayz (loyayz@foxmail.com)
  */
-class DeptUsers {
-    private final EntityId deptId;
-    private final Set<Long> newUsers = new HashSet<>();
-    private final Set<Long> deletedUsers = new HashSet<>();
+class DeptUsers extends AbstractEntityRelations<UaaDeptUser> {
 
     static DeptUsers of(EntityId deptId) {
         return new DeptUsers(deptId);
     }
 
-    void addUsers(List<Long> userIds) {
-        this.newUsers.addAll(userIds);
+    @Override
+    protected List<Long> existInRepo(Set<Long> items) {
+        Long deptId = super.entityId().get();
+        return DeptRepository.listUserIds(deptId, items);
     }
 
-    void removeUsers(List<Long> userIds) {
-        this.newUsers.removeAll(userIds);
-        this.deletedUsers.addAll(userIds);
-    }
-
-    void save() {
-        this.insert();
-        this.delete();
-    }
-
-    private void insert() {
-        if (this.newUsers.isEmpty()) {
-            return;
-        }
-        Long deptId = this.deptId.get();
-        List<Long> existUsers = DeptRepository.listUserIds(deptId, this.newUsers);
-        this.newUsers.removeAll(existUsers);
-
-        List<UaaDeptUser> deptUsers = this.newUsers.stream()
-                .map(userId -> new UaaDeptUser(deptId, userId))
-                .collect(Collectors.toList());
-        if (!deptUsers.isEmpty()) {
-            new UaaDeptUser().insert(deptUsers);
-        }
-        this.newUsers.clear();
-    }
-
-    /**
-     * {@link com.loyayz.uaa.data.mapper.UaaDeptUserMapper#deleteByDeptUsers}
-     */
-    private void delete() {
-        if (this.deletedUsers.isEmpty()) {
-            return;
-        }
-        Map<String, Object> param = new HashMap<>(3);
-        param.put("deptId", this.deptId.get());
-        param.put("userIds", this.deletedUsers);
-        MybatisUtils.executeDelete(UaaDeptUser.class, "deleteByDeptUsers", param);
-        this.deletedUsers.clear();
+    @Override
+    protected UaaDeptUser buildRelation(Long item) {
+        Long deptId = super.entityId().get();
+        return UaaDeptUser.builder()
+                .deptId(deptId)
+                .userId(item)
+                .build();
     }
 
     private DeptUsers(EntityId deptId) {
-        this.deptId = deptId;
+        super(deptId);
     }
 
 }

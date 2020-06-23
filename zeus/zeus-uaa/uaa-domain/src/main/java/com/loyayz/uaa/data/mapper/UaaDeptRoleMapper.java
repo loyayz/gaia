@@ -16,15 +16,8 @@ public interface UaaDeptRoleMapper extends BaseMapper<UaaDeptRole> {
     @Delete("DELETE FROM uaa_dept_role WHERE dept_id = #{deptId}")
     int deleteByDept(@Param("deptId") Long deptId);
 
-    @Delete("<script>" +
-            "DELETE FROM uaa_dept_role WHERE dept_id = #{deptId}" +
-            " AND role_id IN (" +
-            "   <foreach collection=\"roleIds\" item=\"roleId\" separator=\",\">" +
-            "       #{roleId}" +
-            "   </foreach>" +
-            "   )" +
-            "</script>")
-    int deleteByDeptRoles(@Param("deptId") Long deptId, @Param("roleIds") List<Long> roleIds);
+    @Delete("DELETE FROM uaa_dept_role WHERE dept_id = #{deptId} AND role_id = #{roleId}")
+    int deleteByEntityRelation(UaaDeptRole entity);
 
     @Select("<script>" +
             "SELECT role_id FROM uaa_dept_role WHERE dept_id = #{deptId}" +
