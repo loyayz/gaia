@@ -29,24 +29,24 @@ public class DeptTest {
     @Test
     public void testCreate() {
         Dept dept = create(false);
-        Assert.assertNull(dept.id());
+        Assert.assertNull(dept.idValue());
         dept.name("loyayz").save();
-        Assert.assertNotNull(dept.id());
-        Assert.assertNotNull(new UaaDept().findById(dept.id()));
+        Assert.assertNotNull(dept.idValue());
+        Assert.assertNotNull(new UaaDept().findById(dept.idValue()));
     }
 
     @Test
     public void testSort() {
         for (int i = 0; i < 5; i++) {
             Dept dept = create(true);
-            Long pid = dept.id();
+            Long pid = dept.idValue();
             Assert.assertEquals(i, (int) new UaaDept().findById(pid).getSort());
 
             for (int j = 0; j < 10; j++) {
                 dept = create(false);
                 dept.pid(pid);
                 dept.save();
-                Assert.assertEquals(j, (int) new UaaDept().findById(dept.id()).getSort());
+                Assert.assertEquals(j, (int) new UaaDept().findById(dept.idValue()).getSort());
             }
         }
     }
@@ -54,9 +54,9 @@ public class DeptTest {
     @Test
     public void testDelete() {
         Dept dept = create(true);
-        Assert.assertNotNull(new UaaDept().findById(dept.id()));
+        Assert.assertNotNull(new UaaDept().findById(dept.idValue()));
         dept.delete();
-        Assert.assertNull(new UaaDept().findById(dept.id()));
+        Assert.assertNull(new UaaDept().findById(dept.idValue()));
     }
 
     @Test
@@ -66,16 +66,16 @@ public class DeptTest {
         String newName = UUID.randomUUID().toString();
         int newSort = 100;
 
-        UaaDept storeDept = new UaaDept().findById(dept.id());
+        UaaDept storeDept = new UaaDept().findById(dept.idValue());
         Assert.assertNotEquals(newName, storeDept.getName());
         Assert.assertNotEquals(newSort, (int) storeDept.getSort());
 
-        dept = Dept.of(dept.id());
+        dept = Dept.of(dept.idValue());
         dept.name(newName)
                 .sort(newSort);
         dept.save();
 
-        storeDept = new UaaDept().findById(dept.id());
+        storeDept = new UaaDept().findById(dept.idValue());
         Assert.assertEquals(newName, storeDept.getName());
         Assert.assertEquals(newSort, (int) storeDept.getSort());
     }
@@ -91,7 +91,7 @@ public class DeptTest {
         dept.addUser(userIds);
         dept.save();
 
-        UaaDeptUser deptQueryObject = UaaDeptUser.builder().deptId(dept.id()).build();
+        UaaDeptUser deptQueryObject = UaaDeptUser.builder().deptId(dept.idValue()).build();
         Assert.assertEquals(userIds.size(), deptQueryObject.listByCondition().size());
 
         // valid repeat add
@@ -114,7 +114,7 @@ public class DeptTest {
         dept.addRole(roleIds);
         dept.save();
 
-        UaaDeptRole deptQueryObject = UaaDeptRole.builder().deptId(dept.id()).build();
+        UaaDeptRole deptQueryObject = UaaDeptRole.builder().deptId(dept.idValue()).build();
         Assert.assertEquals(roleIds.size(), deptQueryObject.listByCondition().size());
 
         // valid repeat add

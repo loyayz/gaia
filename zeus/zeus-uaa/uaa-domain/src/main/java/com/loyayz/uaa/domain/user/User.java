@@ -97,18 +97,18 @@ public class User extends AbstractEntity<UaaUser, Long> {
      * @param accountName 账号名
      */
     public UserAccount account(String accountType, String accountName) {
-        return UserAccount.of(super.identity(), accountType, accountName);
+        return UserAccount.of(super.id(), accountType, accountName);
     }
 
     @Override
     protected UaaUser buildEntity() {
-        if (super.idIsEmpty()) {
-            UaaUser user = new UaaUser();
-            user.setLocked(0);
-            user.setDeleted(0);
-            return user;
+        if (super.hasId()) {
+            return UserRepository.findById(super.idValue());
         } else {
-            return UserRepository.findById(super.id());
+            UaaUser entity = new UaaUser();
+            entity.setLocked(0);
+            entity.setDeleted(0);
+            return entity;
         }
     }
 
@@ -120,7 +120,7 @@ public class User extends AbstractEntity<UaaUser, Long> {
      */
     @Override
     public void delete() {
-        Long userId = super.id();
+        Long userId = super.idValue();
         // delete user
         UaaUser user = new UaaUser();
         user.setId(userId);

@@ -6,7 +6,7 @@ import com.loyayz.uaa.data.UaaRolePermission;
 import com.loyayz.uaa.data.UaaUserRole;
 import com.loyayz.uaa.domain.RoleRepository;
 import com.loyayz.zeus.AbstractEntity;
-import com.loyayz.zeus.Identity;
+import com.loyayz.zeus.EntityId;
 
 import java.util.HashMap;
 import java.util.List;
@@ -61,7 +61,7 @@ public class Role extends AbstractEntity<UaaRole, Long> {
 
     @Override
     protected UaaRole buildEntity() {
-        return RoleRepository.getRole(super.id());
+        return RoleRepository.getRole(super.idValue());
     }
 
     @Override
@@ -77,7 +77,7 @@ public class Role extends AbstractEntity<UaaRole, Long> {
     @Override
     protected void deleteExtra() {
         Map<String, Object> param = new HashMap<>(2);
-        param.put("roleId", super.id());
+        param.put("roleId", super.idValue());
         // delete userRole
         MybatisUtils.executeDelete(UaaUserRole.class, "deleteByRole", param);
         // delete rolePermission
@@ -86,7 +86,7 @@ public class Role extends AbstractEntity<UaaRole, Long> {
 
     private Role(Long roleId) {
         super(roleId);
-        Identity id = super.identity();
+        EntityId id = super.id();
         this.roleUsers = RoleUsers.of(id);
         this.rolePermissions = RolePermissions.of(id);
     }

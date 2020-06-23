@@ -8,7 +8,7 @@ import com.loyayz.uaa.data.UaaMenu;
 import com.loyayz.uaa.data.converter.AppConverter;
 import com.loyayz.uaa.domain.AppRepository;
 import com.loyayz.zeus.AbstractEntity;
-import com.loyayz.zeus.Identity;
+import com.loyayz.zeus.EntityId;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,34 +21,34 @@ import static com.loyayz.uaa.common.constant.UaaConstant.ROOT_MENU_CODE;
  * @author loyayz (loyayz@foxmail.com)
  */
 public class AppMenuMeta extends AbstractEntity<UaaAppMenuMeta, Long> {
-    private final Identity appId;
+    private final EntityId appId;
 
     private final List<String> deletedMenuActions = new ArrayList<>();
 
-    static AppMenuMeta of(Identity appId) {
+    static AppMenuMeta of(EntityId appId) {
         return of(appId, null);
     }
 
-    static AppMenuMeta of(Identity appId, Long menuId) {
+    static AppMenuMeta of(EntityId appId, Long menuId) {
         return new AppMenuMeta(appId, menuId);
     }
 
     public AppMenuMeta info(SimpleMenu menu) {
-        if (super.idIsEmpty()) {
-            super.identity().set(menu.getId());
+        if (!super.hasId()) {
+            super.id().set(menu.getId());
         }
-        if (super.idIsEmpty()) {
-            super.identity().set(new UaaAppMenuMeta().genId());
-            this.entity(menu);
-        } else {
+        if (super.hasId()) {
             UaaAppMenuMeta entity = super.entity();
             if (entity == null) {
                 this.entity(menu);
             } else {
                 AppConverter.setEntity(entity, menu);
             }
+        } else {
+            super.id().set(new UaaAppMenuMeta().genId());
+            this.entity(menu);
         }
-        menu.setId(super.id());
+        menu.setId(super.idValue());
         super.markUpdated();
         return this;
     }
@@ -57,7 +57,7 @@ public class AppMenuMeta extends AbstractEntity<UaaAppMenuMeta, Long> {
         if (menu.getPid() == null) {
             menu.setPid(ROOT_MENU_CODE);
         }
-        UaaAppMenuMeta entity = AppConverter.toEntity(super.id(), menu);
+        UaaAppMenuMeta entity = AppConverter.toEntity(super.idValue(), menu);
         super.entity(entity);
     }
 
@@ -67,13 +67,13 @@ public class AppMenuMeta extends AbstractEntity<UaaAppMenuMeta, Long> {
     }
 
     public AppMenuAction action(String actionCode) {
-        return AppMenuAction.of(super.identity(), actionCode);
+        return AppMenuAction.of(super.id(), actionCode);
     }
 
     @Override
     protected UaaAppMenuMeta buildEntity() {
-        return super.idIsEmpty() ?
-                null : AppRepository.getAppMenu(super.id());
+        return super.hasId() ?
+                AppRepository.getAppMenu(super.idValue()) : null;
     }
 
     @Override
@@ -90,7 +90,7 @@ public class AppMenuMeta extends AbstractEntity<UaaAppMenuMeta, Long> {
             return;
         }
         Map<String, Object> param = new HashMap<>(3);
-        param.put("menuMetaId", super.id());
+        param.put("menuMetaId", super.idValue());
         param.put("actionCodes", this.deletedMenuActions);
         MybatisUtils.executeDelete(UaaAppMenuAction.class, "deleteByMenuAndCodes", param);
     }
@@ -102,12 +102,12 @@ public class AppMenuMeta extends AbstractEntity<UaaAppMenuMeta, Long> {
     @Override
     protected void deleteExtra() {
         Map<String, Object> param = new HashMap<>(2);
-        param.put("menuMetaId", super.id());
+        param.put("menuMetaId", super.idValue());
         MybatisUtils.executeDelete(UaaAppMenuAction.class, "deleteByMenu", param);
         MybatisUtils.executeDelete(UaaMenu.class, "deleteByMeta", param);
     }
 
-    private AppMenuMeta(Identity appId, Long menuId) {
+    private AppMenuMeta(EntityId appId, Long menuId) {
         super(menuId);
         this.appId = appId;
     }

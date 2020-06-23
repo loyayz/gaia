@@ -69,7 +69,7 @@ public class App extends AbstractEntity<UaaApp, Long> {
     }
 
     public AppMenuMeta menuMeta(Long menuMetaId) {
-        return AppMenuMeta.of(super.identity(), menuMetaId);
+        return AppMenuMeta.of(super.id(), menuMetaId);
     }
 
     public AppMenuAction menuAction(Long menuMetaId, String actionCode) {
@@ -78,13 +78,13 @@ public class App extends AbstractEntity<UaaApp, Long> {
 
     @Override
     protected UaaApp buildEntity() {
-        if (super.idIsEmpty()) {
+        if (super.hasId()) {
+            return AppRepository.findById(this.idValue());
+        } else {
             UaaApp app = new UaaApp();
             app.setUrl("");
             app.setRemark("");
             return app;
-        } else {
-            return AppRepository.findById(this.id());
         }
     }
 
@@ -109,7 +109,7 @@ public class App extends AbstractEntity<UaaApp, Long> {
     @Override
     protected void deleteExtra() {
         Map<String, Object> param = new HashMap<>(2);
-        param.put("appId", super.id());
+        param.put("appId", super.idValue());
         MybatisUtils.executeDelete(UaaAppMenuMeta.class, "deleteByApp", param);
         MybatisUtils.executeDelete(UaaMenu.class, "deleteByApp", param);
         MybatisUtils.executeDelete(UaaRole.class, "deleteByApp", param);
@@ -118,7 +118,7 @@ public class App extends AbstractEntity<UaaApp, Long> {
 
     private App(Long appId) {
         super(appId);
-        this.helper = AppHelper.of(super.identity());
+        this.helper = AppHelper.of(super.id());
     }
 
 }

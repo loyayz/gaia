@@ -30,24 +30,24 @@ public class UserTest {
     @Test
     public void testCreate() {
         User user = create(false);
-        Assert.assertNull(user.id());
+        Assert.assertNull(user.idValue());
         user.name("loyayz").save();
-        Assert.assertNotNull(user.id());
-        Assert.assertNotNull(new UaaUser().findById(user.id()));
+        Assert.assertNotNull(user.idValue());
+        Assert.assertNotNull(new UaaUser().findById(user.idValue()));
     }
 
     @Test
     public void testDelete() {
         User user = create(true);
 
-        Assert.assertEquals(0, (int) new UaaUser().findById(user.id()).getDeleted());
+        Assert.assertEquals(0, (int) new UaaUser().findById(user.idValue()).getDeleted());
         user.delete();
-        Assert.assertEquals(1, (int) new UaaUser().findById(user.id()).getDeleted());
+        Assert.assertEquals(1, (int) new UaaUser().findById(user.idValue()).getDeleted());
 
         user = create(true);
-        Assert.assertEquals(0, (int) new UaaUser().findById(user.id()).getDeleted());
+        Assert.assertEquals(0, (int) new UaaUser().findById(user.idValue()).getDeleted());
         user.delete();
-        Assert.assertEquals(1, (int) new UaaUser().findById(user.id()).getDeleted());
+        Assert.assertEquals(1, (int) new UaaUser().findById(user.idValue()).getDeleted());
     }
 
     @Test
@@ -67,7 +67,7 @@ public class UserTest {
                 .email(userParam.getEmail())
                 .info(userParam.getInfos());
 
-        UaaUser storeUser = new UaaUser().findById(user.id());
+        UaaUser storeUser = new UaaUser().findById(user.idValue());
         Map<String, Object> storeInfos = JsonUtils.read(storeUser.getInfo());
         Assert.assertNotEquals(userParam.getName(), storeUser.getName());
         Assert.assertNotEquals(userParam.getMobile(), storeUser.getMobile());
@@ -78,7 +78,7 @@ public class UserTest {
 
         user.save();
 
-        storeUser = new UaaUser().findById(user.id());
+        storeUser = new UaaUser().findById(user.idValue());
         storeInfos = JsonUtils.read(storeUser.getInfo());
         Assert.assertEquals(userParam.getName(), storeUser.getName());
         Assert.assertEquals(userParam.getMobile(), storeUser.getMobile());
@@ -88,19 +88,19 @@ public class UserTest {
             Assert.assertEquals(entry.getValue(), storeInfos.get(entry.getKey()));
         }
 
-        user = User.of(user.id());
+        user = User.of(user.idValue());
         user.addInfo("name", userParam.getName())
                 .save();
-        storeUser = new UaaUser().findById(user.id());
+        storeUser = new UaaUser().findById(user.idValue());
         storeInfos = JsonUtils.read(storeUser.getInfo());
         Assert.assertEquals(userParam.getInfos().size() + 1, storeInfos.size());
 
         Assert.assertEquals(0, (int) storeUser.getLocked());
         user.lock().save();
-        storeUser = new UaaUser().findById(user.id());
+        storeUser = new UaaUser().findById(user.idValue());
         Assert.assertEquals(1, (int) storeUser.getLocked());
         user.unlock().save();
-        storeUser = new UaaUser().findById(user.id());
+        storeUser = new UaaUser().findById(user.idValue());
         Assert.assertEquals(0, (int) storeUser.getLocked());
     }
 
@@ -115,7 +115,7 @@ public class UserTest {
         user.account("2", name + "2").password(password + "2").save();
         user.account("2", name + "2").password(password + "2").save();
 
-        UaaUserAccount queryObject = UaaUserAccount.builder().userId(user.id()).build();
+        UaaUserAccount queryObject = UaaUserAccount.builder().userId(user.idValue()).build();
         List<UaaUserAccount> accounts = queryObject.listByCondition();
         Assert.assertEquals(2, accounts.size());
 
@@ -129,7 +129,7 @@ public class UserTest {
         accounts = queryObject.listByCondition();
         Assert.assertEquals(1, accounts.size());
 
-        queryObject = UaaUserAccount.builder().userId(user.id()).type(type).name(name).build();
+        queryObject = UaaUserAccount.builder().userId(user.idValue()).type(type).name(name).build();
         Assert.assertTrue(queryObject.listByCondition().isEmpty());
         for (int j = 0; j < 2; j++) {
             user.account(type, name).save();

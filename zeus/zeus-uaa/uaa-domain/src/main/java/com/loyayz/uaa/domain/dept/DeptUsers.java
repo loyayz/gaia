@@ -3,7 +3,7 @@ package com.loyayz.uaa.domain.dept;
 import com.loyayz.gaia.data.mybatis.extension.MybatisUtils;
 import com.loyayz.uaa.data.UaaDeptUser;
 import com.loyayz.uaa.domain.DeptRepository;
-import com.loyayz.zeus.Identity;
+import com.loyayz.zeus.EntityId;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -12,11 +12,11 @@ import java.util.stream.Collectors;
  * @author loyayz (loyayz@foxmail.com)
  */
 class DeptUsers {
-    private final Identity deptId;
+    private final EntityId deptId;
     private final Set<Long> newUsers = new HashSet<>();
     private final Set<Long> deletedUsers = new HashSet<>();
 
-    static DeptUsers of(Identity deptId) {
+    static DeptUsers of(EntityId deptId) {
         return new DeptUsers(deptId);
     }
 
@@ -65,7 +65,7 @@ class DeptUsers {
         this.deletedUsers.clear();
     }
 
-    private DeptUsers(Identity deptId) {
+    private DeptUsers(EntityId deptId) {
         this.deptId = deptId;
     }
 

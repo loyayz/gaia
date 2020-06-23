@@ -10,16 +10,16 @@ import java.io.Serializable;
  */
 @SuppressWarnings("unchecked")
 public abstract class AbstractEntity<T extends BaseTable<T>, IT extends Serializable> implements Entity {
-    private final Identity identity;
+    private final EntityId id;
     private T entity;
     private boolean updated = false;
 
     protected AbstractEntity(IT id) {
-        this.identity = Identity.of(id);
+        this.id = EntityId.of(id);
     }
 
-    public IT id() {
-        return this.identity.get();
+    public IT idValue() {
+        return this.id.get();
     }
 
     /**
@@ -28,8 +28,8 @@ public abstract class AbstractEntity<T extends BaseTable<T>, IT extends Serializ
      */
     protected abstract T buildEntity();
 
-    protected Identity identity() {
-        return this.identity;
+    protected EntityId id() {
+        return this.id;
     }
 
     protected void entity(T e) {
@@ -50,8 +50,8 @@ public abstract class AbstractEntity<T extends BaseTable<T>, IT extends Serializ
             this.fillEntityBeforeSave(entity);
             entity.save();
 
-            if (this.identity.isEmpty()) {
-                this.identity.set(entity.pkVal());
+            if (this.id.isEmpty()) {
+                this.id.set(entity.pkVal());
             }
         }
         this.saveExtra();
@@ -61,7 +61,7 @@ public abstract class AbstractEntity<T extends BaseTable<T>, IT extends Serializ
     public void delete() {
         try {
             T deletedEntity = (T) ClassUtils.resolveGenericType(getClass()).newInstance();
-            deletedEntity.deleteById(this.id());
+            deletedEntity.deleteById(this.idValue());
         } catch (InstantiationException | IllegalAccessException e) {
             throw new RuntimeException(e);
         }
@@ -98,8 +98,8 @@ public abstract class AbstractEntity<T extends BaseTable<T>, IT extends Serializ
     /**
      * id 是否有值
      */
-    protected boolean idIsEmpty() {
-        return this.identity.isEmpty();
+    protected boolean hasId() {
+        return !this.id.isEmpty();
     }
 
 }

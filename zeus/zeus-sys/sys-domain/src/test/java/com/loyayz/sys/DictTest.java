@@ -30,16 +30,16 @@ public class DictTest {
     @Test
     public void testCreate() {
         Dict dict = create(false);
-        Assert.assertNull(DictRepository.findByCode(dict.id()));
+        Assert.assertNull(DictRepository.findByCode(dict.idValue()));
         dict.name("loyayz").save();
-        Assert.assertNotNull(DictRepository.findByCode(dict.id()));
+        Assert.assertNotNull(DictRepository.findByCode(dict.idValue()));
     }
 
     @Test
     public void testSort() {
         for (int i = 0; i < 5; i++) {
             Dict dict = create(true);
-            SysDict sysDict = DictRepository.findByCode(dict.id());
+            SysDict sysDict = DictRepository.findByCode(dict.idValue());
             Assert.assertNotNull(sysDict);
             Assert.assertEquals("", sysDict.getGroupName());
             Assert.assertEquals(i, (int) sysDict.getSort());
@@ -49,7 +49,7 @@ public class DictTest {
                 dict.group(i + "");
                 dict.save();
 
-                sysDict = DictRepository.findByCode(dict.id());
+                sysDict = DictRepository.findByCode(dict.idValue());
                 Assert.assertNotNull(sysDict);
                 Assert.assertEquals(j, (int) sysDict.getSort());
             }
@@ -59,9 +59,9 @@ public class DictTest {
     @Test
     public void testDelete() {
         Dict dict = create(true);
-        Assert.assertNotNull(DictRepository.findByCode(dict.id()));
+        Assert.assertNotNull(DictRepository.findByCode(dict.idValue()));
         dict.delete();
-        Assert.assertNull(DictRepository.findByCode(dict.id()));
+        Assert.assertNull(DictRepository.findByCode(dict.idValue()));
     }
 
     @Test
@@ -72,19 +72,19 @@ public class DictTest {
         String newName = UUID.randomUUID().toString();
         int newSort = 100;
 
-        SysDict storeDict = DictRepository.findByCode(dict.id());
+        SysDict storeDict = DictRepository.findByCode(dict.idValue());
         Assert.assertNotNull(storeDict);
         Assert.assertNotEquals(newGroup, storeDict.getGroupName());
         Assert.assertNotEquals(newName, storeDict.getName());
         Assert.assertNotEquals(newSort, (int) storeDict.getSort());
 
-        dict = Dict.of(dict.id());
+        dict = Dict.of(dict.idValue());
         dict.group(newGroup)
                 .name(newName)
                 .sort(newSort)
                 .save();
 
-        storeDict = DictRepository.findByCode(dict.id());
+        storeDict = DictRepository.findByCode(dict.idValue());
         Assert.assertNotNull(storeDict);
         Assert.assertEquals(newGroup, storeDict.getGroupName());
         Assert.assertEquals(newName, storeDict.getName());
@@ -111,12 +111,12 @@ public class DictTest {
         this.mockItem(dict, items, "14", null);
         dict.save();
 
-        dict = Dict.of(dict.id());
+        dict = Dict.of(dict.idValue());
         this.mockItem(dict, items, "15", null);
         this.mockItem(dict, items, "16", 16);
         dict.save();
 
-        SysDictItem queryObject = SysDictItem.builder().dictCode(dict.id()).build();
+        SysDictItem queryObject = SysDictItem.builder().dictCode(dict.idValue()).build();
         List<SysDictItem> storeItems = queryObject.listByCondition();
         Assert.assertEquals(items.size(), storeItems.size());
 

@@ -30,26 +30,26 @@ public class AppTest {
     @Test
     public void testCreate() {
         App app = create(false);
-        Assert.assertNull(app.id());
+        Assert.assertNull(app.idValue());
         app.name("loyayz").save();
-        Assert.assertNotNull(app.id());
-        Assert.assertNotNull(new UaaApp().findById(app.id()));
+        Assert.assertNotNull(app.idValue());
+        Assert.assertNotNull(new UaaApp().findById(app.idValue()));
     }
 
     @Test
     public void testSort() {
         for (int i = 0; i < 5; i++) {
             App app = create(true);
-            Assert.assertEquals(i, (int) new UaaApp().findById(app.id()).getSort());
+            Assert.assertEquals(i, (int) new UaaApp().findById(app.idValue()).getSort());
         }
     }
 
     @Test
     public void testDelete() {
         App app = create(true);
-        Assert.assertNotNull(new UaaApp().findById(app.id()));
+        Assert.assertNotNull(new UaaApp().findById(app.idValue()));
         app.delete();
-        Assert.assertNull(new UaaApp().findById(app.id()));
+        Assert.assertNull(new UaaApp().findById(app.idValue()));
     }
 
     @Test
@@ -62,7 +62,7 @@ public class AppTest {
         appParam.setRemark(UUID.randomUUID().toString());
         appParam.setSort(100);
 
-        Long appId = app.id();
+        Long appId = app.idValue();
         UaaApp storeApp = new UaaApp().findById(appId);
         Assert.assertNotEquals(appParam.getName(), storeApp.getName());
         Assert.assertNotEquals(appParam.getUrl(), storeApp.getUrl());
@@ -103,9 +103,9 @@ public class AppTest {
 
         Long menu1Id = menu1.getId();
         Long menu2Id = menu2.getId();
-        UaaAppMenuMeta queryObject = UaaAppMenuMeta.builder().appId(app.id()).build();
-        UaaAppMenuMeta queryObject1 = UaaAppMenuMeta.builder().appId(app.id()).pid(menu1Id).build();
-        UaaAppMenuMeta queryObject2 = UaaAppMenuMeta.builder().appId(app.id()).pid(menu2Id).build();
+        UaaAppMenuMeta queryObject = UaaAppMenuMeta.builder().appId(app.idValue()).build();
+        UaaAppMenuMeta queryObject1 = UaaAppMenuMeta.builder().appId(app.idValue()).pid(menu1Id).build();
+        UaaAppMenuMeta queryObject2 = UaaAppMenuMeta.builder().appId(app.idValue()).pid(menu2Id).build();
         Assert.assertEquals(6, queryObject.listByCondition().size());
         Assert.assertEquals(2, queryObject1.listByCondition().size());
         Assert.assertEquals(1, queryObject2.listByCondition().size());

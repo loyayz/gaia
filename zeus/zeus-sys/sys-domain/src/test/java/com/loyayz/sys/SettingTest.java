@@ -25,17 +25,17 @@ public class SettingTest {
     @Test
     public void testCreate() {
         Setting setting = create(false);
-        Assert.assertNull(SettingRepository.findByCode(setting.id()));
+        Assert.assertNull(SettingRepository.findByCode(setting.idValue()));
         setting.name("loyayz").save();
-        Assert.assertNotNull(SettingRepository.findByCode(setting.id()));
+        Assert.assertNotNull(SettingRepository.findByCode(setting.idValue()));
     }
 
     @Test
     public void testDelete() {
         Setting setting = create(true);
-        Assert.assertNotNull(SettingRepository.findByCode(setting.id()));
+        Assert.assertNotNull(SettingRepository.findByCode(setting.idValue()));
         setting.delete();
-        Assert.assertNull(SettingRepository.findByCode(setting.id()));
+        Assert.assertNull(SettingRepository.findByCode(setting.idValue()));
     }
 
     @Test
@@ -45,17 +45,17 @@ public class SettingTest {
         String newName = UUID.randomUUID().toString();
         String newValue = UUID.randomUUID().toString();
 
-        SysSetting storeSetting = SettingRepository.findByCode(setting.id());
+        SysSetting storeSetting = SettingRepository.findByCode(setting.idValue());
         Assert.assertNotNull(storeSetting);
         Assert.assertNotEquals(newName, storeSetting.getName());
         Assert.assertNotEquals(newValue, storeSetting.getValue());
 
-        setting = Setting.of(setting.id());
+        setting = Setting.of(setting.idValue());
         setting.name(newName)
                 .value(newValue)
                 .save();
 
-        storeSetting = SettingRepository.findByCode(setting.id());
+        storeSetting = SettingRepository.findByCode(setting.idValue());
         Assert.assertNotNull(storeSetting);
         Assert.assertEquals(newName, storeSetting.getName());
         Assert.assertEquals(newValue, storeSetting.getValue());

@@ -28,18 +28,18 @@ public class ClientTest {
     @Test
     public void testCreate() {
         Client client = create(false);
-        Assert.assertNull(client.id());
+        Assert.assertNull(client.idValue());
         client.name("loyayz").save();
-        Assert.assertNotNull(client.id());
-        Assert.assertNotNull(new UaaClient().findById(client.id()));
+        Assert.assertNotNull(client.idValue());
+        Assert.assertNotNull(new UaaClient().findById(client.idValue()));
     }
 
     @Test
     public void testDelete() {
         Client client = create(true);
-        Assert.assertNotNull(new UaaClient().findById(client.id()));
+        Assert.assertNotNull(new UaaClient().findById(client.idValue()));
         client.delete();
-        Assert.assertNull(new UaaClient().findById(client.id()));
+        Assert.assertNull(new UaaClient().findById(client.idValue()));
     }
 
     @Test
@@ -51,19 +51,19 @@ public class ClientTest {
         String newPublicKey = UUID.randomUUID().toString();
         String newRemark = UUID.randomUUID().toString();
 
-        UaaClient storeClient = new UaaClient().findById(client.id());
+        UaaClient storeClient = new UaaClient().findById(client.idValue());
         Assert.assertNotEquals(newName, storeClient.getName());
         Assert.assertNotEquals(newPrivateKey, storeClient.getPrivateKey());
         Assert.assertNotEquals(newPublicKey, storeClient.getPublicKey());
         Assert.assertEquals("", storeClient.getRemark());
 
-        client = Client.of(client.id());
+        client = Client.of(client.idValue());
         client.name(newName)
                 .key(newPrivateKey, newPublicKey)
                 .remark(newRemark)
                 .save();
 
-        storeClient = new UaaClient().findById(client.id());
+        storeClient = new UaaClient().findById(client.idValue());
         Assert.assertEquals(newName, storeClient.getName());
         Assert.assertEquals(newName, storeClient.getName());
         Assert.assertEquals(newPrivateKey, storeClient.getPrivateKey());
@@ -82,7 +82,7 @@ public class ClientTest {
         client.addApp(appIds);
         client.save();
 
-        UaaClientApp clientQueryObject = UaaClientApp.builder().clientId(client.id()).build();
+        UaaClientApp clientQueryObject = UaaClientApp.builder().clientId(client.idValue()).build();
         Assert.assertEquals(appIds.size(), clientQueryObject.listByCondition().size());
 
         // valid repeat add

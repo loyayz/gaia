@@ -3,7 +3,7 @@ package com.loyayz.uaa.domain.client;
 import com.loyayz.gaia.data.mybatis.extension.MybatisUtils;
 import com.loyayz.uaa.data.UaaClientApp;
 import com.loyayz.uaa.domain.ClientRepository;
-import com.loyayz.zeus.Identity;
+import com.loyayz.zeus.EntityId;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -12,11 +12,11 @@ import java.util.stream.Collectors;
  * @author loyayz (loyayz@foxmail.com)
  */
 class ClientApps {
-    private final Identity clientId;
+    private final EntityId clientId;
     private final Set<Long> newApps = new HashSet<>();
     private final Set<Long> deletedApps = new HashSet<>();
 
-    static ClientApps of(Identity clientId) {
+    static ClientApps of(EntityId clientId) {
         return new ClientApps(clientId);
     }
 
@@ -65,7 +65,7 @@ class ClientApps {
         this.deletedApps.clear();
     }
 
-    private ClientApps(Identity clientId) {
+    private ClientApps(EntityId clientId) {
         this.clientId = clientId;
     }
 

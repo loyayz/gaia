@@ -3,10 +3,10 @@ package com.loyayz.zeus;
 /**
  * @author loyayz (loyayz@foxmail.com)
  */
-public class Identity implements ValueObject {
+public class EntityId implements ValueObject {
 
-    public static <T> Identity of(T id) {
-        return new Identity(id);
+    public static <T> EntityId of(T id) {
+        return new EntityId(id);
     }
 
     private Object id;
@@ -24,7 +24,7 @@ public class Identity implements ValueObject {
         return this.id == null;
     }
 
-    private Identity(Object id) {
+    private EntityId(Object id) {
         this.id = id;
     }
 

@@ -61,10 +61,10 @@ public class Dict extends AbstractEntity<SysDict, String> {
 
     @Override
     protected SysDict buildEntity() {
-        SysDict entity = DictRepository.findByCode(this.id());
+        SysDict entity = DictRepository.findByCode(this.idValue());
         if (entity == null) {
             entity = new SysDict();
-            entity.setCode(this.id());
+            entity.setCode(this.idValue());
         }
         return entity;
     }
@@ -91,7 +91,7 @@ public class Dict extends AbstractEntity<SysDict, String> {
     @Override
     public void delete() {
         Map<String, Object> param = new HashMap<>(2);
-        param.put("dictCode", super.id());
+        param.put("dictCode", super.idValue());
 
         MybatisUtils.executeDelete(SysDict.class, "deleteByCode", param);
         MybatisUtils.executeDelete(SysDictItem.class, "deleteByCode", param);
@@ -99,7 +99,7 @@ public class Dict extends AbstractEntity<SysDict, String> {
 
     private Dict(String code) {
         super(code);
-        this.items = DictItems.of(super.identity());
+        this.items = DictItems.of(super.id());
     }
 
 }

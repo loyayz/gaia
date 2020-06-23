@@ -73,14 +73,14 @@ public class Menu extends AbstractEntity<UaaMenu, Long> {
 
     @Override
     protected UaaMenu buildEntity() {
-        if (super.idIsEmpty()) {
+        if (super.hasId()) {
+            return MenuRepository.findById(this.idValue());
+        } else {
             UaaMenu entity = new UaaMenu();
             entity.setName("");
             entity.setIcon("");
             entity.setHidden(0);
             return entity;
-        } else {
-            return MenuRepository.findById(this.id());
         }
     }
 

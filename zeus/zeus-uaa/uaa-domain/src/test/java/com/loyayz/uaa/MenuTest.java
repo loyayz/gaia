@@ -26,26 +26,26 @@ public class MenuTest {
     @Test
     public void testCreate() {
         Menu menu = create(false);
-        Assert.assertNull(menu.id());
+        Assert.assertNull(menu.idValue());
         menu.save();
-        Assert.assertNotNull(menu.id());
-        Assert.assertNotNull(new UaaMenu().findById(menu.id()));
+        Assert.assertNotNull(menu.idValue());
+        Assert.assertNotNull(new UaaMenu().findById(menu.idValue()));
     }
 
     @Test
     public void testSort() {
         for (int i = 0; i < 5; i++) {
             Menu menu = create(true);
-            Assert.assertEquals(i, (int) new UaaMenu().findById(menu.id()).getSort());
+            Assert.assertEquals(i, (int) new UaaMenu().findById(menu.idValue()).getSort());
         }
     }
 
     @Test
     public void testDelete() {
         Menu menu = create(true);
-        Assert.assertNotNull(new UaaMenu().findById(menu.id()));
-        Menu.of(menu.id()).delete();
-        Assert.assertNull(new UaaMenu().findById(menu.id()));
+        Assert.assertNotNull(new UaaMenu().findById(menu.idValue()));
+        Menu.of(menu.idValue()).delete();
+        Assert.assertNull(new UaaMenu().findById(menu.idValue()));
     }
 
     @Test
@@ -68,7 +68,7 @@ public class MenuTest {
                 .sort(menuParam.getSort())
                 .hidden();
 
-        UaaMenu storeMenu = new UaaMenu().findById(menu.id());
+        UaaMenu storeMenu = new UaaMenu().findById(menu.idValue());
         Assert.assertNotEquals(menuParam.getId(), storeMenu.getMenuMetaId());
         Assert.assertNotEquals(menuParam.getName(), storeMenu.getName());
         Assert.assertNotEquals(menuParam.getIcon(), storeMenu.getIcon());
@@ -77,16 +77,16 @@ public class MenuTest {
 
         menu.save();
 
-        storeMenu = new UaaMenu().findById(menu.id());
+        storeMenu = new UaaMenu().findById(menu.idValue());
         Assert.assertEquals(menuParam.getId(), storeMenu.getMenuMetaId());
         Assert.assertEquals(menuParam.getName(), storeMenu.getName());
         Assert.assertEquals(menuParam.getIcon(), storeMenu.getIcon());
         Assert.assertEquals(menuParam.getSort(), storeMenu.getSort());
         Assert.assertEquals(1, (int) storeMenu.getHidden());
 
-        menu = Menu.of(menu.id());
+        menu = Menu.of(menu.idValue());
         menu.open().save();
-        storeMenu = new UaaMenu().findById(menu.id());
+        storeMenu = new UaaMenu().findById(menu.idValue());
         Assert.assertEquals(0, (int) storeMenu.getHidden());
     }
 

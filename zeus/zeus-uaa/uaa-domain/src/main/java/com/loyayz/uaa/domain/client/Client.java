@@ -5,7 +5,7 @@ import com.loyayz.uaa.data.UaaClient;
 import com.loyayz.uaa.data.UaaClientApp;
 import com.loyayz.uaa.domain.ClientRepository;
 import com.loyayz.zeus.AbstractEntity;
-import com.loyayz.zeus.Identity;
+import com.loyayz.zeus.EntityId;
 
 import java.util.HashMap;
 import java.util.List;
@@ -66,12 +66,12 @@ public class Client extends AbstractEntity<UaaClient, Long> {
 
     @Override
     protected UaaClient buildEntity() {
-        if (super.idIsEmpty()) {
+        if (super.hasId()) {
+            return ClientRepository.findById(this.idValue());
+        } else {
             UaaClient entity = new UaaClient();
             entity.setRemark("");
             return entity;
-        } else {
-            return ClientRepository.findById(this.id());
         }
     }
 
@@ -86,13 +86,13 @@ public class Client extends AbstractEntity<UaaClient, Long> {
     @Override
     protected void deleteExtra() {
         Map<String, Object> param = new HashMap<>(2);
-        param.put("clientId", super.id());
+        param.put("clientId", super.idValue());
         MybatisUtils.executeDelete(UaaClientApp.class, "deleteByClient", param);
     }
 
     private Client(Long deptId) {
         super(deptId);
-        Identity id = super.identity();
+        EntityId id = super.id();
         this.clientApps = ClientApps.of(id);
     }
 

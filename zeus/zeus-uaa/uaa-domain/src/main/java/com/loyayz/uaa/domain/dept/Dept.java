@@ -6,7 +6,7 @@ import com.loyayz.uaa.data.UaaDeptRole;
 import com.loyayz.uaa.data.UaaDeptUser;
 import com.loyayz.uaa.domain.DeptRepository;
 import com.loyayz.zeus.AbstractEntity;
-import com.loyayz.zeus.Identity;
+import com.loyayz.zeus.EntityId;
 
 import java.util.HashMap;
 import java.util.List;
@@ -89,10 +89,10 @@ public class Dept extends AbstractEntity<UaaDept, Long> {
 
     @Override
     protected UaaDept buildEntity() {
-        if (super.idIsEmpty()) {
-            return new UaaDept();
+        if (super.hasId()) {
+            return DeptRepository.findById(this.idValue());
         } else {
-            return DeptRepository.findById(this.id());
+            return new UaaDept();
         }
     }
 
@@ -119,14 +119,14 @@ public class Dept extends AbstractEntity<UaaDept, Long> {
     @Override
     protected void deleteExtra() {
         Map<String, Object> param = new HashMap<>(2);
-        param.put("deptId", super.id());
+        param.put("deptId", super.idValue());
         MybatisUtils.executeDelete(UaaDeptRole.class, "deleteByDept", param);
         MybatisUtils.executeDelete(UaaDeptUser.class, "deleteByDept", param);
     }
 
     private Dept(Long deptId) {
         super(deptId);
-        Identity id = super.identity();
+        EntityId id = super.id();
         this.deptRoles = DeptRoles.of(id);
         this.deptUsers = DeptUsers.of(id);
     }

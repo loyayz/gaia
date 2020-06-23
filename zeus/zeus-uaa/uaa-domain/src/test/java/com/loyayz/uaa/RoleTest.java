@@ -32,14 +32,14 @@ public class RoleTest {
     @Test
     public void testCreate() {
         Role role = create();
-        Assert.assertNotNull(new UaaRole().findById(role.id()));
+        Assert.assertNotNull(new UaaRole().findById(role.idValue()));
     }
 
     @Test
     public void testDelete() {
         Role role = create();
         role.delete();
-        Assert.assertNull(new UaaRole().findById(role.id()));
+        Assert.assertNull(new UaaRole().findById(role.idValue()));
     }
 
     @Test
@@ -49,7 +49,7 @@ public class RoleTest {
         role.name(name);
         role.save();
 
-        Assert.assertEquals(name, new UaaRole().findById(role.id()).getName());
+        Assert.assertEquals(name, new UaaRole().findById(role.idValue()).getName());
     }
 
     @Test
@@ -63,7 +63,7 @@ public class RoleTest {
         role.addUser(userIds);
         role.save();
 
-        UaaUserRole roleQueryObject = UaaUserRole.builder().roleId(role.id()).build();
+        UaaUserRole roleQueryObject = UaaUserRole.builder().roleId(role.idValue()).build();
         Assert.assertEquals(userIds.size(), roleQueryObject.listByCondition().size());
 
         // valid repeat add
@@ -86,7 +86,7 @@ public class RoleTest {
         role.addPermission(PermissionFactory.menuAction((long) new Random().nextInt(100000)));
         role.save();
 
-        UaaRolePermission queryObject = UaaRolePermission.builder().roleId(role.id()).build();
+        UaaRolePermission queryObject = UaaRolePermission.builder().roleId(role.idValue()).build();
         Assert.assertEquals(3, queryObject.listByCondition().size());
         queryObject.setType(PermissionFactory.menu(null).type());
         Assert.assertEquals(2, queryObject.listByCondition().size());
@@ -97,12 +97,12 @@ public class RoleTest {
         role.addPermission(menu1);
         role.addPermission(menu2);
         role.save();
-        queryObject = UaaRolePermission.builder().roleId(role.id()).build();
+        queryObject = UaaRolePermission.builder().roleId(role.idValue()).build();
         Assert.assertEquals(3, queryObject.listByCondition().size());
 
         role.removePermission(menu1);
         role.save();
-        queryObject = UaaRolePermission.builder().roleId(role.id()).build();
+        queryObject = UaaRolePermission.builder().roleId(role.idValue()).build();
         Assert.assertEquals(2, queryObject.listByCondition().size());
         queryObject.setType(PermissionFactory.menu(null).type());
         Assert.assertEquals(1, queryObject.listByCondition().size());
@@ -115,7 +115,7 @@ public class RoleTest {
         app.addRole(UUID.randomUUID().toString());
         app.save();
 
-        Long roleId = UaaRole.builder().appId(app.id()).build()
+        Long roleId = UaaRole.builder().appId(app.idValue()).build()
                 .listByCondition()
                 .get(0)
                 .getId();

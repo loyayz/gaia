@@ -31,10 +31,10 @@ public class Setting extends AbstractEntity<SysSetting, String> {
 
     @Override
     protected SysSetting buildEntity() {
-        SysSetting entity = SettingRepository.findByCode(this.id());
+        SysSetting entity = SettingRepository.findByCode(this.idValue());
         if (entity == null) {
             entity = new SysSetting();
-            entity.setCode(this.id());
+            entity.setCode(this.idValue());
         }
         return entity;
     }
@@ -45,7 +45,7 @@ public class Setting extends AbstractEntity<SysSetting, String> {
     @Override
     public void delete() {
         Map<String, Object> param = new HashMap<>(2);
-        param.put("code", super.id());
+        param.put("code", super.idValue());
 
         MybatisUtils.executeDelete(SysSetting.class, "deleteByCode", param);
     }
