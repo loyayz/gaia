@@ -72,7 +72,7 @@ public abstract class AbstractEntityRelations<T extends BaseTable<T>> {
         return ClassUtils.resolveGenericType(getClass());
     }
 
-    protected String deleteMapperMethod() {
+    protected String mapperDeleteMethod() {
         return "deleteByEntityRelation";
     }
 
@@ -101,7 +101,7 @@ public abstract class AbstractEntityRelations<T extends BaseTable<T>> {
             return;
         }
         Class<T> relationClass = this.getRelationClass();
-        String methodName = this.deleteMapperMethod();
+        String methodName = this.mapperDeleteMethod();
         this.deletedItems.stream()
                 .map(this::buildRelation)
                 .collect(Collectors.toList())
