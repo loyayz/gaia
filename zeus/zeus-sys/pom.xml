@@ -10,7 +10,9 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>sys-api</module>
         <module>sys-domain</module>
+        <module>sys-service</module>
     </modules>
 
     <properties>

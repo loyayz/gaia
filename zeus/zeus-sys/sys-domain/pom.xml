@@ -21,6 +21,10 @@
             <groupId>com.loyayz</groupId>
             <artifactId>zeus-core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.loyayz</groupId>
+            <artifactId>sys-api</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>com.loyayz</groupId>

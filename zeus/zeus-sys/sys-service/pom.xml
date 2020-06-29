@@ -10,34 +10,17 @@
         <relativePath>../../zeus-parent/pom.xml</relativePath>
     </parent>
 
-    <artifactId>uaa-domain</artifactId>
+    <artifactId>sys-service</artifactId>
 
     <properties>
         <main.user.dir>${basedir}/../../..</main.user.dir>
     </properties>
 
+
     <dependencies>
         <dependency>
             <groupId>com.loyayz</groupId>
-            <artifactId>zeus-core</artifactId>
+            <artifactId>sys-domain</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.loyayz</groupId>
-            <artifactId>uaa-api</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.loyayz</groupId>
-            <artifactId>gaia-data-mybatis-starter</artifactId>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <optional>true</optional>
-        </dependency>
-
     </dependencies>
-
 </project>

@@ -10,7 +10,9 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>uaa-api</module>
         <module>uaa-domain</module>
+        <module>uaa-service</module>
     </modules>
 
     <properties>
