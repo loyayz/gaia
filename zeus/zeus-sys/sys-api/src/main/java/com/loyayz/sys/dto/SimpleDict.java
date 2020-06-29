@@ -1,4 +1,4 @@
-package com.loyayz.sys.common.dto;
+package com.loyayz.sys.dto;
 
 import lombok.Data;
 

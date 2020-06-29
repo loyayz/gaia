@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.loyayz.uaa.common.constant.UaaConstant.ROOT_DEPT_ID;
+import static com.loyayz.uaa.constant.UaaConstant.ROOT_DEPT_ID;
 
 /**
  * @author loyayz (loyayz@foxmail.com)

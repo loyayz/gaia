@@ -1,9 +1,9 @@
 package com.loyayz.sys.domain.dict;
 
 import com.loyayz.gaia.data.mybatis.extension.MybatisUtils;
-import com.loyayz.sys.common.dto.SimpleDictItem;
 import com.loyayz.sys.data.SysDictItem;
 import com.loyayz.sys.domain.DictRepository;
+import com.loyayz.sys.dto.SimpleDictItem;
 import com.loyayz.zeus.EntityId;
 
 import java.util.ArrayList;

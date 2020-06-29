@@ -1,14 +1,14 @@
 package com.loyayz.uaa.query;
 
-import com.loyayz.uaa.common.dto.SimpleAccount;
-import com.loyayz.uaa.common.dto.SimpleRole;
-import com.loyayz.uaa.common.dto.SimpleUser;
-import com.loyayz.uaa.common.dto.UserQueryParam;
 import com.loyayz.uaa.data.UaaUser;
 import com.loyayz.uaa.data.UaaUserAccount;
 import com.loyayz.uaa.data.converter.RoleConverter;
 import com.loyayz.uaa.data.converter.UserConverter;
 import com.loyayz.uaa.domain.UserRepository;
+import com.loyayz.uaa.dto.SimpleAccount;
+import com.loyayz.uaa.dto.SimpleRole;
+import com.loyayz.uaa.dto.SimpleUser;
+import com.loyayz.uaa.dto.UserQueryParam;
 
 import java.util.List;
 import java.util.Optional;

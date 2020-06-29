@@ -1,4 +1,4 @@
-package com.loyayz.uaa.common.dto;
+package com.loyayz.uaa.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

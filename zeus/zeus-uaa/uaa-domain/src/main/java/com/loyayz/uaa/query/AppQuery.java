@@ -1,14 +1,14 @@
 package com.loyayz.uaa.query;
 
-import com.loyayz.uaa.common.dto.*;
 import com.loyayz.uaa.data.UaaApp;
 import com.loyayz.uaa.data.converter.AppConverter;
 import com.loyayz.uaa.domain.AppRepository;
+import com.loyayz.uaa.dto.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.loyayz.uaa.common.constant.UaaConstant.ROOT_MENU_CODE;
+import static com.loyayz.uaa.constant.UaaConstant.ROOT_MENU_CODE;
 
 /**
  * @author loyayz (loyayz@foxmail.com)

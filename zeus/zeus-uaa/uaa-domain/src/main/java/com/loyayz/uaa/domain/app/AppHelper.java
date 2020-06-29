@@ -1,14 +1,14 @@
 package com.loyayz.uaa.domain.app;
 
-import com.loyayz.uaa.common.dto.SimpleMenu;
 import com.loyayz.uaa.data.UaaRole;
+import com.loyayz.uaa.dto.SimpleMenu;
 import com.loyayz.zeus.EntityId;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.loyayz.uaa.common.constant.UaaConstant.ROOT_MENU_CODE;
+import static com.loyayz.uaa.constant.UaaConstant.ROOT_MENU_CODE;
 
 /**
  * @author loyayz (loyayz@foxmail.com)

@@ -1,10 +1,10 @@
 package com.loyayz.uaa;
 
 import com.loyayz.gaia.util.JsonUtils;
-import com.loyayz.uaa.common.dto.SimpleUser;
 import com.loyayz.uaa.data.UaaUser;
 import com.loyayz.uaa.data.UaaUserAccount;
 import com.loyayz.uaa.domain.user.User;
+import com.loyayz.uaa.dto.SimpleUser;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

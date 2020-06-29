@@ -1,10 +1,10 @@
 package com.loyayz.sys;
 
-import com.loyayz.sys.common.dto.SimpleDictItem;
 import com.loyayz.sys.data.SysDict;
 import com.loyayz.sys.data.SysDictItem;
 import com.loyayz.sys.domain.DictRepository;
 import com.loyayz.sys.domain.dict.Dict;
+import com.loyayz.sys.dto.SimpleDictItem;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -1,9 +1,9 @@
 package com.loyayz.uaa.domain.app;
 
 import com.loyayz.gaia.data.mybatis.extension.MybatisUtils;
-import com.loyayz.uaa.common.dto.SimpleMenu;
 import com.loyayz.uaa.data.*;
 import com.loyayz.uaa.domain.AppRepository;
+import com.loyayz.uaa.dto.SimpleMenu;
 import com.loyayz.zeus.AbstractEntity;
 
 import java.util.HashMap;

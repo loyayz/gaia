@@ -1,9 +1,9 @@
 package com.loyayz.uaa.query;
 
-import com.loyayz.uaa.common.dto.RoleQueryParam;
-import com.loyayz.uaa.common.dto.SimpleRole;
 import com.loyayz.uaa.data.converter.RoleConverter;
 import com.loyayz.uaa.domain.RoleRepository;
+import com.loyayz.uaa.dto.RoleQueryParam;
+import com.loyayz.uaa.dto.SimpleRole;
 
 import java.util.List;
 import java.util.Optional;

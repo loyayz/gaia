@@ -1,10 +1,10 @@
 package com.loyayz.uaa.domain;
 
 import com.loyayz.gaia.data.mybatis.extension.MybatisUtils;
-import com.loyayz.uaa.common.dto.RoleQueryParam;
 import com.loyayz.uaa.data.UaaRole;
 import com.loyayz.uaa.data.UaaRolePermission;
 import com.loyayz.uaa.data.UaaUserRole;
+import com.loyayz.uaa.dto.RoleQueryParam;
 
 import java.util.Collection;
 import java.util.HashMap;

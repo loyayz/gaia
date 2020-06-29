@@ -1,8 +1,8 @@
 package com.loyayz.uaa.data.mapper;
 
 import com.loyayz.gaia.data.mybatis.BaseMapper;
-import com.loyayz.uaa.common.dto.AppQueryParam;
 import com.loyayz.uaa.data.UaaApp;
+import com.loyayz.uaa.dto.AppQueryParam;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;

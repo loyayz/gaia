@@ -1,4 +1,4 @@
-package com.loyayz.uaa.common.dto;
+package com.loyayz.uaa.dto;
 
 import lombok.Data;
 
@@ -6,14 +6,10 @@ import lombok.Data;
  * @author loyayz (loyayz@foxmail.com)
  */
 @Data
-public class RoleQueryParam {
+public class AppQueryParam  {
 
     /**
-     * 应用
-     */
-    private Long appId;
-    /**
-     * 角色名
+     * 名称
      * 模糊查询
      */
     private String name;

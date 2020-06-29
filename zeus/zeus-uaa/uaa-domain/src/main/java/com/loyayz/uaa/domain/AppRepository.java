@@ -1,12 +1,12 @@
 package com.loyayz.uaa.domain;
 
 import com.loyayz.gaia.data.mybatis.extension.MybatisUtils;
-import com.loyayz.uaa.common.dto.AppQueryParam;
-import com.loyayz.uaa.common.dto.MenuQueryParam;
 import com.loyayz.uaa.data.UaaApp;
 import com.loyayz.uaa.data.UaaAppMenuAction;
 import com.loyayz.uaa.data.UaaAppMenuMeta;
 import com.loyayz.uaa.data.mapper.UaaAppMenuMetaMapper;
+import com.loyayz.uaa.dto.AppQueryParam;
+import com.loyayz.uaa.dto.MenuQueryParam;
 
 import java.util.List;
 

@@ -1,7 +1,7 @@
 package com.loyayz.uaa.data.converter;
 
-import com.loyayz.uaa.common.dto.SimpleRole;
 import com.loyayz.uaa.data.UaaRole;
+import com.loyayz.uaa.dto.SimpleRole;
 
 /**
  * @author loyayz (loyayz@foxmail.com)
