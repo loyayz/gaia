@@ -3,13 +3,8 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>com.loyayz</groupId>
-        <artifactId>pantheon-dependencies</artifactId>
-        <version>0.1.0-SNAPSHOT</version>
-        <relativePath>../../pantheon-dependencies</relativePath>
-    </parent>
 
+    <groupId>com.loyayz</groupId>
     <artifactId>gaia-parent</artifactId>
     <version>0.3.1-SNAPSHOT</version>
     <packaging>pom</packaging>
@@ -17,6 +12,8 @@
     <properties>
         <main.user.dir>${basedir}/../..</main.user.dir>
 
+        <pantheon.version>0.1.0-SNAPSHOT</pantheon.version>
+        <versions-maven-plugin.version>2.7</versions-maven-plugin.version>
     </properties>
 
     <dependencies>
@@ -32,5 +29,30 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.loyayz</groupId>
+                <artifactId>pantheon-dependencies</artifactId>
+                <version>${pantheon.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+                <version>${versions-maven-plugin.version}</version>
+                <configuration>
+                    <generateBackupPoms>false</generateBackupPoms>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
