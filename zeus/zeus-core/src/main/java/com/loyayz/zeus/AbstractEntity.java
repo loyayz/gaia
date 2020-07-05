@@ -44,7 +44,7 @@ public abstract class AbstractEntity<T extends BaseTable<T>, IT extends Serializ
     }
 
     @Override
-    public void save() {
+    public IT save() {
         if (this.updated()) {
             T entity = this.entity();
             this.fillEntityBeforeSave(entity);
@@ -55,6 +55,7 @@ public abstract class AbstractEntity<T extends BaseTable<T>, IT extends Serializ
             }
         }
         this.saveExtra();
+        return this.idValue();
     }
 
     @Override

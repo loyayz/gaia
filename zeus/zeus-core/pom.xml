@@ -15,6 +15,10 @@
     <dependencies>
         <dependency>
             <groupId>com.loyayz</groupId>
+            <artifactId>gaia-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.loyayz</groupId>
             <artifactId>gaia-data</artifactId>
             <optional>true</optional>
         </dependency>

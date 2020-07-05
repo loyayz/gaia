@@ -3,12 +3,12 @@ package com.loyayz.zeus;
 /**
  * @author loyayz (loyayz@foxmail.com)
  */
-public interface Entity {
+public interface Entity<ID> {
 
     /**
      * 保存（修改或修改）
      */
-    void save();
+    ID save();
 
     /**
      * 删除
