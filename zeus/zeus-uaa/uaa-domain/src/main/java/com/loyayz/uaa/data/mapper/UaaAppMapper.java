@@ -16,11 +16,11 @@ public interface UaaAppMapper extends BaseMapper<UaaApp> {
     Integer getMaxSort();
 
     @Select("<script>SELECT * FROM uaa_app " +
-            "   <where> " +
+            "  <where> " +
             "   <if test=\"name != null and name != ''\">" +
             "       AND name LIKE CONCAT('%',#{name},'%') " +
             "   </if>" +
-            "</where> </script>")
+            "  </where> ORDER BY sort DESC </script>")
     List<UaaApp> listByParam(AppQueryParam queryParam);
 
 }

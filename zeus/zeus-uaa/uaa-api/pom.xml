@@ -16,5 +16,12 @@
         <main.user.dir>${basedir}/../../..</main.user.dir>
     </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.loyayz</groupId>
+            <artifactId>gaia-core</artifactId>
+        </dependency>
+    </dependencies>
+
 
 </project>
