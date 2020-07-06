@@ -18,10 +18,7 @@ public interface UaaRoleMapper extends BaseMapper<UaaRole> {
     int deleteByApp(@Param("appId") Long appId);
 
     @Select("<script>SELECT * FROM uaa_role " +
-            "   <where> " +
-            "   <if test=\"appId != null\">" +
-            "       app_id = #{appId} " +
-            "   </if>" +
+            "   <where> app_id = #{appId} " +
             "   <if test=\"name != null and name != ''\">" +
             "       AND name LIKE CONCAT('%',#{name},'%') " +
             "   </if>" +

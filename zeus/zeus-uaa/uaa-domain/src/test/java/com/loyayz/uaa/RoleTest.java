@@ -3,7 +3,6 @@ package com.loyayz.uaa;
 import com.loyayz.uaa.data.UaaRole;
 import com.loyayz.uaa.data.UaaRolePermission;
 import com.loyayz.uaa.data.UaaUserRole;
-import com.loyayz.uaa.domain.app.App;
 import com.loyayz.uaa.domain.role.BasePermission;
 import com.loyayz.uaa.domain.role.PermissionFactory;
 import com.loyayz.uaa.domain.role.Role;
@@ -111,15 +110,11 @@ public class RoleTest {
     }
 
     private Role create() {
-        App app = App.of().name(UUID.randomUUID().toString());
-        app.addRole(UUID.randomUUID().toString());
-        app.save();
-
-        Long roleId = UaaRole.builder().appId(app.idValue()).build()
-                .listByCondition()
-                .get(0)
-                .getId();
-        return Role.of(roleId);
+        Long appId = (long) new Random().nextInt(1000000);
+        String roleName = UUID.randomUUID().toString();
+        Role role = Role.of().appId(appId).name(roleName);
+        role.save();
+        return role;
     }
 
 }

@@ -48,16 +48,6 @@ public class App extends AbstractEntity<UaaApp, Long> {
     }
 
     /**
-     * 添加应用角色
-     *
-     * @param roleName 角色名
-     */
-    public App addRole(String roleName) {
-        this.helper.addRole(roleName);
-        return this;
-    }
-
-    /**
      * 添加菜单元数据
      *
      * @param pid  上级菜单

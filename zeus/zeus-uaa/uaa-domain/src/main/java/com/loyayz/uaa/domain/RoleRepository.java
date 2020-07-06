@@ -16,7 +16,7 @@ import java.util.Map;
  */
 public final class RoleRepository {
 
-    public static UaaRole getRole(Long id) {
+    public static UaaRole findById(Long id) {
         return new UaaRole().findById(id);
     }
 

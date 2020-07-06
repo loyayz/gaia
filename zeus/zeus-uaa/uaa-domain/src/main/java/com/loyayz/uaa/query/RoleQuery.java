@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 public final class RoleQuery {
 
     public static SimpleRole getRole(Long id) {
-        return Optional.ofNullable(RoleRepository.getRole(id))
+        return Optional.ofNullable(RoleRepository.findById(id))
                 .map(RoleConverter::toSimple)
                 .orElse(null);
     }

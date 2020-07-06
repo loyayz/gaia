@@ -19,8 +19,18 @@ public class Role extends AbstractEntity<UaaRole, Long> {
     private final RoleUsers roleUsers;
     private final RolePermissions rolePermissions;
 
+    public static Role of() {
+        return new Role(null);
+    }
+
     public static Role of(Long id) {
         return new Role(id);
+    }
+
+    public Role appId(Long appId) {
+        super.entity().setAppId(appId);
+        super.markUpdated();
+        return this;
     }
 
     public Role name(String name) {
@@ -61,7 +71,11 @@ public class Role extends AbstractEntity<UaaRole, Long> {
 
     @Override
     protected UaaRole buildEntity() {
-        return RoleRepository.getRole(super.idValue());
+        if (super.hasId()) {
+            return RoleRepository.findById(super.idValue());
+        } else {
+            return new UaaRole();
+        }
     }
 
     @Override
