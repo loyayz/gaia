@@ -1,8 +1,5 @@
 package com.loyayz.gaia.util;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Random;
@@ -10,9 +7,8 @@ import java.util.Random;
 /**
  * @author loyayz (loyayz@foxmail.com)
  */
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 @SuppressWarnings("unchecked")
-public class NumberUtils {
+public final class NumberUtils {
 
     public static BigDecimal toBigDecimal(Object number) {
         return toBigDecimal(number, null);

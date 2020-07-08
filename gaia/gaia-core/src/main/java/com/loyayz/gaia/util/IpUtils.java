@@ -1,8 +1,5 @@
 package com.loyayz.gaia.util;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-
 import javax.servlet.http.HttpServletRequest;
 
 
@@ -12,8 +9,7 @@ import javax.servlet.http.HttpServletRequest;
  *
  * @author loyayz (loyayz@foxmail.com)
  */
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class IpUtils {
+public final class IpUtils {
 
     private static final String X_FORWARDED_FOR = "X-Forwarded-For";
     private static final String X_FORWARDED_FOR_SPLIT_SYMBOL = ",";

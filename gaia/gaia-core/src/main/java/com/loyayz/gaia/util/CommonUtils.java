@@ -1,8 +1,5 @@
 package com.loyayz.gaia.util;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-
 import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Map;
@@ -13,8 +10,7 @@ import java.util.Optional;
  *
  * @author loyayz (loyayz@foxmail.com)
  */
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class CommonUtils {
+public final class CommonUtils {
 
     public static boolean hasLength(CharSequence str) {
         return str != null && str.length() > 0;
@@ -22,10 +18,6 @@ public class CommonUtils {
 
     public static boolean hasText(CharSequence str) {
         return str != null && str.length() > 0 && containsText(str);
-    }
-
-    public static boolean notText(CharSequence str) {
-        return !hasText(str);
     }
 
     public static boolean isEmpty(Object obj) {

@@ -1,8 +1,5 @@
 package com.loyayz.gaia.util;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -12,8 +9,7 @@ import java.util.Date;
 /**
  * @author loyayz (loyayz@foxmail.com)
  */
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class DateUtils {
+public final class DateUtils {
 
     private static ZoneId timezone = ZoneId.systemDefault();
 

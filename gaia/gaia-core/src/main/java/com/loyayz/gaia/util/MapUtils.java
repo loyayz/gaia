@@ -1,15 +1,11 @@
 package com.loyayz.gaia.util;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-
 import java.util.Map;
 
 /**
  * @author loyayz (loyayz@foxmail.com)
  */
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class MapUtils {
+public final class MapUtils {
 
     @SuppressWarnings("unchecked")
     public static <T> T getOrDefault(Map<String, Object> map, String key, T defaultValue) {

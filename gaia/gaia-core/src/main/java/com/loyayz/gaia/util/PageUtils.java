@@ -1,8 +1,5 @@
 package com.loyayz.gaia.util;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,8 +8,7 @@ import java.util.List;
  *
  * @author loyayz (loyayz@foxmail.com)
  */
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class PageUtils {
+public final class PageUtils {
 
     /**
      * 计算页数

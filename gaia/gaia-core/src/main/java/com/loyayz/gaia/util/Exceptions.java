@@ -1,8 +1,5 @@
 package com.loyayz.gaia.util;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-
 import java.util.Collection;
 import java.util.Map;
 
@@ -11,8 +8,7 @@ import java.util.Map;
  *
  * @author loyayz (loyayz@foxmail.com)
  */
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class Exceptions {
+public final class Exceptions {
 
     /**
      * 将异常转换为 RuntimeException
