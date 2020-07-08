@@ -4,6 +4,7 @@ import com.loyayz.gaia.data.mybatis.extension.MybatisUtils;
 import com.loyayz.uaa.data.UaaClient;
 import com.loyayz.uaa.data.UaaClientApp;
 import com.loyayz.uaa.domain.ClientRepository;
+import com.loyayz.uaa.dto.ClientSecret;
 import com.loyayz.zeus.AbstractEntity;
 import com.loyayz.zeus.EntityId;
 
@@ -21,8 +22,8 @@ public class Client extends AbstractEntity<UaaClient, Long> {
         return of(null);
     }
 
-    public static Client of(Long deptId) {
-        return new Client(deptId);
+    public static Client of(Long clientId) {
+        return new Client(clientId);
     }
 
     public Client name(String name) {
@@ -31,15 +32,11 @@ public class Client extends AbstractEntity<UaaClient, Long> {
         return this;
     }
 
-    public Client key(String privateKey, String publicKey) {
-        super.entity().setPrivateKey(privateKey);
-        super.entity().setPublicKey(publicKey);
-        super.markUpdated();
-        return this;
-    }
-
-    public Client remark(String remark) {
-        super.entity().setRemark(remark);
+    public Client secret(ClientSecret secret) {
+        UaaClient entity = super.entity();
+        entity.setSecretType(secret.getType());
+        entity.setPrivateKey(secret.getPrivateKey());
+        entity.setPublicKey(secret.getPublicKey());
         super.markUpdated();
         return this;
     }
@@ -69,9 +66,7 @@ public class Client extends AbstractEntity<UaaClient, Long> {
         if (super.hasId()) {
             return ClientRepository.findById(this.idValue());
         } else {
-            UaaClient entity = new UaaClient();
-            entity.setRemark("");
-            return entity;
+            return new UaaClient();
         }
     }
 
@@ -90,8 +85,8 @@ public class Client extends AbstractEntity<UaaClient, Long> {
         MybatisUtils.executeDelete(UaaClientApp.class, "deleteByClient", param);
     }
 
-    private Client(Long deptId) {
-        super(deptId);
+    private Client(Long clientId) {
+        super(clientId);
         EntityId id = super.id();
         this.clientApps = ClientApps.of(id);
     }

@@ -3,6 +3,7 @@ package com.loyayz.uaa;
 import com.loyayz.uaa.data.UaaClient;
 import com.loyayz.uaa.data.UaaClientApp;
 import com.loyayz.uaa.domain.client.Client;
+import com.loyayz.uaa.dto.ClientSecret;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -47,28 +48,25 @@ public class ClientTest {
         Client client = create(true);
 
         String newName = UUID.randomUUID().toString();
-        String newPrivateKey = UUID.randomUUID().toString();
-        String newPublicKey = UUID.randomUUID().toString();
-        String newRemark = UUID.randomUUID().toString();
+        ClientSecret secret = new ClientSecret();
+        secret.setPublicKey(UUID.randomUUID().toString());
+        secret.setPrivateKey(UUID.randomUUID().toString());
 
         UaaClient storeClient = new UaaClient().findById(client.idValue());
         Assert.assertNotEquals(newName, storeClient.getName());
-        Assert.assertNotEquals(newPrivateKey, storeClient.getPrivateKey());
-        Assert.assertNotEquals(newPublicKey, storeClient.getPublicKey());
-        Assert.assertEquals("", storeClient.getRemark());
+        Assert.assertNotEquals(secret.getPublicKey(), storeClient.getPublicKey());
+        Assert.assertNotEquals(secret.getPrivateKey(), storeClient.getPrivateKey());
 
         client = Client.of(client.idValue());
         client.name(newName)
-                .key(newPrivateKey, newPublicKey)
-                .remark(newRemark)
+                .secret(secret)
                 .save();
 
         storeClient = new UaaClient().findById(client.idValue());
         Assert.assertEquals(newName, storeClient.getName());
         Assert.assertEquals(newName, storeClient.getName());
-        Assert.assertEquals(newPrivateKey, storeClient.getPrivateKey());
-        Assert.assertEquals(newPublicKey, storeClient.getPublicKey());
-        Assert.assertEquals(newRemark, storeClient.getRemark());
+        Assert.assertEquals(secret.getPublicKey(), storeClient.getPublicKey());
+        Assert.assertEquals(secret.getPrivateKey(), storeClient.getPrivateKey());
     }
 
     @Test
@@ -95,9 +93,14 @@ public class ClientTest {
     }
 
     private Client create(boolean save) {
+        ClientSecret secret = new ClientSecret();
+        secret.setType("RSA");
+        secret.setPublicKey(UUID.randomUUID().toString());
+        secret.setPrivateKey(UUID.randomUUID().toString());
+
         Client client = Client.of()
                 .name(UUID.randomUUID().toString())
-                .key(UUID.randomUUID().toString(), UUID.randomUUID().toString());
+                .secret(secret);
         if (save) {
             client.save();
         }

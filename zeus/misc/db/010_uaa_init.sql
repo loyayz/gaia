@@ -174,9 +174,9 @@ CREATE TABLE `uaa_client`
 (
     `id`           bigint(20) unsigned NOT NULL,
     `name`         varchar(50)         NOT NULL COMMENT '名称',
-    `private_key`  text                NOT NULL COMMENT '私钥',
+    `secret_type`  varchar(20)         NOT NULL COMMENT '密钥类型',
     `public_key`   text                NOT NULL COMMENT '公钥',
-    `remark`       varchar(200)        NOT NULL COMMENT '备注',
+    `private_key`  text                NOT NULL COMMENT '私钥',
     `gmt_create`   datetime DEFAULT NULL,
     `gmt_modified` datetime DEFAULT NULL,
     PRIMARY KEY (`id`)

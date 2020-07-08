@@ -20,6 +20,10 @@ public class UaaClient extends AbstractTable<UaaClient> {
      */
     private String name;
     /**
+     * 密钥类型
+     */
+    private String secretType;
+    /**
      * 私钥
      */
     private String privateKey;
@@ -27,9 +31,5 @@ public class UaaClient extends AbstractTable<UaaClient> {
      * 公钥
      */
     private String publicKey;
-    /**
-     * 备注
-     */
-    private String remark;
 
 }
