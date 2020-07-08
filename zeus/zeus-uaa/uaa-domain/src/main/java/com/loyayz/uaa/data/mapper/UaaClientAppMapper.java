@@ -22,6 +22,9 @@ public interface UaaClientAppMapper extends BaseMapper<UaaClientApp> {
     @Delete("DELETE FROM uaa_client_app WHERE client_id = #{clientId} AND app_id = ${appId}")
     int deleteByEntityRelation(UaaClientApp entity);
 
+    @Select("SELECT app_id FROM uaa_client_app WHERE client_id = #{clientId}")
+    List<Long> listAppByClient(@Param("clientId") Long clientId);
+
     @Select("<script>" +
             "SELECT app_id FROM uaa_client_app WHERE client_id = #{clientId}" +
             " AND app_id IN (" +

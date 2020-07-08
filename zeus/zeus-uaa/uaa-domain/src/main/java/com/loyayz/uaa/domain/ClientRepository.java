@@ -3,7 +3,7 @@ package com.loyayz.uaa.domain;
 import com.loyayz.gaia.data.mybatis.extension.MybatisUtils;
 import com.loyayz.uaa.data.UaaClient;
 import com.loyayz.uaa.data.UaaClientApp;
-import com.loyayz.uaa.data.UaaDeptRole;
+import com.loyayz.uaa.dto.ClientQueryParam;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -17,6 +17,22 @@ public final class ClientRepository {
 
     public static UaaClient findById(Long clientId) {
         return new UaaClient().findById(clientId);
+    }
+
+    /**
+     * {@link com.loyayz.uaa.data.mapper.UaaClientMapper#listByParam}
+     */
+    public static List<UaaClient> listByParam(ClientQueryParam queryParam) {
+        return MybatisUtils.executeSelectList(UaaClient.class, "listByParam", queryParam);
+    }
+
+    /**
+     * {@link com.loyayz.uaa.data.mapper.UaaClientAppMapper#listAppByClient}
+     */
+    public static List<Long> listAppIds(Long clientId) {
+        Map<String, Object> param = new HashMap<>(2);
+        param.put("clientId", clientId);
+        return MybatisUtils.executeSelectList(UaaClientApp.class, "listAppByClient", param);
     }
 
     /**

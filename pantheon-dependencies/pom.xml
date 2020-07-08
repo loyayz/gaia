@@ -51,6 +51,7 @@
 
         <!-- 3rd lib dependency -->
         <guava.version>29.0-jre</guava.version>
+        <hutool.version>5.3.8</hutool.version>
         <jjwt.version>0.9.1</jjwt.version>
 
         <mybatis.version>3.5.5</mybatis.version>
@@ -135,6 +136,11 @@
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
                 <version>${guava.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-all</artifactId>
+                <version>${hutool.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.jsonwebtoken</groupId>
