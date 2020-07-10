@@ -35,7 +35,7 @@ public class SimpleUser implements Serializable {
     /**
      * 是否锁定
      */
-    private Boolean locked;
+    private Integer locked;
     /**
      * 创建日期
      */

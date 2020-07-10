@@ -20,7 +20,7 @@ public final class UserConverter {
         result.setMobile(user.getMobile());
         result.setEmail(user.getEmail());
         result.setInfos(infoMap(user.getInfo()));
-        result.setLocked(Integer.valueOf(1).equals(user.getLocked()));
+        result.setLocked(user.getLocked());
         result.setCreateTime(user.getGmtCreate().getTime());
         return result;
     }
