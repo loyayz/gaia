@@ -56,8 +56,12 @@ public class User extends AbstractEntity<UaaUser, Long> {
      * 有则修改，无则新增
      */
     public User info(Map<String, Object> infos) {
-        super.entity().setInfo(UserConverter.infoStr(infos));
-        super.markUpdated();
+        if (infos != null) {
+            Map<String, Object> infoMap = UserConverter.infoMap(super.entity().getInfo());
+            infoMap.putAll(infos);
+            super.entity().setInfo(UserConverter.infoStr(infoMap));
+            super.markUpdated();
+        }
         return this;
     }
 
@@ -66,9 +70,22 @@ public class User extends AbstractEntity<UaaUser, Long> {
      * 有则修改，无则新增
      */
     public User addInfo(String key, Object value) {
-        Map<String, Object> infos = UserConverter.infoMap(super.entity().getInfo());
+        Map<String, Object> infos = new HashMap<>(2);
         infos.put(key, value);
         this.info(infos);
+        return this;
+    }
+
+    /**
+     * 删除用户详情
+     */
+    public User removeInfo(String... keys) {
+        Map<String, Object> infos = UserConverter.infoMap(super.entity().getInfo());
+        for (String key : keys) {
+            infos.remove(key);
+        }
+        super.entity().setInfo(UserConverter.infoStr(infos));
+        super.markUpdated();
         return this;
     }
 

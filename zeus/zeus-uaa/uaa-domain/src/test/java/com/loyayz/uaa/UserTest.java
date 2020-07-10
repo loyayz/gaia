@@ -54,46 +54,31 @@ public class UserTest {
     public void testUpdate() {
         User user = create(true);
 
-        HashMap<String, Object> infos = new HashMap<>();
-        infos.put("age", 100);
         SimpleUser userParam = new SimpleUser();
         userParam.setName(UUID.randomUUID().toString());
         userParam.setMobile(UUID.randomUUID().toString().substring(0, 10));
         userParam.setEmail(UUID.randomUUID().toString());
-        userParam.setInfos(infos);
 
         user.name(userParam.getName())
                 .mobile(userParam.getMobile())
-                .email(userParam.getEmail())
-                .info(userParam.getInfos());
+                .email(userParam.getEmail());
 
         UaaUser storeUser = new UaaUser().findById(user.idValue());
-        Map<String, Object> storeInfos = JsonUtils.read(storeUser.getInfo());
         Assert.assertNotEquals(userParam.getName(), storeUser.getName());
         Assert.assertNotEquals(userParam.getMobile(), storeUser.getMobile());
         Assert.assertNotEquals(userParam.getEmail(), storeUser.getEmail());
-        for (Map.Entry<String, Object> entry : userParam.getInfos().entrySet()) {
-            Assert.assertNotEquals(entry.getValue(), storeInfos.get(entry.getKey()));
-        }
 
         user.save();
 
         storeUser = new UaaUser().findById(user.idValue());
-        storeInfos = JsonUtils.read(storeUser.getInfo());
         Assert.assertEquals(userParam.getName(), storeUser.getName());
         Assert.assertEquals(userParam.getMobile(), storeUser.getMobile());
         Assert.assertEquals(userParam.getEmail(), storeUser.getEmail());
-        Assert.assertEquals(userParam.getInfos().size(), storeInfos.size());
-        for (Map.Entry<String, Object> entry : userParam.getInfos().entrySet()) {
-            Assert.assertEquals(entry.getValue(), storeInfos.get(entry.getKey()));
-        }
 
         user = User.of(user.idValue());
         user.addInfo("name", userParam.getName())
                 .save();
         storeUser = new UaaUser().findById(user.idValue());
-        storeInfos = JsonUtils.read(storeUser.getInfo());
-        Assert.assertEquals(userParam.getInfos().size() + 1, storeInfos.size());
 
         Assert.assertEquals(0, (int) storeUser.getLocked());
         user.lock().save();
@@ -102,6 +87,65 @@ public class UserTest {
         user.unlock().save();
         storeUser = new UaaUser().findById(user.idValue());
         Assert.assertEquals(0, (int) storeUser.getLocked());
+    }
+
+    @Test
+    public void testInfo() {
+        User user = create(true);
+
+        UaaUser storeUser = new UaaUser().findById(user.idValue());
+        Map<String, Object> storeInfos = JsonUtils.read(storeUser.getInfo());
+        Assert.assertTrue(storeInfos.isEmpty());
+
+        Map<String, Object> infos = new HashMap<>();
+        infos.put("avatar", "http://www.loyayz.com/img/1");
+        infos.put("age", 100);
+        infos.put("sex", "男");
+        user.info(infos).save();
+
+        infos.put("age", 20);
+        infos.put("sex", "女");
+        infos.put("test", "测试");
+        user = User.of(user.idValue())
+                .addInfo("age", 10)
+                .addInfo("age", 20)
+                .addInfo("sex", "女")
+                .addInfo("test", "测试");
+        user.save();
+
+        storeUser = new UaaUser().findById(user.idValue());
+        storeInfos = JsonUtils.read(storeUser.getInfo());
+        Assert.assertEquals(infos.size(), storeInfos.size());
+        for (Map.Entry<String, Object> entry : infos.entrySet()) {
+            Assert.assertEquals(entry.getValue(), storeInfos.get(entry.getKey()));
+        }
+
+        infos.put("sex", "男");
+        Map<String, Object> updateInfos = new HashMap<>();
+        updateInfos.put("sex", "男");
+        user = User.of(user.idValue())
+                .info(updateInfos);
+        user.save();
+
+        storeUser = new UaaUser().findById(user.idValue());
+        storeInfos = JsonUtils.read(storeUser.getInfo());
+        Assert.assertEquals(infos.size(), storeInfos.size());
+        for (Map.Entry<String, Object> entry : infos.entrySet()) {
+            Assert.assertEquals(entry.getValue(), storeInfos.get(entry.getKey()));
+        }
+
+        infos.remove("sex");
+        infos.remove("test");
+        user = User.of(user.idValue())
+                .removeInfo("sex", "test");
+        user.save();
+
+        storeUser = new UaaUser().findById(user.idValue());
+        storeInfos = JsonUtils.read(storeUser.getInfo());
+        Assert.assertEquals(infos.size(), storeInfos.size());
+        for (Map.Entry<String, Object> entry : infos.entrySet()) {
+            Assert.assertEquals(entry.getValue(), storeInfos.get(entry.getKey()));
+        }
     }
 
     @Test
