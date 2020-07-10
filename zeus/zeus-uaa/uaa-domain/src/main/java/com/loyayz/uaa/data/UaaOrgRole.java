@@ -14,12 +14,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UaaDeptRole extends AbstractTable<UaaDeptRole> {
+public class UaaOrgRole extends AbstractTable<UaaOrgRole> {
 
     /**
-     * 部门
+     * 组织
      */
-    private Long deptId;
+    private Long orgId;
     /**
      * 角色
      */

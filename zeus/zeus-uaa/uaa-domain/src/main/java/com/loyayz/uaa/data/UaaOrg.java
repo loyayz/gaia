@@ -13,10 +13,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UaaDept extends AbstractTable<UaaDept> {
+public class UaaOrg extends AbstractTable<UaaOrg> {
 
     /**
-     * 上级部门
+     * 上级组织
      */
     private Long pid;
     /**

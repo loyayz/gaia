@@ -131,10 +131,10 @@ CREATE TABLE `uaa_role_permission`
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='角色权限';
 
-CREATE TABLE `uaa_dept`
+CREATE TABLE `uaa_org`
 (
     `id`           bigint(20) unsigned NOT NULL,
-    `pid`          bigint(20) unsigned NOT NULL COMMENT '上级部门',
+    `pid`          bigint(20) unsigned NOT NULL COMMENT '上级组织',
     `name`         varchar(50)         NOT NULL COMMENT '名称',
     `sort`         int(11)             NOT NULL COMMENT '序号',
     `gmt_create`   datetime DEFAULT NULL,
@@ -142,33 +142,33 @@ CREATE TABLE `uaa_dept`
     PRIMARY KEY (`id`),
     KEY `idx_ud_pid` (`pid`)
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4 COMMENT ='部门';
+  DEFAULT CHARSET = utf8mb4 COMMENT ='组织';
 
-CREATE TABLE `uaa_dept_role`
+CREATE TABLE `uaa_org_role`
 (
     `id`           bigint(20) unsigned not null,
-    `dept_id`      bigint(20) unsigned not null comment '部门',
+    `org_id`       bigint(20) unsigned not null comment '组织',
     `role_id`      bigint(20) unsigned not null comment '角色',
     `gmt_create`   datetime default null,
     `gmt_modified` datetime default null,
     PRIMARY KEY (`id`),
-    KEY `idx_udr_did` (`dept_id`),
+    KEY `idx_udr_oid` (`org_id`),
     KEY `idx_udr_rid` (`role_id`)
 ) ENGINE = INNODB
-  DEFAULT CHARSET = utf8mb4 COMMENT ='部门角色';
+  DEFAULT CHARSET = utf8mb4 COMMENT ='组织角色';
 
-CREATE TABLE `uaa_dept_user`
+CREATE TABLE `uaa_org_user`
 (
     `id`           bigint(20) unsigned not null,
-    `dept_id`      bigint(20) unsigned not null comment '部门',
+    `org_id`       bigint(20) unsigned not null comment '组织',
     `user_id`      bigint(20) unsigned not null comment '用户',
     `gmt_create`   datetime default null,
     `gmt_modified` datetime default null,
     PRIMARY KEY (`id`),
-    KEY `idx_udu_did` (`dept_id`),
+    KEY `idx_udu_oid` (`org_id`),
     KEY `idx_udu_uid` (`user_id`)
 ) ENGINE = INNODB
-  DEFAULT CHARSET = utf8mb4 COMMENT ='部门用户';
+  DEFAULT CHARSET = utf8mb4 COMMENT ='组织用户';
 
 CREATE TABLE `uaa_client`
 (
