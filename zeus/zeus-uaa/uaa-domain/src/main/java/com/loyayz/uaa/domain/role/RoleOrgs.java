@@ -1,6 +1,6 @@
 package com.loyayz.uaa.domain.role;
 
-import com.loyayz.uaa.data.UaaUserRole;
+import com.loyayz.uaa.data.UaaOrgRole;
 import com.loyayz.uaa.domain.RoleRepository;
 import com.loyayz.zeus.AbstractEntityRelations;
 import com.loyayz.zeus.EntityId;
@@ -9,32 +9,32 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * {@link com.loyayz.uaa.data.mapper.UaaUserRoleMapper#deleteByEntityRelation}
+ * {@link com.loyayz.uaa.data.mapper.UaaOrgRoleMapper#deleteByEntityRelation}
  *
  * @author loyayz (loyayz@foxmail.com)
  */
-class RoleUsers extends AbstractEntityRelations<UaaUserRole> {
+class RoleOrgs extends AbstractEntityRelations<UaaOrgRole> {
 
-    static RoleUsers of(EntityId roleId) {
-        return new RoleUsers(roleId);
+    static RoleOrgs of(EntityId roleId) {
+        return new RoleOrgs(roleId);
     }
 
     @Override
     protected List<Long> existInRepo(Set<Long> items) {
         Long roleId = super.entityId().get();
-        return RoleRepository.listUserIds(roleId, items);
+        return RoleRepository.listOrgIds(roleId, items);
     }
 
     @Override
-    protected UaaUserRole buildRelation(Long item) {
+    protected UaaOrgRole buildRelation(Long item) {
         Long roleId = super.entityId().get();
-        return UaaUserRole.builder()
+        return UaaOrgRole.builder()
                 .roleId(roleId)
-                .userId(item)
+                .orgId(item)
                 .build();
     }
 
-    private RoleUsers(EntityId roleId) {
+    private RoleOrgs(EntityId roleId) {
         super(roleId);
     }
 

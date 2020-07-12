@@ -29,4 +29,14 @@ public interface UaaOrgUserMapper extends BaseMapper<UaaOrgUser> {
             "</script>")
     List<Long> listUserByOrgUsers(@Param("orgId") Long orgId, @Param("userIds") List<Long> userIds);
 
+    @Select("<script>" +
+            "SELECT org_id FROM uaa_org_user WHERE user_id = #{userId}" +
+            " AND org_id IN (" +
+            "   <foreach collection=\"orgIds\" item=\"orgId\" separator=\",\">" +
+            "       #{orgId}" +
+            "   </foreach>" +
+            "   )" +
+            "</script>")
+    List<Long> listOrgByUserOrgs(@Param("userId") Long userId, @Param("orgIds") List<Long> orgIds);
+
 }

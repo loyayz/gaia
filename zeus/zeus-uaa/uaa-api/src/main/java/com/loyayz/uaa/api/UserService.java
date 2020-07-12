@@ -40,4 +40,24 @@ public interface UserService {
      */
     void deleteUser(List<Long> userIds);
 
+    /**
+     * 用户添加角色
+     */
+    void addRole(Long userId, List<Long> roleIds);
+
+    /**
+     * 用户删除角色
+     */
+    void removeRole(Long userId, List<Long> roleIds);
+
+    /**
+     * 用户添加组织
+     */
+    void addOrg(Long userId, List<Long> orgIds);
+
+    /**
+     * 用户删除组织
+     */
+    void removeOrg(Long userId, List<Long> orgIds);
+
 }

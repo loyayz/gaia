@@ -33,6 +33,16 @@ public interface UaaUserRoleMapper extends BaseMapper<UaaUserRole> {
             "</script>")
     List<Long> listUserByRoleUsers(@Param("roleId") Long roleId, @Param("userIds") List<Long> userIds);
 
+    @Select("<script>" +
+            "SELECT role_id FROM uaa_user_role WHERE user_id = #{userId}" +
+            " AND role_id IN (" +
+            "   <foreach collection=\"roleIds\" item=\"roleId\" separator=\",\">" +
+            "       #{roleId}" +
+            "   </foreach>" +
+            "   )" +
+            "</script>")
+    List<Long> listRoleByUserRoles(@Param("userId") Long userId, @Param("roleIds") List<Long> roleIds);
+
     @Select("SELECT r.* FROM uaa_user_role u,uaa_role r " +
             "  WHERE u.role_id = r.id AND u.user_id = #{userId} ")
     List<UaaRole> listByUser(@Param("userId") Long userId);

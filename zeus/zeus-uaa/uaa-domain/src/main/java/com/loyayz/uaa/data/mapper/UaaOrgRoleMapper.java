@@ -29,4 +29,14 @@ public interface UaaOrgRoleMapper extends BaseMapper<UaaOrgRole> {
             "</script>")
     List<Long> listRoleByOrgRoles(@Param("orgId") Long orgId, @Param("roleIds") List<Long> roleIds);
 
+    @Select("<script>" +
+            "SELECT org_id FROM uaa_org_role WHERE role_id = #{roleId}" +
+            " AND org_id IN (" +
+            "   <foreach collection=\"orgIds\" item=\"orgId\" separator=\",\">" +
+            "       #{orgId}" +
+            "   </foreach>" +
+            "   )" +
+            "</script>")
+    List<Long> listOrgByRoleOrgs(@Param("roleId") Long roleId, @Param("orgIds") List<Long> orgIds);
+
 }

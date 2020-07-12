@@ -44,4 +44,24 @@ public interface RoleService {
      */
     void deleteRole(List<Long> roleIds);
 
+    /**
+     * 角色添加用户
+     */
+    void addUser(Long roleId, List<Long> userIds);
+
+    /**
+     * 角色删除用户
+     */
+    void removeUser(Long roleId, List<Long> userIds);
+
+    /**
+     * 角色添加组织
+     */
+    void addOrg(Long roleId, List<Long> orgIds);
+
+    /**
+     * 角色删除组织
+     */
+    void removeOrg(Long roleId, List<Long> orgIds);
+
 }

@@ -57,4 +57,34 @@ public class RoleServiceImpl implements RoleService {
         }
     }
 
+    @Override
+    public void addUser(Long roleId, List<Long> userIds) {
+        Role.of(roleId)
+                .addUser(userIds)
+                .save();
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void removeUser(Long roleId, List<Long> userIds) {
+        Role.of(roleId)
+                .removeUser(userIds)
+                .save();
+    }
+
+    @Override
+    public void addOrg(Long roleId, List<Long> orgIds) {
+        Role.of(roleId)
+                .addOrg(orgIds)
+                .save();
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void removeOrg(Long roleId, List<Long> orgIds) {
+        Role.of(roleId)
+                .removeOrg(orgIds)
+                .save();
+    }
+
 }

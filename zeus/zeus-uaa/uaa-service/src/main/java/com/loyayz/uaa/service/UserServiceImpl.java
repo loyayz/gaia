@@ -60,4 +60,34 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
+    public void addRole(Long userId, List<Long> roleIds) {
+        User.of(userId)
+                .addRole(roleIds)
+                .save();
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void removeRole(Long userId, List<Long> roleIds) {
+        User.of(userId)
+                .removeRole(roleIds)
+                .save();
+    }
+
+    @Override
+    public void addOrg(Long userId, List<Long> orgIds) {
+        User.of(userId)
+                .addOrg(orgIds)
+                .save();
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void removeOrg(Long userId, List<Long> orgIds) {
+        User.of(userId)
+                .removeOrg(orgIds)
+                .save();
+    }
+
 }

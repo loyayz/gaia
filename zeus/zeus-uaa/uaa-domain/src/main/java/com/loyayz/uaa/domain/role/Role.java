@@ -17,6 +17,7 @@ import java.util.Map;
  */
 public class Role extends AbstractEntity<UaaRole, Long> {
     private final RoleUsers roleUsers;
+    private final RoleOrgs roleOrgs;
     private final RolePermissions rolePermissions;
 
     public static Role of() {
@@ -59,6 +60,26 @@ public class Role extends AbstractEntity<UaaRole, Long> {
         return this;
     }
 
+    /**
+     * 添加组织
+     *
+     * @param orgIds 组织id
+     */
+    public Role addOrg(List<Long> orgIds) {
+        this.roleOrgs.add(orgIds);
+        return this;
+    }
+
+    /**
+     * 删除组织
+     *
+     * @param orgIds 组织id
+     */
+    public Role removeOrg(List<Long> orgIds) {
+        this.roleOrgs.remove(orgIds);
+        return this;
+    }
+
     public Role addPermission(BasePermission permission) {
         this.rolePermissions.add(permission);
         return this;
@@ -81,6 +102,7 @@ public class Role extends AbstractEntity<UaaRole, Long> {
     @Override
     protected void saveExtra() {
         this.roleUsers.save();
+        this.roleOrgs.save();
         this.rolePermissions.save();
     }
 
@@ -102,6 +124,7 @@ public class Role extends AbstractEntity<UaaRole, Long> {
         super(roleId);
         EntityId id = super.id();
         this.roleUsers = RoleUsers.of(id);
+        this.roleOrgs = RoleOrgs.of(id);
         this.rolePermissions = RolePermissions.of(id);
     }
 }

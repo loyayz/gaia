@@ -7,14 +7,18 @@ import com.loyayz.uaa.data.UaaUserRole;
 import com.loyayz.uaa.data.converter.UserConverter;
 import com.loyayz.uaa.domain.UserRepository;
 import com.loyayz.zeus.AbstractEntity;
+import com.loyayz.zeus.EntityId;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
  * @author loyayz (loyayz@foxmail.com)
  */
 public class User extends AbstractEntity<UaaUser, Long> {
+    private final UserRoles userRoles;
+    private final UserOrgs userOrgs;
 
     public static User of() {
         return of(null);
@@ -117,6 +121,46 @@ public class User extends AbstractEntity<UaaUser, Long> {
         return UserAccount.of(super.id(), accountType, accountName);
     }
 
+    /**
+     * 添加角色
+     *
+     * @param roleIds 角色id
+     */
+    public User addRole(List<Long> roleIds) {
+        this.userRoles.add(roleIds);
+        return this;
+    }
+
+    /**
+     * 删除角色
+     *
+     * @param roleIds 角色id
+     */
+    public User removeRole(List<Long> roleIds) {
+        this.userRoles.remove(roleIds);
+        return this;
+    }
+
+    /**
+     * 添加组织
+     *
+     * @param orgIds 组织id
+     */
+    public User addOrg(List<Long> orgIds) {
+        this.userOrgs.add(orgIds);
+        return this;
+    }
+
+    /**
+     * 删除角色
+     *
+     * @param orgIds 组织id
+     */
+    public User removeOrg(List<Long> orgIds) {
+        this.userOrgs.remove(orgIds);
+        return this;
+    }
+
     @Override
     protected UaaUser buildEntity() {
         if (super.hasId()) {
@@ -127,6 +171,12 @@ public class User extends AbstractEntity<UaaUser, Long> {
             entity.setDeleted(0);
             return entity;
         }
+    }
+
+    @Override
+    protected void saveExtra() {
+        this.userRoles.save();
+        this.userOrgs.save();
     }
 
     /**
@@ -154,6 +204,9 @@ public class User extends AbstractEntity<UaaUser, Long> {
 
     private User(Long userId) {
         super(userId);
+        EntityId id = super.id();
+        this.userRoles = UserRoles.of(id);
+        this.userOrgs = UserOrgs.of(id);
     }
 
 }
