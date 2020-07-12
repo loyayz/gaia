@@ -28,6 +28,17 @@ public class SimpleAccount implements Serializable {
      */
     private Long createTime;
 
+    public SimpleAccount() {
+
+    }
+
+    public SimpleAccount(SimpleAccount account, String password) {
+        this.type = account.getType();
+        this.name = account.getName();
+        this.password = password;
+        this.createTime = account.getCreateTime();
+    }
+
     public void erasePassword() {
         this.password = null;
     }

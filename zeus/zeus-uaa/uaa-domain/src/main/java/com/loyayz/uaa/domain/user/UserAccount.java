@@ -1,6 +1,7 @@
 package com.loyayz.uaa.domain.user;
 
 import com.loyayz.gaia.data.mybatis.extension.MybatisUtils;
+import com.loyayz.gaia.exception.OperationDeniedException;
 import com.loyayz.uaa.data.UaaUserAccount;
 import com.loyayz.uaa.domain.UserRepository;
 import com.loyayz.zeus.AbstractEntity;
@@ -24,7 +25,24 @@ public class UserAccount extends AbstractEntity<UaaUserAccount, Long> {
     }
 
     public UserAccount password(String password) {
-        this.entity().setPassword(password);
+        super.entity().setPassword(password);
+        return this;
+    }
+
+    public String password() {
+        return super.entity().getPassword();
+    }
+
+    /**
+     * 校验用户是否一致
+     */
+    public UserAccount validOwner(String logPrefix) {
+        Long userId = this.userId.get();
+        boolean valid = userId != null && userId.equals(super.entity().getUserId());
+        if (!valid) {
+            String msg = String.format(logPrefix + " user [%s] account [%s - %s]", userId, this.type, this.name);
+            throw new OperationDeniedException(msg);
+        }
         return this;
     }
 
@@ -44,6 +62,9 @@ public class UserAccount extends AbstractEntity<UaaUserAccount, Long> {
     @Override
     protected void fillEntityBeforeSave(UaaUserAccount entity) {
         entity.setUserId(userId.get());
+        if (entity.getPassword() == null) {
+            entity.setPassword("");
+        }
     }
 
     /**

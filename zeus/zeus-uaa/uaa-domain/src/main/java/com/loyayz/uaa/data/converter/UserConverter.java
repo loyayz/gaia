@@ -25,7 +25,7 @@ public final class UserConverter {
         return result;
     }
 
-    public static SimpleAccount toSimple(UaaUserAccount account) {
+    public static SimpleAccount toSimpleAccount(UaaUserAccount account) {
         SimpleAccount result = new SimpleAccount();
         result.setType(account.getType());
         result.setName(account.getName());

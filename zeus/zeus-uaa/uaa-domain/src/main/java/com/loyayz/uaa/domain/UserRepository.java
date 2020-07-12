@@ -46,4 +46,9 @@ public final class UserRepository {
         return MybatisUtils.executeSelectOne(UaaUserAccount.class, "getAccount", param);
     }
 
+    public static List<UaaUserAccount> listAccount(Long userId) {
+        return UaaUserAccount.builder().userId(userId).build()
+                .listByCondition();
+    }
+
 }
