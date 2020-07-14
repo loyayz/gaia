@@ -1,4 +1,4 @@
-package com.loyayz.uaa.service;
+package com.loyayz.uaa.helper;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;

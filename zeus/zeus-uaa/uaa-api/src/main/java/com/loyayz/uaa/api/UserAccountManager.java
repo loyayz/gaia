@@ -1,26 +1,11 @@
 package com.loyayz.uaa.api;
 
-import com.loyayz.gaia.model.Pair;
 import com.loyayz.uaa.dto.SimpleAccount;
-import com.loyayz.uaa.exception.AccountPasswordIncorrectException;
-
-import java.util.List;
 
 /**
  * @author loyayz (loyayz@foxmail.com)
  */
 public interface UserAccountManager {
-
-    /**
-     * 查询用户所有账号
-     */
-    List<SimpleAccount> listAccount(Long userId);
-
-    /**
-     * 获取账号信息
-     * <userId,account>
-     */
-    Pair<Long, SimpleAccount> getAccount(String accountType, String accountName);
 
     /**
      * 用户添加账号
@@ -41,28 +26,6 @@ public interface UserAccountManager {
      * 非本人账号，抛异常 {@link com.loyayz.gaia.exception.OperationDeniedException}
      */
     void removeAccount(Long userId, String accountType, String accountName);
-
-    /**
-     * 校验账号密码
-     *
-     * @param account       账号信息
-     * @param validPassword 要校验的密码
-     * @return 密码是否正确
-     */
-    boolean validPassword(SimpleAccount account, String validPassword);
-
-    /**
-     * 校验账号密码并抛异常
-     *
-     * @param account       账号信息
-     * @param validPassword 要校验的密码
-     */
-    default void validPasswordThrowException(SimpleAccount account, String validPassword) {
-        boolean valid = this.validPassword(account, validPassword);
-        if (!valid) {
-            throw new AccountPasswordIncorrectException(account.getType(), account.getName());
-        }
-    }
 
     /**
      * 用户修改账号密码

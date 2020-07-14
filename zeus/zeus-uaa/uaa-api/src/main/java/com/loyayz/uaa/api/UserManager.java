@@ -1,26 +1,13 @@
 package com.loyayz.uaa.api;
 
-import com.loyayz.gaia.model.PageModel;
-import com.loyayz.gaia.model.request.PageRequest;
 import com.loyayz.uaa.dto.SimpleUser;
-import com.loyayz.uaa.dto.UserQueryParam;
 
 import java.util.List;
 
 /**
  * @author loyayz (loyayz@foxmail.com)
  */
-public interface UserService {
-
-    /**
-     * 根据id查询用户
-     */
-    SimpleUser getUser(Long userId);
-
-    /**
-     * 分页查询用户
-     */
-    PageModel<SimpleUser> pageUser(UserQueryParam queryParam, PageRequest pageRequest);
+public interface UserManager {
 
     /**
      * 新增用户

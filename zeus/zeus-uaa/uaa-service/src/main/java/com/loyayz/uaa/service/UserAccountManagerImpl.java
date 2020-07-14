@@ -1,16 +1,13 @@
 package com.loyayz.uaa.service;
 
-import com.loyayz.gaia.model.Pair;
 import com.loyayz.gaia.util.Exceptions;
-import com.loyayz.gaia.util.Functions;
 import com.loyayz.uaa.api.UserAccountManager;
-import com.loyayz.uaa.data.UaaUserAccount;
-import com.loyayz.uaa.data.converter.UserConverter;
-import com.loyayz.uaa.domain.UserRepository;
+import com.loyayz.uaa.api.UserQuery;
 import com.loyayz.uaa.domain.user.User;
 import com.loyayz.uaa.domain.user.UserAccount;
 import com.loyayz.uaa.dto.SimpleAccount;
 import com.loyayz.uaa.exception.AccountExistException;
+import com.loyayz.uaa.helper.UserAccountPasswordProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,28 +19,12 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class UserAccountManagerImpl implements UserAccountManager {
+    private final UserQuery userQuery;
     private final List<UserAccountPasswordProvider> passwordProviders;
 
     @Override
-    public List<SimpleAccount> listAccount(Long userId) {
-        List<UaaUserAccount> accounts = UserRepository.listAccount(userId);
-        return Functions.convert(accounts, UserConverter::toSimpleAccount);
-    }
-
-    @Override
-    public Pair<Long, SimpleAccount> getAccount(String accountType, String accountName) {
-        return Functions.convert(UserRepository.getAccount(accountType, accountName),
-                (account) -> {
-                    Pair<Long, SimpleAccount> result = new Pair<>();
-                    result.setLeft(account.getUserId());
-                    result.setRight(UserConverter.toSimpleAccount(account));
-                    return result;
-                });
-    }
-
-    @Override
     public void addAccount(Long userId, String accountType, String accountName, String password) {
-        Exceptions.isNull(this.getAccount(accountType, accountName), new AccountExistException(accountType, accountName));
+        Exceptions.isNull(this.userQuery.getAccount(accountType, accountName), new AccountExistException(accountType, accountName));
         password = this.passwordProvider(accountType).encrypt(password);
         User.of(userId)
                 .account(accountType, accountName)
@@ -60,19 +41,13 @@ public class UserAccountManagerImpl implements UserAccountManager {
     }
 
     @Override
-    public boolean validPassword(SimpleAccount account, String validPassword) {
-        return this.passwordProvider(account.getType())
-                .valid(account, validPassword);
-    }
-
-    @Override
     public void changePassword(Long userId, SimpleAccount account, String validPassword) {
         String accountType = account.getType();
 
         UserAccount userAccount = User.of(userId)
                 .account(accountType, account.getName())
                 .validOwner("Account change password denied!");
-        this.validPasswordThrowException(new SimpleAccount(account, userAccount.password()), validPassword);
+        this.userQuery.validAccountPassword(new SimpleAccount(account, userAccount.password()), validPassword);
         String password = this.passwordProvider(accountType).encrypt(account.getPassword());
         userAccount
                 .password(password)

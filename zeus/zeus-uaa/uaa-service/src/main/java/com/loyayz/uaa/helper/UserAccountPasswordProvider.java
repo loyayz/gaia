@@ -1,4 +1,4 @@
-package com.loyayz.uaa.service;
+package com.loyayz.uaa.helper;
 
 import com.loyayz.uaa.dto.SimpleAccount;
 

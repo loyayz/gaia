@@ -3,7 +3,8 @@ package com.loyayz.uaa.service;
 import com.loyayz.gaia.data.mybatis.extension.Pages;
 import com.loyayz.gaia.model.PageModel;
 import com.loyayz.gaia.model.request.PageRequest;
-import com.loyayz.uaa.api.AppService;
+import com.loyayz.uaa.api.AppManager;
+import com.loyayz.uaa.api.AppQuery;
 import com.loyayz.uaa.data.converter.AppConverter;
 import com.loyayz.uaa.domain.AppRepository;
 import com.loyayz.uaa.domain.app.App;
@@ -19,7 +20,7 @@ import java.util.Optional;
  * @author loyayz (loyayz@foxmail.com)
  */
 @Service
-public class AppServiceImpl implements AppService {
+public class AppServiceImpl implements AppQuery, AppManager {
 
     @Override
     public SimpleApp getApp(Long appId) {

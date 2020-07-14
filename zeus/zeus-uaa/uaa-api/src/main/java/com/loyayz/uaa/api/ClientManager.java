@@ -1,27 +1,11 @@
 package com.loyayz.uaa.api;
 
-import com.loyayz.gaia.model.PageModel;
-import com.loyayz.gaia.model.request.PageRequest;
-import com.loyayz.uaa.dto.ClientQueryParam;
-import com.loyayz.uaa.dto.SimpleApp;
-import com.loyayz.uaa.dto.SimpleClient;
-
 import java.util.List;
 
 /**
  * @author loyayz (loyayz@foxmail.com)
  */
-public interface ClientService {
-
-    /**
-     * 根据id查询客户端
-     */
-    SimpleClient getClient(Long clientId);
-
-    /**
-     * 分页查询客户端
-     */
-    PageModel<SimpleClient> pageClient(ClientQueryParam queryParam, PageRequest pageRequest);
+public interface ClientManager {
 
     /**
      * 新增客户端
@@ -46,9 +30,12 @@ public interface ClientService {
     void deleteClient(List<Long> clientIds);
 
     /**
-     * 查询客户端拥有的应用
+     * 重置客户端密钥
+     *
+     * @param clientId   客户端 id
+     * @param secretType 密钥类型
      */
-    List<SimpleApp> listAppByClient(Long clientId);
+    void resetSecret(Long clientId, String secretType);
 
     /**
      * 客户端添加应用

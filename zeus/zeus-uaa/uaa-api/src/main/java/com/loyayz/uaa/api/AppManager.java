@@ -1,8 +1,5 @@
 package com.loyayz.uaa.api;
 
-import com.loyayz.gaia.model.PageModel;
-import com.loyayz.gaia.model.request.PageRequest;
-import com.loyayz.uaa.dto.AppQueryParam;
 import com.loyayz.uaa.dto.SimpleApp;
 
 import java.util.List;
@@ -10,17 +7,7 @@ import java.util.List;
 /**
  * @author loyayz (loyayz@foxmail.com)
  */
-public interface AppService {
-
-    /**
-     * 根据id查询应用
-     */
-    SimpleApp getApp(Long appId);
-
-    /**
-     * 分页查询应用
-     */
-    PageModel<SimpleApp> pageApp(AppQueryParam queryParam, PageRequest pageRequest);
+public interface AppManager {
 
     /**
      * 新增应用

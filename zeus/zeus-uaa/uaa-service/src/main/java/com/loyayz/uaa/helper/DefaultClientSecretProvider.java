@@ -1,4 +1,4 @@
-package com.loyayz.uaa.service;
+package com.loyayz.uaa.helper;
 
 import cn.hutool.crypto.asymmetric.KeyType;
 import cn.hutool.crypto.asymmetric.RSA;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @Order
-public class RsaClientSecretProvider implements ClientSecretProvider {
+public class DefaultClientSecretProvider implements ClientSecretProvider {
 
     @Override
     public String secretType() {
