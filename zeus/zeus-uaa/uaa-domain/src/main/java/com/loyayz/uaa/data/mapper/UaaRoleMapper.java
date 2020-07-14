@@ -13,6 +13,10 @@ import java.util.List;
  * @author loyayz (loyayz@foxmail.com)
  */
 public interface UaaRoleMapper extends BaseMapper<UaaRole> {
+    String FROM_TABLE_BY_USER = " FROM uaa_role WHERE id IN (" +
+            " SELECT role_id FROM uaa_org_role WHERE org_id IN (SELECT org_id FROM uaa_org_user WHERE user_id = #{userId})" +
+            " UNION SELECT role_id FROM uaa_user_role WHERE user_id = #{userId} )";
+    String SELECT_APP_BY_USER = " SELECT app_id " + FROM_TABLE_BY_USER;
 
     @Delete("DELETE FROM uaa_role WHERE app_id = #{appId}")
     int deleteByApp(@Param("appId") Long appId);

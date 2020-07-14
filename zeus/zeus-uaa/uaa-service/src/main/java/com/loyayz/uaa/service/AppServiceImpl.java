@@ -13,8 +13,10 @@ import com.loyayz.uaa.dto.SimpleApp;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @author loyayz (loyayz@foxmail.com)
@@ -33,6 +35,15 @@ public class AppServiceImpl implements AppQuery, AppManager {
     public PageModel<SimpleApp> pageApp(AppQueryParam queryParam, PageRequest pageRequest) {
         return Pages.doSelectPage(pageRequest, () -> AppRepository.listAppByParam(queryParam))
                 .convert(AppConverter::toSimple);
+    }
+
+    @Override
+    public List<SimpleApp> listApp(List<Long> appIds) {
+        return new HashSet<>(appIds)
+                .parallelStream()
+                .map(this::getApp)
+                .sorted()
+                .collect(Collectors.toList());
     }
 
     @Override

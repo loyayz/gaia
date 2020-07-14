@@ -3,11 +3,13 @@ package com.loyayz.uaa.service;
 import com.loyayz.gaia.data.mybatis.extension.Pages;
 import com.loyayz.gaia.model.PageModel;
 import com.loyayz.gaia.model.request.PageRequest;
+import com.loyayz.uaa.api.AppQuery;
 import com.loyayz.uaa.api.ClientQuery;
 import com.loyayz.uaa.data.converter.ClientConverter;
 import com.loyayz.uaa.domain.ClientRepository;
 import com.loyayz.uaa.dto.ClientQueryParam;
 import com.loyayz.uaa.dto.ClientSecret;
+import com.loyayz.uaa.dto.SimpleApp;
 import com.loyayz.uaa.dto.SimpleClient;
 import com.loyayz.uaa.helper.ClientSecretProvider;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class ClientQueryImpl implements ClientQuery {
+    private final AppQuery appQuery;
     private final List<ClientSecretProvider> secretProviders;
 
     @Override
@@ -55,6 +58,12 @@ public class ClientQueryImpl implements ClientQuery {
     public ClientSecret generateSecret(String secretType) {
         return this.clientSecretProvider(secretType)
                 .generateSecret();
+    }
+
+    @Override
+    public List<SimpleApp> listApp(Long clientId) {
+        List<Long> appIds = ClientRepository.listAppIds(clientId);
+        return this.appQuery.listApp(appIds);
     }
 
     private ClientSecretProvider clientSecretProvider(String secretType) {

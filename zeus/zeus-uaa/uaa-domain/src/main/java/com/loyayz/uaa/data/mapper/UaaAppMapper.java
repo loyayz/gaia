@@ -3,6 +3,7 @@ package com.loyayz.uaa.data.mapper;
 import com.loyayz.gaia.data.mybatis.BaseMapper;
 import com.loyayz.uaa.data.UaaApp;
 import com.loyayz.uaa.dto.AppQueryParam;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
@@ -22,5 +23,8 @@ public interface UaaAppMapper extends BaseMapper<UaaApp> {
             "   </if>" +
             "  </where> ORDER BY sort DESC </script>")
     List<UaaApp> listByParam(AppQueryParam queryParam);
+
+    @Select("SELECT * FROM uaa_app WHERE id IN ( " + UaaRoleMapper.SELECT_APP_BY_USER + ") ORDER BY sort DESC")
+    List<UaaApp> listByUser(@Param("userId") Long userId);
 
 }

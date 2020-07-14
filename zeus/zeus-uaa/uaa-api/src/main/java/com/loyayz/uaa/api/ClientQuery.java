@@ -4,7 +4,10 @@ import com.loyayz.gaia.model.PageModel;
 import com.loyayz.gaia.model.request.PageRequest;
 import com.loyayz.uaa.dto.ClientQueryParam;
 import com.loyayz.uaa.dto.ClientSecret;
+import com.loyayz.uaa.dto.SimpleApp;
 import com.loyayz.uaa.dto.SimpleClient;
+
+import java.util.List;
 
 /**
  * @author loyayz (loyayz@foxmail.com)
@@ -40,5 +43,10 @@ public interface ClientQuery {
      * @param secretType 密钥类型
      */
     ClientSecret generateSecret(String secretType);
+
+    /**
+     * 客户端有权限的应用列表
+     */
+    List<SimpleApp> listApp(Long clientId);
 
 }

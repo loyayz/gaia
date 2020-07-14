@@ -4,6 +4,7 @@ import com.loyayz.gaia.model.PageModel;
 import com.loyayz.gaia.model.Pair;
 import com.loyayz.gaia.model.request.PageRequest;
 import com.loyayz.uaa.dto.SimpleAccount;
+import com.loyayz.uaa.dto.SimpleApp;
 import com.loyayz.uaa.dto.SimpleUser;
 import com.loyayz.uaa.dto.UserQueryParam;
 
@@ -43,5 +44,10 @@ public interface UserQuery {
      * @param validPassword 要校验的密码
      */
     void validAccountPassword(SimpleAccount account, String validPassword);
+
+    /**
+     * 用户有权限的应用列表
+     */
+    List<SimpleApp> listApp(Long userId);
 
 }

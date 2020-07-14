@@ -7,9 +7,12 @@ import com.loyayz.gaia.model.request.PageRequest;
 import com.loyayz.gaia.util.Functions;
 import com.loyayz.uaa.api.UserQuery;
 import com.loyayz.uaa.data.UaaUserAccount;
+import com.loyayz.uaa.data.converter.AppConverter;
 import com.loyayz.uaa.data.converter.UserConverter;
+import com.loyayz.uaa.domain.AppRepository;
 import com.loyayz.uaa.domain.UserRepository;
 import com.loyayz.uaa.dto.SimpleAccount;
+import com.loyayz.uaa.dto.SimpleApp;
 import com.loyayz.uaa.dto.SimpleUser;
 import com.loyayz.uaa.dto.UserQueryParam;
 import com.loyayz.uaa.exception.AccountPasswordIncorrectException;
@@ -18,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author loyayz (loyayz@foxmail.com)
@@ -62,6 +66,14 @@ public class UserQueryImpl implements UserQuery {
         if (!valid) {
             throw new AccountPasswordIncorrectException(account.getType(), account.getName());
         }
+    }
+
+    @Override
+    public List<SimpleApp> listApp(Long userId) {
+        return AppRepository.listAppByUser(userId)
+                .stream()
+                .map(AppConverter::toSimple)
+                .collect(Collectors.toList());
     }
 
     private UserAccountPasswordProvider passwordProvider(String accountType) {

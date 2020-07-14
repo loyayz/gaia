@@ -8,7 +8,10 @@ import com.loyayz.uaa.data.mapper.UaaAppMenuMetaMapper;
 import com.loyayz.uaa.dto.AppQueryParam;
 import com.loyayz.uaa.dto.MenuQueryParam;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author loyayz (loyayz@foxmail.com)
@@ -32,6 +35,15 @@ public final class AppRepository {
      */
     public static List<UaaApp> listAppByParam(AppQueryParam queryParam) {
         return MybatisUtils.executeSelectList(UaaApp.class, "listByParam", queryParam);
+    }
+
+    /**
+     * {@link com.loyayz.uaa.data.mapper.UaaAppMapper#listByUser}
+     */
+    public static List<UaaApp> listAppByUser(Long userId) {
+        Map<String, Object> param = new HashMap<>(2);
+        param.put("userId", userId);
+        return MybatisUtils.executeSelectList(UaaApp.class, "listByUser", param);
     }
 
     public static UaaAppMenuMeta getAppMenu(Long menuId) {
