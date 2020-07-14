@@ -3,6 +3,7 @@ package com.loyayz.uaa.service;
 import com.loyayz.gaia.data.mybatis.extension.Pages;
 import com.loyayz.gaia.model.PageModel;
 import com.loyayz.gaia.model.request.PageRequest;
+import com.loyayz.gaia.util.Functions;
 import com.loyayz.uaa.api.AppManager;
 import com.loyayz.uaa.api.AppQuery;
 import com.loyayz.uaa.data.converter.AppConverter;
@@ -13,10 +14,10 @@ import com.loyayz.uaa.dto.SimpleApp;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * @author loyayz (loyayz@foxmail.com)
@@ -39,11 +40,9 @@ public class AppServiceImpl implements AppQuery, AppManager {
 
     @Override
     public List<SimpleApp> listApp(List<Long> appIds) {
-        return new HashSet<>(appIds)
-                .parallelStream()
-                .map(this::getApp)
-                .sorted()
-                .collect(Collectors.toList());
+        List<SimpleApp> apps = Functions.parallelConvertList(new HashSet<>(appIds), this::getApp);
+        Collections.sort(apps);
+        return apps;
     }
 
     @Override

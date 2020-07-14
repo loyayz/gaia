@@ -27,7 +27,7 @@ public class OrgQueryImpl implements OrgQuery {
 
     @Override
     public List<SimpleOrg> listOrgByPid(Long pid) {
-        return Functions.convert(OrgRepository.listByPid(pid), OrgConverter::toSimple);
+        return Functions.convertList(OrgRepository.listByPid(pid), OrgConverter::toSimple);
     }
 
     @Override

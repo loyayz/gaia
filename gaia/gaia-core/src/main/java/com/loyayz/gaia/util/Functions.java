@@ -1,6 +1,7 @@
 package com.loyayz.gaia.util;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -24,11 +25,21 @@ public final class Functions {
     /**
      * 转换 list
      */
-    public static <T, R> List<R> convert(List<T> origin, Function<T, R> mapper) {
+    public static <T, R> List<R> convertList(Collection<T> origin, Function<T, R> mapper) {
         if (origin == null) {
             return new ArrayList<>();
         }
         return origin.stream().map(mapper).collect(Collectors.toList());
+    }
+
+    /**
+     * 并行转换 list
+     */
+    public static <T, R> List<R> parallelConvertList(Collection<T> origin, Function<T, R> mapper) {
+        if (origin == null) {
+            return new ArrayList<>();
+        }
+        return origin.parallelStream().map(mapper).collect(Collectors.toList());
     }
 
     /**

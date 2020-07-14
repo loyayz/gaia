@@ -45,7 +45,7 @@ public class UserQueryImpl implements UserQuery {
     @Override
     public List<SimpleAccount> listAccount(Long userId) {
         List<UaaUserAccount> accounts = UserRepository.listAccount(userId);
-        return Functions.convert(accounts, UserConverter::toSimpleAccount);
+        return Functions.convertList(accounts, UserConverter::toSimpleAccount);
     }
 
     @Override
