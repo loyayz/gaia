@@ -29,6 +29,9 @@ public interface UaaUserMapper extends BaseMapper<UaaUser> {
             "   <if test=\"roleId != null \">" +
             "       AND id IN (SELECT user_id FROM uaa_user_role WHERE role_id = #{roleId}) " +
             "   </if>" +
+            "   <if test=\"orgId != null \">" +
+            "       AND id IN (SELECT user_id FROM uaa_org_user WHERE org_id = #{orgId}) " +
+            "   </if>" +
             "</script>")
     List<UaaUser> listByParam(UserQueryParam queryParam);
 

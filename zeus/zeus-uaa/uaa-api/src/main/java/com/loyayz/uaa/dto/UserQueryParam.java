@@ -31,5 +31,9 @@ public class UserQueryParam {
      * 角色
      */
     private Long roleId;
+    /**
+     * 组织
+     */
+    private Long orgId;
 
 }

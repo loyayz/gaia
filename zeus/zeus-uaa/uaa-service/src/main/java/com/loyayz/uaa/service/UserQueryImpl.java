@@ -8,9 +8,11 @@ import com.loyayz.gaia.util.Functions;
 import com.loyayz.uaa.api.UserQuery;
 import com.loyayz.uaa.data.UaaUserAccount;
 import com.loyayz.uaa.data.converter.AppConverter;
+import com.loyayz.uaa.data.converter.OrgConverter;
 import com.loyayz.uaa.data.converter.RoleConverter;
 import com.loyayz.uaa.data.converter.UserConverter;
 import com.loyayz.uaa.domain.AppRepository;
+import com.loyayz.uaa.domain.OrgRepository;
 import com.loyayz.uaa.domain.RoleRepository;
 import com.loyayz.uaa.domain.UserRepository;
 import com.loyayz.uaa.dto.*;
@@ -74,6 +76,11 @@ public class UserQueryImpl implements UserQuery {
     @Override
     public List<SimpleRole> listRole(Long userId) {
         return Functions.convertList(RoleRepository.listByUser(userId), RoleConverter::toSimple);
+    }
+
+    @Override
+    public List<SimpleOrg> listOrg(Long userId) {
+        return Functions.convertList(OrgRepository.listByUser(userId), OrgConverter::toSimple);
     }
 
     private UserAccountPasswordProvider passwordProvider(String accountType) {

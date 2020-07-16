@@ -52,4 +52,9 @@ public interface UserQuery {
      */
     List<SimpleRole> listRole(Long userId);
 
+    /**
+     * 用户的组织列表
+     */
+    List<SimpleOrg> listOrg(Long userId);
+
 }

@@ -37,6 +37,15 @@ public final class OrgRepository {
     }
 
     /**
+     * {@link com.loyayz.uaa.data.mapper.UaaOrgMapper#listByUser}
+     */
+    public static List<UaaOrg> listByUser(Long userId) {
+        Map<String, Object> param = new HashMap<>(2);
+        param.put("userId", userId);
+        return MybatisUtils.executeSelectList(UaaOrg.class, "listByUser", param);
+    }
+
+    /**
      * {@link com.loyayz.uaa.data.mapper.UaaOrgMapper#getMaxSortByParent}
      */
     public static Integer getNextSort(Long pid) {

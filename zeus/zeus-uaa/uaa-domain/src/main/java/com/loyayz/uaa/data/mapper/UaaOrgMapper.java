@@ -27,4 +27,9 @@ public interface UaaOrgMapper extends BaseMapper<UaaOrg> {
             "</where> ORDER BY sort DESC</script>")
     List<UaaOrg> listByParam(OrgQueryParam queryParam);
 
+    @Select("SELECT * FROM uaa_org " +
+            "   WHERE id IN (SELECT org_id FROM uaa_org_user WHERE user_id = #{userId}) " +
+            "  ORDER BY sort DESC")
+    List<UaaOrg> listByUser(@Param("userId") Long userId);
+
 }
