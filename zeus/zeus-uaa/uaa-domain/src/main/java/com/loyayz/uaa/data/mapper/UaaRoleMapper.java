@@ -29,4 +29,10 @@ public interface UaaRoleMapper extends BaseMapper<UaaRole> {
             "</where> </script>")
     List<UaaRole> listByParam(RoleQueryParam queryParam);
 
+    @Select("SELECT * " + FROM_TABLE_BY_USER)
+    List<UaaRole> listByUser(@Param("userId") Long userId);
+
+    @Select("SELECT * FROM uaa_role WHERE id IN ( SELECT role_id FROM uaa_org_role WHERE org_id = #{orgId} )")
+    List<UaaRole> listByOrg(@Param("orgId") Long orgId);
+
 }

@@ -4,6 +4,7 @@ import com.loyayz.gaia.model.PageModel;
 import com.loyayz.gaia.model.request.PageRequest;
 import com.loyayz.uaa.dto.OrgQueryParam;
 import com.loyayz.uaa.dto.SimpleOrg;
+import com.loyayz.uaa.dto.SimpleRole;
 
 import java.util.List;
 
@@ -37,5 +38,10 @@ public interface OrgQuery {
      * 分页查询组织
      */
     PageModel<SimpleOrg> pageOrg(OrgQueryParam queryParam, PageRequest pageRequest);
+
+    /**
+     * 组织的角色列表
+     */
+    List<SimpleRole> listRole(Long orgId);
 
 }

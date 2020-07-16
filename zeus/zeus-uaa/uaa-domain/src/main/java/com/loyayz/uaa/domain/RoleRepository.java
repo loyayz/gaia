@@ -45,7 +45,7 @@ public final class RoleRepository {
      * {@link com.loyayz.uaa.data.mapper.UaaRolePermissionMapper#listRefByRoleTypeRefs}
      */
     public static List<Long> listPermissionRefIdByRoleRefs(Long roleId, String type, List<Long> refIds) {
-        Map<String, Object> param = new HashMap<>(4);
+        Map<String, Object> param = new HashMap<>(5);
         param.put("roleId", roleId);
         param.put("type", type);
         param.put("refIds", refIds);
@@ -57,6 +57,24 @@ public final class RoleRepository {
      */
     public static List<UaaRole> listByParam(RoleQueryParam queryParam) {
         return MybatisUtils.executeSelectList(UaaRole.class, "listByParam", queryParam);
+    }
+
+    /**
+     * {@link com.loyayz.uaa.data.mapper.UaaRoleMapper#listByUser}
+     */
+    public static List<UaaRole> listByUser(Long userId) {
+        Map<String, Object> param = new HashMap<>(2);
+        param.put("userId", userId);
+        return MybatisUtils.executeSelectList(UaaRole.class, "listByUser", param);
+    }
+
+    /**
+     * {@link com.loyayz.uaa.data.mapper.UaaRoleMapper#listByOrg}
+     */
+    public static List<UaaRole> listByOrg(Long orgId) {
+        Map<String, Object> param = new HashMap<>(2);
+        param.put("orgId", orgId);
+        return MybatisUtils.executeSelectList(UaaRole.class, "listByOrg", param);
     }
 
 }

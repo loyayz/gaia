@@ -8,20 +8,18 @@ import com.loyayz.gaia.util.Functions;
 import com.loyayz.uaa.api.UserQuery;
 import com.loyayz.uaa.data.UaaUserAccount;
 import com.loyayz.uaa.data.converter.AppConverter;
+import com.loyayz.uaa.data.converter.RoleConverter;
 import com.loyayz.uaa.data.converter.UserConverter;
 import com.loyayz.uaa.domain.AppRepository;
+import com.loyayz.uaa.domain.RoleRepository;
 import com.loyayz.uaa.domain.UserRepository;
-import com.loyayz.uaa.dto.SimpleAccount;
-import com.loyayz.uaa.dto.SimpleApp;
-import com.loyayz.uaa.dto.SimpleUser;
-import com.loyayz.uaa.dto.UserQueryParam;
+import com.loyayz.uaa.dto.*;
 import com.loyayz.uaa.exception.AccountPasswordIncorrectException;
 import com.loyayz.uaa.helper.UserAccountPasswordProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author loyayz (loyayz@foxmail.com)
@@ -70,10 +68,12 @@ public class UserQueryImpl implements UserQuery {
 
     @Override
     public List<SimpleApp> listApp(Long userId) {
-        return AppRepository.listAppByUser(userId)
-                .stream()
-                .map(AppConverter::toSimple)
-                .collect(Collectors.toList());
+        return Functions.convertList(AppRepository.listAppByUser(userId), AppConverter::toSimple);
+    }
+
+    @Override
+    public List<SimpleRole> listRole(Long userId) {
+        return Functions.convertList(RoleRepository.listByUser(userId), RoleConverter::toSimple);
     }
 
     private UserAccountPasswordProvider passwordProvider(String accountType) {

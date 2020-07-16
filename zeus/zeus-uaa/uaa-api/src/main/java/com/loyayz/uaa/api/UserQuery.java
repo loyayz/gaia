@@ -3,10 +3,7 @@ package com.loyayz.uaa.api;
 import com.loyayz.gaia.model.PageModel;
 import com.loyayz.gaia.model.Pair;
 import com.loyayz.gaia.model.request.PageRequest;
-import com.loyayz.uaa.dto.SimpleAccount;
-import com.loyayz.uaa.dto.SimpleApp;
-import com.loyayz.uaa.dto.SimpleUser;
-import com.loyayz.uaa.dto.UserQueryParam;
+import com.loyayz.uaa.dto.*;
 
 import java.util.List;
 
@@ -46,8 +43,13 @@ public interface UserQuery {
     void validAccountPassword(SimpleAccount account, String validPassword);
 
     /**
-     * 用户有权限的应用列表
+     * 用户的应用列表
      */
     List<SimpleApp> listApp(Long userId);
+
+    /**
+     * 用户的角色列表
+     */
+    List<SimpleRole> listRole(Long userId);
 
 }

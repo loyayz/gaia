@@ -6,9 +6,12 @@ import com.loyayz.gaia.model.request.PageRequest;
 import com.loyayz.gaia.util.Functions;
 import com.loyayz.uaa.api.OrgQuery;
 import com.loyayz.uaa.data.converter.OrgConverter;
+import com.loyayz.uaa.data.converter.RoleConverter;
 import com.loyayz.uaa.domain.OrgRepository;
+import com.loyayz.uaa.domain.RoleRepository;
 import com.loyayz.uaa.dto.OrgQueryParam;
 import com.loyayz.uaa.dto.SimpleOrg;
+import com.loyayz.uaa.dto.SimpleRole;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -34,6 +37,11 @@ public class OrgQueryImpl implements OrgQuery {
     public PageModel<SimpleOrg> pageOrg(OrgQueryParam queryParam, PageRequest pageRequest) {
         return Pages.doSelectPage(pageRequest, () -> OrgRepository.listByParam(queryParam))
                 .convert(OrgConverter::toSimple);
+    }
+
+    @Override
+    public List<SimpleRole> listRole(Long orgId) {
+        return Functions.convertList(RoleRepository.listByOrg(orgId), RoleConverter::toSimple);
     }
 
     private SimpleOrg fillOrgItems(SimpleOrg org, int itemDeep) {
