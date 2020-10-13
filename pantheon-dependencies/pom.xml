@@ -54,7 +54,7 @@
         <hutool.version>5.4.4</hutool.version>
         <jjwt.version>0.9.1</jjwt.version>
 
-        <mybatis.version>3.5.5</mybatis.version>
+        <mybatis.version>3.5.6</mybatis.version>
         <mybatis-spring.version>2.0.5</mybatis-spring.version>
         <mybatis-plus.version>3.4.0</mybatis-plus.version>
         <pagehelper.version>5.2.0</pagehelper.version>
