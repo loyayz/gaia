@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.core.toolkit.GlobalConfigUtils;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
 import org.mybatis.spring.SqlSessionUtils;
 
@@ -17,7 +18,7 @@ import java.util.List;
  * @author loyayz (loyayz@foxmail.com)
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class MybatisUtils {
+public final class MybatisUtils {
 
     public static <R> List<R> executeSelectList(Class<?> clazz, String sqlMethod, Object param) {
         String statement = MybatisUtils.sqlStatement(clazz, sqlMethod);
@@ -70,7 +71,7 @@ public class MybatisUtils {
     }
 
     public static GlobalConfig getGlobalConfig(Class<?> clazz) {
-        MybatisConfiguration configuration = TableInfoHelper.getTableInfo(clazz).getConfiguration();
+        Configuration configuration = TableInfoHelper.getTableInfo(clazz).getConfiguration();
         return GlobalConfigUtils.getGlobalConfig(configuration);
     }
 

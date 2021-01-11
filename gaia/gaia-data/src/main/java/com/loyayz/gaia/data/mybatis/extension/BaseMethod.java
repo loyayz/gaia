@@ -10,7 +10,7 @@ import com.baomidou.mybatisplus.core.toolkit.sql.SqlScriptUtils;
 public abstract class BaseMethod extends AbstractMethod {
 
     protected String sqlWhereEntity(TableInfo table) {
-        if (table.isLogicDelete()) {
+        if (table.isWithLogicDelete()) {
             String sqlScript = table.getAllSqlWhere(true, true, ENTITY_DOT);
             sqlScript = SqlScriptUtils.convertIf(sqlScript, String.format("%s != null", ENTITY), true);
             sqlScript += (NEWLINE + table.getLogicDeleteSql(true, true) + NEWLINE);

@@ -46,7 +46,7 @@ public class PageModel<T> implements Serializable {
     /**
      * 当前页偏移量（起始行）
      */
-    private Integer offset;
+    private Long offset;
 
     public <R> PageModel<R> convert(Function<? super T, ? extends R> mapper) {
         PageModel<R> result = new PageModel<>(this);
